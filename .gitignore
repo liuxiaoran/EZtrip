@@ -24,3 +24,13 @@ proguard/
 
 # Log Files
 *.log
+
+#add by lxr
+gradlew
+gradlew.bat
+gradle.properties
+.idea
+gradle
+*.iml
+
+/build
