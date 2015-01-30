@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/account_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:text="账号"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/register_phone_et"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/account_tv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:hint="您的手机号" />
+
+    <TextView
+        android:id="@+id/pw_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/register_phone_et"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="设置密码"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/register_pw_et"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/pw_tv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:hint="6-16位数字或字母,区分大小写"
+        android:password="true" />
+
+    <TextView
+        android:id="@+id/register_protocol"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/register_pw_et"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <Button
+        android:id="@+id/register_btn"
+        style="@style/match_parent_rounded_rectangle_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/register_protocol"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="注册"
+        />
+
+
+</RelativeLayout>

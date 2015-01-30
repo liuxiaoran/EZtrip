@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">eztrip</string>
+
+  <!-- 第三方登录 -->
+    <string name="login_button_name">登录</string>
+    <string name="auth_cancel">授权操作已取消</string>
+    <string name="auth_error">用户名或密码错误，请重新输入</string>
+    <string name="auth_complete">授权成功，正在跳转…</string>
+    <string name="logining">使用%s帐号登录中…</string>
+    <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
+
+   <string name="action_settings">设置</string>
+</resources>
