@@ -80,7 +80,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         register_tv.setText(
                 Html.fromHtml(
                         "点击注册表示同意" +
-                                "<a href=\"http://www.google.com\">《度度软件许可及服务协议》</a> "));
+                                "<a href=\"http://www.google.com\">《eztrip软件许可及服务协议》</a> "));
         register_tv.setMovementMethod(LinkMovementMethod.getInstance());
         register_btn = (Button) findViewById(R.id.register_btn);
         register_btn.setOnClickListener(this);
@@ -116,7 +116,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         phone = phone_et.getText().toString();
 
         pw = pw_et.getText().toString();
-        Log.v("UserService", phone + "  " + pw);
         boolean phoneRet = UserService.phonePatternMatch(phone);
         boolean pwRet = UserService.pwPatternMatch(pw);
 

@@ -226,7 +226,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
             }
             break;
             case MSG_NOT_REGISTER: {
-                Toast.makeText(this, "您未在度度注册，请注册", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "您未注册，请注册", Toast.LENGTH_SHORT).show();
             }
             break;
         }
