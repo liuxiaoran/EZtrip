@@ -30,9 +30,9 @@ import cn.smssdk.SMSSDK;
 public class RegisterActivity extends Activity implements View.OnClickListener {
     public static String phone;
     // 填写从短信SDK应用后台注册得到的APPKEY
-    private static String APPKEY = "57373ffffa48";
+    private static String APPKEY = "598fccf54148";
     // 填写从短信SDK应用后台注册得到的APPSECRET
-    private static String APPSECRET = "fa96f512580053c8ec87a588b7ec077e";
+    private static String APPSECRET = "fb16d3825a8d3e2babfbf2a81a432182";
     String pw;
     Handler handler = new Handler() {
 
