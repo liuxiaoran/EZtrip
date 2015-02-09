@@ -10,6 +10,42 @@
     <string name="auth_complete">授权成功，正在跳转…</string>
     <string name="logining">使用%s帐号登录中…</string>
     <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
+    <string name="action_settings">设置</string>
+    <!--routemaker-->
+    <string name="last_step">上一步</string>
+    <string name="next_step">下一步</string>
+    <string name="routemaker_basicsettings_destination">目的地</string>
+    <string name="routemaker_basicsettings_favoritespot">景点心愿单</string>
+    <string name="routemaker_basicsettings_favoritespot_hint">已经从您历史的心愿景点单中找到如下几个在目的地中的景点</string>
+    <string name="routemaker_basicsettings_favoritespot_new">添加心愿景点</string>
+    <string name="routemaker_basicsettings_favoritespot_day">旅行天数</string>
+    <string name="routemaker_spotsettings_spot_hint">为您定制了下面的景点游览计划，点击可排序</string>
+    <string name="routemaker_spotsettings_spot_hint_spotadded">您的旅行计划看起来有点少，我们给您推荐了下面的景点，点击可删除</string>
+    <string name="routemaker_spotsettings_spot_hint_spot">您可以浏览整个城市的景点信息</string>
+    <string name="routemaker_spotsettings_hotel_hint">为您推荐宾馆</string>
+    <string name="routemaker_spotsettings_hotel_hint_change">换一个</string>
+    <string name="routemaker_spotsettings_hotel_nohotel">如果您不住宾馆，请输入大致的住宿位置</string>
+    <string name="routemaker_spotsettings_change_hint">提示：更改信息后，需重新生成计划，我们会为您自动生成最佳的计划</string>
+    <string name="routemaker_spotsettings_regeneration">重新生成</string>
+    <string name="routemaker_trafficsettings_hint">选择旅途中交通工具类型</string>
+    <string name="routemaker_trafficsettings_private">自驾游/出租车</string>
+    <string name="routemaker_trafficsettings_public">公共交通</string>
+    <string name="routemaker_dietsettings_time">需要安排就餐的时间</string>
+    <string name="routemaker_dietsettings_breakfast">早餐</string>
+    <string name="routemaker_dietsettings_lunch">午餐</string>
+    <string name="routemaker_dietsettings_supper">晚餐</string>
 
-   <string name="action_settings">设置</string>
+    <string name="routemaker_already_1st_step">已经是第一步</string>
+    <string name="routemaker_finish">完成</string>
+
+    <!--  左侧导航栏标题 -->
+    <string name="title_section1">1</string>
+    <string name="title_section2">2</string>
+    <string name="title_section6">3</string>
+    <string name="title_section3">4</string>
+    <string name="title_section4">5</string>
+    <string name="title_section5">6</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

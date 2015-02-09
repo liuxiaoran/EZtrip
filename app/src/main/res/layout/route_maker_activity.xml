@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".RouteMakerActivity">
+
+    <include
+        android:id="@+id/routemaker_toolbar"
+        layout="@layout/toolbar" />
+
+    <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+    <include
+        android:id="@+id/drawer_layout"
+        layout="@layout/navigator_drawerlayout"/>
+
+</LinearLayout>

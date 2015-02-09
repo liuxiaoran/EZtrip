@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/routemaker_last_step"
+        android:orderInCategory="95"
+        app:showAsAction="ifRoom"
+        android:title="@string/last_step" />
+
+</menu>

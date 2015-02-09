@@ -28,4 +28,6 @@
     <!--<color name="hint">#B8B8B8</color>-->
     <color name="dividers">#DADADA</color>
 
+    <color name="colorPrimary">#43a9f4</color>
+
 </resources>

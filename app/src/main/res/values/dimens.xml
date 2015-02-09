@@ -26,4 +26,6 @@
 
     <!--Padding-->
     <dimen name="default_padding">2dp</dimen>
+
+    <dimen name="navigation_drawer_width">240dp</dimen>
 </resources>
