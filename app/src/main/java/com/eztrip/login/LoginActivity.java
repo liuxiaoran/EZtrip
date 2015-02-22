@@ -36,8 +36,8 @@ import cn.smssdk.gui.RegisterPage;
 public class LoginActivity extends Activity implements View.OnClickListener, PlatformActionListener, Handler.Callback {
 
     //第三方用户注册时短信验证需要的变量
-    private String APPKEY = "57373ffffa48";
-    private String APPSECRET = "fa96f512580053c8ec87a588b7ec077e";
+    private String APPKEY = "598fccf54148";
+    private String APPSECRET = "fb16d3825a8d3e2babfbf2a81a432182";
 
     private static final int MSG_USERID_FOUND = 1;
     private static final int MSG_LOGIN = 2;
@@ -151,7 +151,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
         } else {
             //click  other platform button
             if (view.getId() == R.id.qq_login_btn) {
-                otherplatformType = 1;
+                otherplatformType = 0;
                 // 获取平台列表
                 Platform[] tmp = ShareSDK.getPlatformList();
                 Platform platform = null;
@@ -167,7 +167,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
 
 
             } else if (view.getId() == R.id.weixin_login_btn) {
-                otherplatformType = 2;
+                otherplatformType = 1;
                 Platform[] tmp = ShareSDK.getPlatformList();
                 Platform platform = null;
                 for (Platform p : tmp) {
@@ -182,7 +182,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
 
             } else {
                 //weibo login
-                otherplatformType = 3;
+                otherplatformType = 2;
                 // 获取平台列表
                 Platform[] tmp = ShareSDK.getPlatformList();
                 Platform platform = null;

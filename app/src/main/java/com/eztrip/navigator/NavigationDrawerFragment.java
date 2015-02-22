@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.eztrip.R;
+import com.eztrip.login.LoginActivity;
 
 
 /**
@@ -112,23 +113,26 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+        //用户的姓名 显示在左边的drawer中
+        String userName= LoginActivity.sharedPreferences.getString("name","未知");
+
         DrawerListViewAdapter adapter = new DrawerListViewAdapter(
                 getActivity(),
                 new String[]{
+                        userName,
                         getString(R.string.title_section1),
                         getString(R.string.title_section2),
-                        getString(R.string.title_section6),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
                         getString(R.string.title_section5),
                 },
                 new int[]{
+                        R.drawable.ic_hot_car_show,  //用户的头像
                         R.drawable.ic_hot_car_show,
                         R.drawable.ic_list_products,
                         R.drawable.ic_furniture_models,
                         R.drawable.ic_collection,
-                        R.drawable.ic_content_create,
-                        R.drawable.ic_3d_design_new,
+                        R.drawable.ic_content_create
                 }
         );
         mDrawerListView.setAdapter(adapter);

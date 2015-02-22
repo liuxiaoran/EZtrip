@@ -45,6 +45,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             Object data = msg.obj;
             Log.e("event", "event=" + event);
             if (result == SMSSDK.RESULT_COMPLETE) {
+                Log.v("event","arrive");
                 //短信注册成功后，返回此Activity
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
                     Toast.makeText(getApplicationContext(), "提交验证码成功", Toast.LENGTH_SHORT).show();
@@ -96,6 +97,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 msg.arg2 = result;
                 msg.obj = data;
                 handler.sendMessage(msg);
+                Log.v("event","arrive event "+msg.obj +" "+msg.arg1+" "+msg.arg2);
             }
 
         };
@@ -125,7 +127,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             //TODO:短信验证andvalidate success之后向后台注册
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("验证手机号");
-            builder.setMessage("DoDo将发送验证码到您的手机");
+            builder.setMessage("将发送验证码到您的手机");
             builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

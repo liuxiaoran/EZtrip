@@ -30,7 +30,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -70,24 +70,22 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- login section -->
         <activity
             android:name=".login.LoginActivity"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             />
         <!-- register section-->
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             />
         <activity
@@ -102,10 +100,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Toolbar"
             android:launchMode="standard">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
 
