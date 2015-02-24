@@ -40,8 +40,6 @@ public class ValidateSMS extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.validate_button){
-            Log.v("validate",RegisterActivity.phone+"q");
-            Log.v("validate", auth_code_et.getText().toString()+"q");
             SMSSDK.submitVerificationCode("86", RegisterActivity.phone, auth_code_et.getText().toString());
         }
         else if (view.getId()==R.id.send_again_btn){

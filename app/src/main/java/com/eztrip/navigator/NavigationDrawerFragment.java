@@ -120,11 +120,11 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity(),
                 new String[]{
                         userName,
-                        getString(R.string.title_section1),
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
                         getString(R.string.title_section5),
+                        getString(R.string.title_section6)
                 },
                 new int[]{
                         R.drawable.ic_hot_car_show,  //用户的头像

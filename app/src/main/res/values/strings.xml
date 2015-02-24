@@ -39,12 +39,14 @@
     <string name="routemaker_finish">完成</string>
 
     <!--  左侧导航栏标题 -->
-    <string name="title_section1">首页</string>
-    <string name="title_section2">发现景点</string>
-    <string name="title_section3">发起旅行</string>
-    <string name="title_section4">行程助手</string>
-    <string name="title_section5">我的设置</string>
+    <string name="title_section1">个人中心</string>
+    <string name="title_section2">首页</string>
+    <string name="title_section3">发现景点</string>
+    <string name="title_section4">发起旅行</string>
+    <string name="title_section5">行程助手</string>
+    <string name="title_section6">我的设置</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_clear_cache">清楚缓存</string>
 </resources>
