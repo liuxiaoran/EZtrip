@@ -22,8 +22,6 @@ import com.eztrip.navigator.NavigationDrawerFragment;
 import java.io.File;
 
 
-
-
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -53,7 +51,7 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = "推荐产品";
+        mTitle = "首页";
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -70,55 +68,55 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager;
         switch (position) {
-            case 0:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = RecommendProductFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 1:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = ProductHallFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 2:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = FurnitureModelsFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 3:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = CollectionShowFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 4:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = FinalModelSpaceFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 5:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = DesignChooseFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
-            case 6:
-                fragmentManager = getSupportFragmentManager();
-//                currFragment = DesignChooseFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-                break;
+//            case 0:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = RecommendProductFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 1:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = ProductHallFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 2:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = FurnitureModelsFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 3:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = CollectionShowFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 4:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = FinalModelSpaceFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 5:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = DesignChooseFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
+//            case 6:
+//                fragmentManager = getSupportFragmentManager();
+////                currFragment = DesignChooseFragment.newInstance(getBaseContext());
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.container, currFragment)
+//                        .commit();
+//                break;
 
             default:
                 break;

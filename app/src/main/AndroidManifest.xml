@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.eztrip" >
+    package="com.eztrip">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,14 +27,22 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+        android:theme="@style/Toolbar">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <!--  smssdk activity-->
@@ -69,11 +78,9 @@
             android:name=".welcome.WelcomeActivity"
             android:label="@string/app_name"
             android:noHistory="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+
         </activity>
 
         <!-- login section -->
@@ -81,29 +88,36 @@
             android:name=".login.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            />
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <!-- register section-->
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            />
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".register.ValidateSMS"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
         <activity
             android:name=".routemaker.RouteMakerActivity"
             android:label="@string/app_name"
+            android:launchMode="standard"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Toolbar"
-            android:launchMode="standard">
+            android:screenOrientation="portrait">
 
         </activity>
 
-
+        <!-- findSpot section-->
+        <activity
+            android:name=".findspot.SearchResultActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
 
 
     </application>

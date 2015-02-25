@@ -24,7 +24,9 @@ android {
     productFlavors {
     }
 }
-
+repositories {
+    maven { url "http://jzaccone.github.io/SlidingMenu-aar" }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
@@ -45,4 +47,7 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.loopj.android:android-async-http:1.4.+'
     compile 'com.android.support:support-v13:20.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+
+
 }
