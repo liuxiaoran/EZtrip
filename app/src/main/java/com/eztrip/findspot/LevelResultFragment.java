@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
+import com.eztrip.model.TravelBag;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -59,6 +60,9 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         if (view.getId() == R.id.card_add_btn) {
             //TODO: 加入行囊
+            TravelBag bag = TravelBag.getDefaultTravelBag();
+            bag.addScenery((ScenerySpot) view.getTag());
+
         } else if (view.getId() == R.id.card_look_btn) {
             Intent intent = new Intent(getActivity(), SceneryWebView.class);
             intent.putExtra("url", view.getTag().toString());
@@ -91,6 +95,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
 
             Picasso.with(getActivity()).load(data.get(i).getImgurl()).into(viewHolder.sceneryIv);
             viewHolder.lookBtn.setTag(data.get(i).getUrl());
+            viewHolder.addBtn.setTag(data.get(i));
             viewHolder.addBtn.setOnClickListener(LevelResultFragment.this);
             viewHolder.lookBtn.setOnClickListener(LevelResultFragment.this);
         }

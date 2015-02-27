@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
+import com.eztrip.model.TravelBag;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -34,6 +35,7 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
     private TextView titleTv, commTv, priceTv, gradeTv, addressTv, introTv;
     private ScenerySpot targetSpot;
     private Button addBtn, lookBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,6 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
 
         //use the query to search
         getSpotFromInternet(query);
-
 
 
     }
@@ -98,6 +99,7 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
                 gradeTv.setText("等级: " + targetSpot.getGrade());
                 addressTv.setText("地址: " + targetSpot.getAddress());
                 introTv.setText("介绍: " + targetSpot.getIntro());
+                addBtn.setTag(targetSpot);
 
             }
 
@@ -111,6 +113,9 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.showscenery_add_btn) {
+            //加入行囊
+            TravelBag bag = TravelBag.getDefaultTravelBag();
+            bag.addScenery((ScenerySpot) view.getTag());
 
         } else {
             // lookBtn
