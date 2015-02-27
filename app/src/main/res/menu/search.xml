@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:alpha="http://schemas.android.com/apk/res-auto">
+    <!-- 注意下面的alpha:actionViewClass 而不是android:actionViewClass 否则FindSpotMainFragment中onoptionMenu中searchView得到的是null-->
     <item
         android:id="@+id/search"
-        android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/ic_search"
-        android:showAsAction="collapseActionView|ifRoom"
+        alpha:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_action_search"
+        alpha:showAsAction="collapseActionView|ifRoom"
         android:title="@string/search_title" />
 </menu>

@@ -13,6 +13,6 @@
     <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
     <include
         android:id="@+id/drawer_layout"
-        layout="@layout/navigator_drawerlayout"/>
+        layout="@layout/navigator_drawerlayout" />
 
 </LinearLayout>

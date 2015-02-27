@@ -23,25 +23,26 @@ import java.util.ArrayList;
 /**
  * Created by Steve on 2015/2/4.
  */
-public class RouteMakerActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class RouteMakerActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private ArrayList<Fragment> fragments;
     private int currStep;
     private final String titleHead = "线路规划—";
-    private String[] titles = new String[]{"基本设置","景点及住宿设置","交通设置","饮食设置","时间安排微调","最后一步"};
+    private String[] titles = new String[]{"基本设置", "景点及住宿设置", "交通设置", "饮食设置", "时间安排微调", "最后一步"};
     private Toolbar toolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.route_maker_activity);
+        setContentView(R.layout.routemaker_activity);
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         fragments = new ArrayList<>();
-        Fragment basicSettings = new Fragment(){
+        Fragment basicSettings = new Fragment() {
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
                 return super.onCreateView(inflater, container, savedInstanceState);
@@ -61,7 +62,7 @@ public class RouteMakerActivity extends ActionBarActivity implements NavigationD
         fragments.add(finishSettings);
         fragments.add(dietInfo);
 
-        toolbar = (Toolbar)findViewById(R.id.routemaker_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.routemaker_toolbar);
         setSupportActionBar(toolbar);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -75,13 +76,13 @@ public class RouteMakerActivity extends ActionBarActivity implements NavigationD
     }
 
 
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(titleHead + titles[currStep]);
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -89,8 +90,9 @@ public class RouteMakerActivity extends ActionBarActivity implements NavigationD
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Toast.makeText(RouteMakerActivity.this,Integer.toString(position),Toast.LENGTH_LONG).show();
+        Toast.makeText(RouteMakerActivity.this, Integer.toString(position), Toast.LENGTH_LONG).show();
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
@@ -105,29 +107,28 @@ public class RouteMakerActivity extends ActionBarActivity implements NavigationD
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.routemaker_last_step){
+        if (item.getItemId() == R.id.routemaker_last_step) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            int nextStep = getFragment(-1,currStep);
-            if(nextStep != -1){
-                fragmentManager.beginTransaction().replace(R.id.drawerlayout_container,fragments.get(nextStep)).commit();
+            int nextStep = getFragment(-1, currStep);
+            if (nextStep != -1) {
+                fragmentManager.beginTransaction().replace(R.id.drawerlayout_container, fragments.get(nextStep)).commit();
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private int getFragment(int direction,int currentStep){
-        if(currentStep == 6){
-            currStep =  6 + direction * 3;
+    private int getFragment(int direction, int currentStep) {
+        if (currentStep == 6) {
+            currStep = 6 + direction * 3;
             return currStep;
-        }
-        else{
-            if(currentStep == 0 && direction == -1){
-                Toast.makeText(getApplicationContext(),"已经是第一步",Toast.LENGTH_SHORT).show();
+        } else {
+            if (currentStep == 0 && direction == -1) {
+                Toast.makeText(getApplicationContext(), "已经是第一步", Toast.LENGTH_SHORT).show();
                 return -1;
-            }else if(currentStep == 5 && direction == 1){
-                Toast.makeText(getApplicationContext(),"完成",Toast.LENGTH_SHORT).show();
+            } else if (currentStep == 5 && direction == 1) {
+                Toast.makeText(getApplicationContext(), "完成", Toast.LENGTH_SHORT).show();
                 return -1;
-            }else {
+            } else {
                 currStep = direction + currentStep;
                 return currentStep;
             }

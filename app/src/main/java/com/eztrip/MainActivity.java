@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.navigator.NavigationDrawerFragment;
 
 import java.io.File;
@@ -82,13 +83,13 @@ public class MainActivity extends ActionBarActivity
 //                        .replace(R.id.container, currFragment)
 //                        .commit();
 //                break;
-//            case 2:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = FurnitureModelsFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+            case 2:
+                fragmentManager = getSupportFragmentManager();
+                currFragment = FindSpotMainFragment.newInstance(getBaseContext());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, currFragment)
+                        .commit();
+                break;
 //            case 3:
 //                fragmentManager = getSupportFragmentManager();
 ////                currFragment = CollectionShowFragment.newInstance(getBaseContext());
@@ -110,13 +111,7 @@ public class MainActivity extends ActionBarActivity
 //                        .replace(R.id.container, currFragment)
 //                        .commit();
 //                break;
-//            case 6:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = DesignChooseFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+
 
             default:
                 break;
@@ -173,7 +168,7 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-         if (item.getItemId() == R.id.action_clear_cache) {
+        if (item.getItemId() == R.id.action_clear_cache) {
             cleanInternalCache(MainActivity.this);
         }
         return super.onOptionsItemSelected(item);
