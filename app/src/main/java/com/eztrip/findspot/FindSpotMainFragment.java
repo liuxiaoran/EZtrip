@@ -3,6 +3,7 @@ package com.eztrip.findspot;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,24 @@ public class FindSpotMainFragment extends Fragment {
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
+        searchView.setSubmitButtonEnabled(true);//是否显示确认搜索按钮
+        searchView.setIconifiedByDefault(false);//设置展开后图标的样式,这里只有两种,一种图标在搜索框外,一种在搜索框内
+        searchView.setIconified(false);//设置
+        searchView.clearFocus();//清除焦点
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent intent = new Intent(getActivity(), SearchResultActivity.class);
+                intent.putExtra("query", s);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
     }
 
@@ -59,7 +78,7 @@ public class FindSpotMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        String[] levelData = {"A级", "AA级", "AAA级", "4A级", "5A级"};
+        String[] levelData = {"A级", "AA级", "3A级", "4A级", "5A级"};
 
         View view = inflater.inflate(R.layout.findspot_fragment_main, null);
 

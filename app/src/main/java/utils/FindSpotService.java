@@ -42,16 +42,7 @@ public class FindSpotService {
                 Log.v(TAG, "success" + result);
                 try {
                     JSONObject object = new JSONObject(result);
-                    JSONObject scenery = object.getJSONObject("result");
-                    Log.v(TAG, "" + scenery);
-                    JSONArray sceneryList = scenery.getJSONArray("sceneryList");
-                    Log.v(TAG, "" + sceneryList);
-                    for (int i = 0; i < sceneryList.length(); i++) {
-                        JSONObject oj = sceneryList.getJSONObject(i);
-                        Log.v(TAG, "" + oj);
-                        arrayList.add(new ScenerySpot(oj.getString("title"), oj.getString("price_min"), oj.getString("comm_cnt"), oj.getString("url"),
-                                oj.getString("imgurl"), oj.getString("intro"), oj.getString("address")));
-                    }
+                    addSpotIntoList(arrayList, object);
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -66,5 +57,42 @@ public class FindSpotService {
 
         });
 
+    }
+
+    public static void addSpotIntoList(ArrayList<ScenerySpot> arrayList, JSONObject object) {
+        JSONObject scenery = null;
+        try {
+            scenery = object.getJSONObject("result");
+            JSONArray sceneryList = scenery.getJSONArray("sceneryList");
+            Log.v(TAG, "" + sceneryList);
+            for (int i = 0; i < sceneryList.length(); i++) {
+                JSONObject oj = sceneryList.getJSONObject(i);
+                Log.v(TAG, "" + oj);
+                arrayList.add(new ScenerySpot(oj.getString("title"), oj.getString("price_min"), oj.getString("comm_cnt"), oj.getString("url"),
+                        oj.getString("imgurl"), oj.getString("intro"), oj.getString("address")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static ScenerySpot getSpot(JSONObject object) {
+        ScenerySpot scenerySpot = null;
+        JSONObject scenery = null;
+        try {
+            scenery = object.getJSONObject("result");
+            JSONArray sceneryList = scenery.getJSONArray("sceneryList");
+            Log.v(TAG, "" + sceneryList);
+
+            JSONObject oj = sceneryList.getJSONObject(0);  // 找列表的第一个
+            Log.v(TAG, "" + oj);
+            scenerySpot = new ScenerySpot(oj.getString("title"), oj.getString("price_min"), oj.getString("comm_cnt"), oj.getString("url"),
+                    oj.getString("imgurl"), oj.getString("intro"), oj.getString("address"), oj.getString("grade"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return scenerySpot;
     }
 }

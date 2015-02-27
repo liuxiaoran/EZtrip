@@ -27,6 +27,17 @@ public class ScenerySpot {
         this.address = position;
     }
 
+    public ScenerySpot(String title, String price_min, String comm_cnt, String url, String imgurl, String intro, String position, String grade) {
+        this.title = title;
+        this.price_min = price_min;
+        this.comm_cnt = comm_cnt;
+        this.url = url;
+        this.imgurl = imgurl;
+        this.intro = intro;
+        this.address = position;
+        this.grade = grade;
+    }
+
     public void setIntro(String intro) {
         this.intro = intro;
     }
