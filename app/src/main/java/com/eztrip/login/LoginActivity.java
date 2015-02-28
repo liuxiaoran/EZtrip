@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.eztrip.R;
 
-import utils.UserService;
-
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -29,6 +27,7 @@ import cn.sharesdk.framework.utils.UIHandler;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
+import utils.UserService;
 
 /**
  * Created by xiaoran on 2015/1/19.

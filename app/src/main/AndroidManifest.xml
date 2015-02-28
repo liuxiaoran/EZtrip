@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -82,6 +83,11 @@
         <activity
             android:name=".welcome.WelcomeActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar">
@@ -104,17 +110,13 @@
         <activity
             android:name=".register.ValidateSMS"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".routemaker.RouteMakerActivity"
+            android:name=".citylist.CityList"
             android:label="@string/app_name"
-            android:launchMode="standard"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Toolbar" />
 
-        </activity>
 
         <!-- findSpot section-->
         <activity

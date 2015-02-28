@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
@@ -13,14 +13,14 @@
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="48dip"
-        android:background="#ff303537" >
+        android:background="#ff303537">
 
         <LinearLayout
             android:id="@+id/ll_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="9dp"
-            android:paddingRight="17dp" >
+            android:paddingRight="17dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:id="@+id/llTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -73,7 +73,7 @@
             android:background="@drawable/smssdk_input_bg_focus"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="22dip"

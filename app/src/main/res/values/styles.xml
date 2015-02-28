@@ -159,6 +159,7 @@
 
     </style>
 
+
     <!--Title Bar Style-->
     <style name="title_bar" parent="headline_text">
         <item name="android:layout_margin">0dp</item>

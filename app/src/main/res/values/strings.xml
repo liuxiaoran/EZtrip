@@ -14,40 +14,53 @@
     <!--routemaker-->
     <string name="last_step">上一步</string>
     <string name="next_step">下一步</string>
-    <string name="routemaker_basicsettings_destination">目的地</string>
-    <string name="routemaker_basicsettings_favoritespot">景点心愿单</string>
-    <string name="routemaker_basicsettings_favoritespot_hint">已经从您历史的心愿景点单中找到如下几个在目的地中的景点</string>
-    <string name="routemaker_basicsettings_favoritespot_new">添加心愿景点</string>
-    <string name="routemaker_basicsettings_favoritespot_day">旅行天数</string>
-    <string name="routemaker_spotsettings_spot_hint">为您定制了下面的景点游览计划，点击可排序</string>
+    <string name="routemaker_basicsettings_destination">目的地：</string>
+    <string name="routemaker_basicsettings_destination_edittext">填入城市名</string>
+    <string name="routemaker_basicsettings_favoritespot_hint1">选择您在</string>
+    <string name="routemaker_basicsettings_favoritespot_hint2">要游览的景点</string>
+    <string name="routemaker_basicsettings_favoritespot_hint3">您的心愿景点将会被自动添加。</string>
+    <string name="routemaker_basicsettings_favoritespot_new">添加景点</string>
+    <string name="routemaker_basicsettings_favoritespot_day">旅行天数:</string>
+    <string name="routemaker_basicsettings_favoritespot_day_default">1</string>
+    <string name="routemaker_spotsettings_spot_hint">为您定制了下面的景点游览和住宿计划，可排序</string>
     <string name="routemaker_spotsettings_spot_hint_spotadded">您的旅行计划看起来有点少，我们给您推荐了下面的景点，点击可删除</string>
     <string name="routemaker_spotsettings_spot_hint_spot">您可以浏览整个城市的景点信息</string>
     <string name="routemaker_spotsettings_hotel_hint">为您推荐宾馆</string>
     <string name="routemaker_spotsettings_hotel_hint_change">换一个</string>
     <string name="routemaker_spotsettings_hotel_nohotel">如果您不住宾馆，请输入大致的住宿位置</string>
-    <string name="routemaker_spotsettings_change_hint">提示：更改信息后，需重新生成计划，我们会为您自动生成最佳的计划</string>
+    <string name="routemaker_spotsettings_change_hint">更改信息后，需重新生成计划，我们会为您自动生成最佳的计划</string>
     <string name="routemaker_spotsettings_regeneration">重新生成</string>
-    <string name="routemaker_trafficsettings_hint">选择旅途中交通工具类型</string>
+    <string name="routemaker_basicsettings_traffic_hint">选择旅途中交通工具类型</string>
     <string name="routemaker_trafficsettings_private">自驾游/出租车</string>
     <string name="routemaker_trafficsettings_public">公共交通</string>
     <string name="routemaker_dietsettings_time">需要安排就餐的时间</string>
     <string name="routemaker_dietsettings_breakfast">早餐</string>
     <string name="routemaker_dietsettings_lunch">午餐</string>
-    <string name="routemaker_dietsettings_supper">晚餐</string>
-
+    <string name="routemaker_dietsettings_dinner">晚餐</string>
+    <string name="routemaker_dietsetting_recommend_hint">为您推荐如下的就餐计划：</string>
+    <string name="routemaker_timesettings_hint">您可以微调时间安排。</string>
+    <string name="routemaker_finishsettings_hint">将该计划加入日程表</string>
+    <string name="routemaker_finishsettings_start_date">开始日期：</string>
+    <string name="routemaker_finishsettings_wrong_date">请将开始日期设置在今天之后</string>
+    <string name="routemaker_spotitem_default">信息</string>
     <string name="routemaker_already_1st_step">已经是第一步</string>
     <string name="routemaker_finish">完成</string>
+    <string name="routemaker_finishsettings_change_date">修改日期</string>
 
-    <!--  左侧导航栏标题 -->
+
+    <!--通用-->
+    <string name="change">修改</string>
     <string name="title_section1">个人中心</string>
     <string name="title_section2">首页</string>
     <string name="title_section3">发现景点</string>
+    <string name="title_section4_fragment1">发起旅行-基本设置</string>
     <string name="title_section4">发起旅行</string>
     <string name="title_section5">行程助手</string>
     <string name="title_section6">我的设置</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="beijing">北京</string>
     <string name="action_clear_cache">清楚缓存</string>
     <string name="search_title">景点名称</string>
     <string name="search_hint">输入景点名称</string>

@@ -19,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
-import  utils.UserService;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import utils.UserService;
 
 /**
  * Created by xiaoran on 2015/1/19.

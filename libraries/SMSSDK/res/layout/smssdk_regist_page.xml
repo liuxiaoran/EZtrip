@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         android:layout_height="46dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="18dp" >
+        android:layout_marginTop="18dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
         android:layout_height="46dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="22dp" >
+        android:layout_marginTop="22dp">
 
         <TextView
             android:id="@+id/tv_country_num"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/smssdk_input_bg_special_focus" >
+            android:background="@drawable/smssdk_input_bg_special_focus">
 
             <EditText
                 android:id="@+id/et_write_phone"

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.navigator.NavigationDrawerFragment;
+import com.eztrip.routemaker.RouteMakerFragment;
 
 import java.io.File;
 
@@ -90,13 +91,13 @@ public class MainActivity extends ActionBarActivity
                         .replace(R.id.container, currFragment)
                         .commit();
                 break;
-//            case 3:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = CollectionShowFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+            case 3:
+                fragmentManager = getSupportFragmentManager();
+                currFragment = new RouteMakerFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, currFragment)
+                        .commit();
+                break;
 //            case 4:
 //                fragmentManager = getSupportFragmentManager();
 ////                currFragment = FinalModelSpaceFragment.newInstance(getBaseContext());
@@ -131,7 +132,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_section3);
                 break;
             case 4:
-                mTitle = getString(R.string.title_section4);
+                mTitle = getString(R.string.title_section4_fragment1);
                 break;
             case 5:
                 mTitle = getString(R.string.title_section5);
@@ -149,6 +150,12 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
+    public void setActionbarTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(title);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

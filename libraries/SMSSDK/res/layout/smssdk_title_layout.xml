@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
@@ -12,27 +12,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dip"
-        android:background="#ff303537" >
+        android:background="#ff303537">
 
         <LinearLayout
             android:id="@+id/ll_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="9dp"
-            android:paddingRight="17dp" >
+            android:paddingRight="17dp">
 
             <ImageView
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/smssdk_back_arrow"
-                android:layout_marginRight="9dp"/>
+                android:layout_marginRight="9dp" />
 
             <ImageView
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/smssdk_sharesdk_icon"/>
+                android:background="@drawable/smssdk_sharesdk_icon" />
         </LinearLayout>
 
         <TextView

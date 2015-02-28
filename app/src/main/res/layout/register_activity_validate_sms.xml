@@ -35,11 +35,12 @@
         android:layout_gravity="center_horizontal">
 
     </TextView>
+
     <Button
-        style="@style/match_parent_rounded_rectangle_button"
-        android:text="重新发送"
         android:id="@+id/send_again_btn"
+        style="@style/match_parent_rounded_rectangle_button"
         android:layout_margin="10dp"
-        android:visibility="invisible"/>
+        android:text="重新发送"
+        android:visibility="invisible" />
 
 </LinearLayout>

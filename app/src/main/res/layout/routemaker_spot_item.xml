@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_height_default">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/item_type" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/item_content"
+        android:text="@string/routemaker_spotitem_default"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/default_padding"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_up"
+        android:src="@drawable/ic_up"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_down"
+        android:layout_toStartOf="@+id/item_down"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginEnd="@dimen/default_padding" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_down"
+        android:src="@drawable/ic_down"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_change"
+        android:layout_toStartOf="@+id/item_change"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginEnd="@dimen/default_padding" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_change"
+        android:src="@drawable/ic_change"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_map"
+        android:layout_toStartOf="@+id/item_map"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginEnd="@dimen/default_padding" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_map"
+        android:src="@drawable/ic_map"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginEnd="@dimen/default_padding" />
+
+</RelativeLayout>

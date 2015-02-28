@@ -8,8 +8,8 @@
         android:id="@+id/account_tv"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
         android:text="账号"
         android:textSize="16sp" />
 
@@ -28,8 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_below="@id/register_phone_et"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:text="设置密码"
         android:textSize="16sp" />
 
@@ -49,8 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/register_pw_et"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
 
     <Button
         android:id="@+id/register_btn"
@@ -62,8 +62,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="注册"
-        />
+        android:text="注册" />
 
 
 </RelativeLayout>

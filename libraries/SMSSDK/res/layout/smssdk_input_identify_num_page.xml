@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include layout="@layout/smssdk_title_layout" />
 
@@ -12,7 +12,7 @@
         android:background="#ffffff"
         android:orientation="vertical"
         android:paddingLeft="16dip"
-        android:paddingRight="16dip" >
+        android:paddingRight="16dip">
 
         <TextView
             android:id="@+id/tv_identify_notify"
@@ -39,7 +39,7 @@
             android:layout_height="41dip"
             android:layout_marginTop="19dip"
             android:background="@drawable/smssdk_input_bg_focus"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/et_put_identify"
