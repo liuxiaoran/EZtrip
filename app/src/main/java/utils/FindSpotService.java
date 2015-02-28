@@ -2,9 +2,13 @@ package utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.eztrip.model.ScenerySpot;
 import com.loopj.android.http.*;
+import com.thinkland.sdk.android.DataCallBack;
+import com.thinkland.sdk.android.JuheData;
+import com.thinkland.sdk.android.Parameters;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -28,19 +32,48 @@ public class FindSpotService {
      * @param level
      * @return
      */
+//    public static void getScenerySpotsByLevel(final ArrayList<ScenerySpot> arrayList, String level, final RecyclerView.Adapter adapter) {
+//        //现在是北京市的
+//        final String url = URLConstants.SCENERY_LIST + "&cityId=" + "1_1" + "&grade=" + level;
+//
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        client.get(url, new AsyncHttpResponseHandler() {
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//
+//                String result = new String(responseBody);
+//                Log.v(TAG, "success" + result);
+//                try {
+//                    JSONObject object = new JSONObject(result);
+//                    addSpotIntoList(arrayList, object);
+//                    adapter.notifyDataSetChanged();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//                Log.v(TAG, "failed" + error);
+//            }
+//
+//        });
+//
+//    }
     public static void getScenerySpotsByLevel(final ArrayList<ScenerySpot> arrayList, String level, final RecyclerView.Adapter adapter) {
-        //现在是北京市的
-        final String url = URLConstants.SCENERY_LIST + "&cityId=" + "1_1" + "&grade=" + level;
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new AsyncHttpResponseHandler() {
-
+        Parameters params = new Parameters();
+        params.add("pname", APIConstants.PACKAGE_NAME);
+        params.add("v", "1");
+        params.add("cityId", "1_1");
+        params.add("grade", level);
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                String result = new String(responseBody);
-                Log.v(TAG, "success" + result);
-                try {
+            public void resultLoaded(int err, String reason, String result) {
+                // TODO Auto-generated method stub
+                if (err == 0) {
+                    try {
                     JSONObject object = new JSONObject(result);
                     addSpotIntoList(arrayList, object);
                     adapter.notifyDataSetChanged();
@@ -48,15 +81,11 @@ public class FindSpotService {
                     e.printStackTrace();
                 }
 
+                } else {
+                    Log.v(TAG, "failed" + result);
+                }
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.v(TAG, "failed" + error);
-            }
-
         });
-
     }
 
     public static void addSpotIntoList(ArrayList<ScenerySpot> arrayList, JSONObject object) {

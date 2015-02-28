@@ -14,11 +14,15 @@ import com.eztrip.model.TravelBag;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+import com.thinkland.sdk.android.DataCallBack;
+import com.thinkland.sdk.android.JuheData;
+import com.thinkland.sdk.android.Parameters;
 
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import utils.APIConstants;
 import utils.FindSpotService;
 import utils.URLConstants;
 
@@ -92,31 +96,57 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         lookBtn.setTag(targetSpot.getUrl());
     }
 
+    //    private void getSpotFromInternet(String title) {
+//
+//        String url = URLConstants.SCENERY_LIST + "&cityId=" + "1_1" + "&title=" + title;
+//
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        client.get(url, new AsyncHttpResponseHandler() {
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                String result = new String(responseBody);
+//                JSONObject object = null;
+//                try {
+//                    object = new JSONObject(result);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                targetSpot = FindSpotService.getSpot(object);
+//                fillViewsContent(targetSpot);
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//
+//            }
+//        });
+//    }
     private void getSpotFromInternet(String title) {
 
-        String url = URLConstants.SCENERY_LIST + "&cityId=" + "1_1" + "&title=" + title;
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new AsyncHttpResponseHandler() {
-
+        Parameters params = new Parameters();
+        params.add("pname", APIConstants.PACKAGE_NAME);
+        params.add("v", "1");
+        params.add("cityId", "1_1");
+        params.add("title", title);
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String result = new String(responseBody);
-                JSONObject object = null;
-                try {
-                    object = new JSONObject(result);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void resultLoaded(int err, String reason, String result) {
+                // TODO Auto-generated method stub
+                if (err == 0) {
+                    JSONObject object = null;
+                    try {
+                        object = new JSONObject(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    targetSpot = FindSpotService.getSpot(object);
+                    fillViewsContent(targetSpot);
+                } else {
+
                 }
-                targetSpot = FindSpotService.getSpot(object);
-                fillViewsContent(targetSpot);
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
             }
         });
     }

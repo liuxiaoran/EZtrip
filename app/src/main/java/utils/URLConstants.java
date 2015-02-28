@@ -21,5 +21,5 @@ public class URLConstants {
 
 
     // 聚合数据网 api constant
-    public static final String SCENERY_LIST = "http://web.juhe.cn:8080/travel/scenery/sceneryList.json" + "?key=" + APIConstants.APPKEY + "&pname=" + APIConstants.PACKAGE_NAME + "&v=1";
+//    public static final String SCENERY_LIST = "http://web.juhe.cn:8080/travel/scenery/sceneryList.json" + "?key=" + APIConstants.APPKEY + "&pname=" + APIConstants.PACKAGE_NAME + "&v=1";
 }
