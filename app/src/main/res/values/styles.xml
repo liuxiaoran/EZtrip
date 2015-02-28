@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="BaseTheme">
 
     </style>
+
     <style name="Toolbar" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
@@ -81,14 +82,17 @@
     <style name="title_text" parent="black_text">
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">15dp</item>
     </style>
 
     <style name="subtitle_text" parent="black_text">
         <item name="android:textSize">@dimen/subtitle_text_size</item>
     </style>
+
     <style name="round_black_text">
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="body_text" parent="black_text">
         <item name="android:textSize">@dimen/body_text_size</item>
     </style>
@@ -101,10 +105,12 @@
         <item name="android:textSize">@dimen/caption_text_size</item>
         <item name="android:alpha">0.8</item>
     </style>
+
     <style name="round_button_text" parent="round_black_text">
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="menu_text" parent="black_text">
         <item name="android:textSize">@dimen/menu_text_size</item>
         <item name="android:textStyle">bold</item>
@@ -117,10 +123,10 @@
     </style>
 
     <!--Button Styles-->
-    <style name="button" parent="button_text">
-    </style>
-    <style name="round_button" parent="round_button_text">
-    </style>
+    <style name="button" parent="button_text"></style>
+
+    <style name="round_button" parent="round_button_text"></style>
+
     <style name="set_button" parent="match_parent_and_wrap_content_with_padding">
         <item name="android:background">#FFFFFFFF</item>
         <item name="android:textColor">#FF000000</item>
@@ -172,8 +178,7 @@
         <item name="android:layout_height">@dimen/small_picture_size</item>
     </style>
 
-    <style name="avatar" parent="small_picture">
-    </style>
+    <style name="avatar" parent="small_picture"></style>
 
     <style name="medium_picture">
         <item name="android:layout_width">@dimen/medium_picture_size</item>
