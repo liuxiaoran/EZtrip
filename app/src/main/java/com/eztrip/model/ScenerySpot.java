@@ -1,10 +1,12 @@
 package com.eztrip.model;
 
+import java.io.Serializable;
+
 /**
  * Created by liuxiaoran on 2015/2/26.
  * 景点
  */
-public class ScenerySpot {
+public class ScenerySpot implements Serializable {
     public String seller;
     public String title;
     public String grade;

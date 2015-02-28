@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -21,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="left" />
+        android:gravity="left|center_vertical"
+        android:background="#FFFFFF" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -100,19 +102,31 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
 
-        <Button
+        <info.hoang8f.widget.FButton
             android:id="@+id/showscenery_add_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/showscenery_divider_iv"
-            android:text="加入" />
+            android:text="加入"
+            android:layout_marginRight="10dp"
+            fbutton:buttonColor="@color/fbutton_color_concrete"
+            fbutton:shadowColor="@color/fbutton_color_asbestos"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp" />
 
-        <Button
+        <info.hoang8f.widget.FButton
             android:id="@+id/showscenery_look_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/showscenery_divider_iv"
-            android:text="详情" />
+            android:text="详情"
+            android:layout_marginLeft="10dp"
+            fbutton:buttonColor="@color/fbutton_color_concrete"
+            fbutton:shadowColor="@color/fbutton_color_asbestos"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp" />
 
     </RelativeLayout>
 

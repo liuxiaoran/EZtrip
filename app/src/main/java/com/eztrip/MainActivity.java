@@ -69,13 +69,13 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager;
         switch (position) {
-//            case 0:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = RecommendProductFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+            case 0:
+                fragmentManager = getSupportFragmentManager();
+                currFragment = MainFragment.newInstance(getBaseContext());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, currFragment)
+                        .commit();
+                break;
 //            case 1:
 //                fragmentManager = getSupportFragmentManager();
 ////                currFragment = ProductHallFragment.newInstance(getBaseContext());

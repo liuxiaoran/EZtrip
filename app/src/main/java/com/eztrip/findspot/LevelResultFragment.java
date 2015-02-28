@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
@@ -62,10 +63,13 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             //TODO: 加入行囊
             TravelBag bag = TravelBag.getDefaultTravelBag();
             bag.addScenery((ScenerySpot) view.getTag());
+            Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();
 
         } else if (view.getId() == R.id.card_look_btn) {
-            Intent intent = new Intent(getActivity(), SceneryWebView.class);
-            intent.putExtra("url", view.getTag().toString());
+            Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("spot", (ScenerySpot) view.getTag());
+            intent.putExtras(bundle);
             startActivity(intent);
         }
     }
@@ -94,7 +98,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             viewHolder.positionTv.setText("地址：" + data.get(i).getAddress());
 
             Picasso.with(getActivity()).load(data.get(i).getImgurl()).into(viewHolder.sceneryIv);
-            viewHolder.lookBtn.setTag(data.get(i).getUrl());
+            viewHolder.lookBtn.setTag(data.get(i));
             viewHolder.addBtn.setTag(data.get(i));
             viewHolder.addBtn.setOnClickListener(LevelResultFragment.this);
             viewHolder.lookBtn.setOnClickListener(LevelResultFragment.this);

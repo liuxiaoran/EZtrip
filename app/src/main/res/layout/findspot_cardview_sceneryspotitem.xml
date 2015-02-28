@@ -72,7 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/card_add_btn"
-                android:text="加入" />
+                android:text="加入"
+                style="@style/transparent_button" />
 
             <Button
                 android:layout_alignParentRight="true"
@@ -80,7 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/card_look_btn"
-                android:text="详情" />
+                android:text="详情"
+                style="@style/transparent_button" />
 
         </RelativeLayout>
 

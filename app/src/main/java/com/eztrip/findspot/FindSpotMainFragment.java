@@ -1,13 +1,11 @@
 package com.eztrip.findspot;
 
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
@@ -28,6 +25,7 @@ public class FindSpotMainFragment extends Fragment {
 
     public static Context context;
     public static String TAG = "FindSpotMainFragment";
+
     public static FindSpotMainFragment newInstance(Context context) {
         FindSpotMainFragment.context = context;
         return new FindSpotMainFragment();
@@ -55,8 +53,9 @@ public class FindSpotMainFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(getActivity(), SearchResultActivity.class);
+                Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
                 intent.putExtra("query", s);
+                intent.putExtra("isSearch", true);
                 startActivity(intent);
                 return true;
             }

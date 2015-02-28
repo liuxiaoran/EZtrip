@@ -1,10 +1,8 @@
 package com.eztrip.findspot;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,7 +26,7 @@ import utils.URLConstants;
  * Created by liuxiaoran on 2015/2/25.
  * 处理一个单独的景点的展示
  */
-public class SearchResultActivity extends ActionBarActivity implements View.OnClickListener {
+public class ShowScenerySpot extends ActionBarActivity implements View.OnClickListener {
 
     private static String TAG = "SearchResultActivity";
     private ImageView sceneryIv;
@@ -43,8 +41,16 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
 
         initView();
 
-        //处理search intent
-        handleIntent(getIntent().getStringExtra("query"));
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("isSearch", false)) {
+            //是从查找框进来的
+            //处理search intent
+            handleIntent(intent.getStringExtra("query"));
+        } else {
+            ScenerySpot scenerySpot = (ScenerySpot) intent.getSerializableExtra("spot");
+            fillViewsContent(scenerySpot);
+        }
+
     }
 
 
@@ -68,8 +74,22 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
         lookBtn = (Button) findViewById(R.id.showscenery_look_btn);
         addBtn.setOnClickListener(this);
         lookBtn.setOnClickListener(this);
-        lookBtn.setTag(targetSpot.getUrl());
 
+
+    }
+
+    private void fillViewsContent(ScenerySpot targetSpot) {
+
+        //修改控件值
+        Picasso.with(ShowScenerySpot.this).load(targetSpot.getImgurl()).into(sceneryIv);
+        titleTv.setText(targetSpot.getTitle());
+        commTv.setText("去过：" + targetSpot.getComm_cnt() + "人");
+        priceTv.setText("价格：" + targetSpot.getPrice_min() + "RMB");
+        gradeTv.setText("等级: " + targetSpot.getGrade());
+        addressTv.setText("地址: " + targetSpot.getAddress());
+        introTv.setText("介绍: " + targetSpot.getIntro());
+        addBtn.setTag(targetSpot);
+        lookBtn.setTag(targetSpot.getUrl());
     }
 
     private void getSpotFromInternet(String title) {
@@ -89,17 +109,8 @@ public class SearchResultActivity extends ActionBarActivity implements View.OnCl
                     e.printStackTrace();
                 }
                 targetSpot = FindSpotService.getSpot(object);
+                fillViewsContent(targetSpot);
 
-
-                //修改控件值
-                Picasso.with(SearchResultActivity.this).load(targetSpot.getImgurl()).into(sceneryIv);
-                titleTv.setText(targetSpot.getTitle());
-                commTv.setText("去过：" + targetSpot.getComm_cnt() + "人");
-                priceTv.setText("价格：" + targetSpot.getPrice_min() + "RMB");
-                gradeTv.setText("等级: " + targetSpot.getGrade());
-                addressTv.setText("地址: " + targetSpot.getAddress());
-                introTv.setText("介绍: " + targetSpot.getIntro());
-                addBtn.setTag(targetSpot);
 
             }
 
