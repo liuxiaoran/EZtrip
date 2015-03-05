@@ -3,6 +3,7 @@ package com.eztrip.findspot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private TextView titleTv, commTv, priceTv, gradeTv, addressTv, introTv;
     private ScenerySpot targetSpot;
     private Button addBtn, lookBtn;
+    private int mScreenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         setContentView(R.layout.findspot_activity_showspot);
 
         initView();
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        mScreenWidth = metric.widthPixels; // 屏幕宽度（像素）
 
         Intent intent = getIntent();
         if (intent.getBooleanExtra("isSearch", false)) {
@@ -85,7 +90,8 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private void fillViewsContent(ScenerySpot targetSpot) {
 
         //修改控件值
-        Picasso.with(ShowScenerySpot.this).load(targetSpot.getImgurl()).into(sceneryIv);
+        Picasso.with(ShowScenerySpot.this).load(targetSpot.getImgurl()).resize(mScreenWidth - 6, 200).centerCrop().error(R.drawable.main_foreground).placeholder(R.drawable.main_foreground)
+                .into(sceneryIv);
         titleTv.setText(targetSpot.getTitle());
         commTv.setText("去过：" + targetSpot.getComm_cnt() + "人");
         priceTv.setText("价格：" + targetSpot.getPrice_min() + "RMB");

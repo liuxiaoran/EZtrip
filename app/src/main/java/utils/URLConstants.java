@@ -8,7 +8,7 @@ public class URLConstants {
     /**
      * 服务器IP
      */
-    public static final String SERVER_IP = "http://comet-01.chinacloudsites.cn";
+    public static final String SERVER_IP = "http://comet-02.chinacloudsites.cn";
 
 
     public static final String LOGIN = SERVER_IP + "/auth/login";

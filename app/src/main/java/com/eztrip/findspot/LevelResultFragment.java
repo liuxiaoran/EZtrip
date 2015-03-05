@@ -96,7 +96,8 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             viewHolder.commTv.setText("评论数：" + data.get(i).getComm_cnt());
             viewHolder.positionTv.setText("地址：" + data.get(i).getAddress());
 
-            Picasso.with(getActivity()).load(data.get(i).getImgurl()).into(viewHolder.sceneryIv);
+            Picasso.with(getActivity()).load(data.get(i).getImgurl()).placeholder(R.drawable.main_foreground)
+                    .error(R.drawable.main_foreground).centerCrop().into(viewHolder.sceneryIv);
             viewHolder.lookBtn.setTag(data.get(i));
             viewHolder.addBtn.setTag(data.get(i));
             viewHolder.addBtn.setOnClickListener(LevelResultFragment.this);

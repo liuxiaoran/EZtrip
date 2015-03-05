@@ -4,36 +4,36 @@
     android:layout_height="wrap_content">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-        android:background="#ECECEC">
+        xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ECECEC"
+        android:orientation="vertical">
 
         <ImageView
-        android:id="@+id/showscenery_scenery_iv"
-        android:layout_width="match_parent"
+            android:id="@+id/showscenery_scenery_iv"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
-        android:cropToPadding="true"
-        android:padding="6dp"
-            android:scaleType="centerCrop"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:cropToPadding="true"
+            android:padding="6dp"
+            android:scaleType="centerCrop" />
 
 
         <TextView
-        android:id="@+id/showscenery_title_tv"
-            android:textSize="25sp"
-        android:layout_width="match_parent"
+            android:id="@+id/showscenery_title_tv"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:paddingLeft="20dp"
-            android:gravity="left|center_vertical"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
-            android:layout_marginTop="20dp" />
+            android:gravity="left|center_vertical"
+            android:paddingLeft="20dp"
+            android:textSize="25sp" />
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="8dp"
@@ -42,7 +42,7 @@
             app:cardCornerRadius="3dp">
 
             <ScrollView
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
@@ -56,18 +56,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:paddingLeft="20dp"
-            android:paddingBottom="10dp">
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="门票" />
+                android:text="门票"
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -84,18 +84,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
             android:paddingBottom="10dp"
-            android:layout_marginTop="20dp">
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp">
 
             <TextView
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="地址" />
+                android:text="地址"
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -112,18 +112,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
             android:paddingBottom="10dp"
-            android:layout_marginTop="20dp">
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="等级" />
+                android:text="等级"
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -141,20 +141,20 @@
 
 
         <LinearLayout
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:paddingLeft="20dp"
             android:paddingBottom="10dp"
-            android:layout_marginTop="10dp">
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="评论人数" />
+                android:text="评论人数"
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -164,53 +164,53 @@
 
             <TextView
                 android:id="@+id/showscenery_comm_tv"
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
 
         <RelativeLayout
-            android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp">
 
             <View
-            android:id="@+id/showscenery_divider_iv"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
+                android:id="@+id/showscenery_divider_iv"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:background="?android:attr/listDivider" />
 
             <info.hoang8f.widget.FButton
-            android:id="@+id/showscenery_add_btn"
+                android:id="@+id/showscenery_add_btn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/showscenery_divider_iv"
-            android:text="加入"
-            android:layout_marginRight="5dp"
-            android:textColor="@color/white"
-            fbutton:buttonColor="@color/customize"
-            fbutton:shadowColor="@color/fbutton_color_asbestos"
-            fbutton:shadowEnabled="false"
-            fbutton:cornerRadius="8dp" />
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/showscenery_divider_iv"
+                android:text="加入"
+                android:textColor="@color/white"
+                fbutton:buttonColor="@color/customize"
+                fbutton:cornerRadius="8dp"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="false" />
 
-        <info.hoang8f.widget.FButton
-            android:id="@+id/showscenery_look_btn"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/showscenery_divider_iv"
-            android:text="详情"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/white"
-            fbutton:buttonColor="@color/customize"
-            fbutton:shadowColor="@color/fbutton_color_asbestos"
-            fbutton:shadowEnabled="false"
-            fbutton:cornerRadius="8dp" />
+            <info.hoang8f.widget.FButton
+                android:id="@+id/showscenery_look_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/showscenery_divider_iv"
+                android:text="详情"
+                android:textColor="@color/white"
+                fbutton:buttonColor="@color/customize"
+                fbutton:cornerRadius="8dp"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="false" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

@@ -46,10 +46,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <!--  smssdk activity-->
         <activity
@@ -83,15 +80,13 @@
         <activity
             android:name=".welcome.WelcomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-            android:noHistory="true"
             android:screenOrientation="portrait"
+            android:noHistory="true"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
