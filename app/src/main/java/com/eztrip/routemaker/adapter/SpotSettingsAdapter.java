@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
-import com.eztrip.routemaker.data.RouteData;
+import com.eztrip.model.RouteData;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -31,13 +31,10 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public View getHeaderView(int i, View view, ViewGroup viewGroup) {
         HeaderViewHolder holder;
-        if (view == null) {
-            holder = new HeaderViewHolder();
-            view = inflater.inflate(R.layout.routemaker_day_header, viewGroup, false);
-            holder.date = (TextView) view.findViewById(R.id.day_header_date);
-            view.setTag(holder);
-        } else
-            holder = (HeaderViewHolder) view.getTag();
+        holder = new HeaderViewHolder();
+        view = inflater.inflate(R.layout.routemaker_day_header, viewGroup, false);
+        holder.date = (TextView) view.findViewById(R.id.day_header_date);
+        view.setTag(holder);
         String headerText = new String();
         int day = RouteData.spotTempInfo[i].period / 3;
         int dayPeriod = RouteData.spotTempInfo[i].period % 3;
@@ -82,19 +79,19 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.routemaker_spot_item, parent, false);
-            holder.map = (ImageView) convertView.findViewById(R.id.item_map);
-            holder.change = (ImageView) convertView.findViewById(R.id.item_change);
-            holder.detail = (TextView) convertView.findViewById(R.id.item_content);
-            holder.up = (ImageView) convertView.findViewById(R.id.item_up);
-            holder.down = (ImageView) convertView.findViewById(R.id.item_down);
-            holder.type = (ImageView) convertView.findViewById(R.id.item_type);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+//        if (convertView == null) {
+        holder = new ViewHolder();
+        convertView = inflater.inflate(R.layout.routemaker_spot_item, parent, false);
+        holder.map = (ImageView) convertView.findViewById(R.id.item_map);
+        holder.change = (ImageView) convertView.findViewById(R.id.item_change);
+        holder.detail = (TextView) convertView.findViewById(R.id.item_content);
+        holder.up = (ImageView) convertView.findViewById(R.id.item_up);
+        holder.down = (ImageView) convertView.findViewById(R.id.item_down);
+        holder.type = (ImageView) convertView.findViewById(R.id.item_type);
+        convertView.setTag(holder);
+//        } else {
+//            holder = (ViewHolder) convertView.getTag();
+//        }
         holder.map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,9 +107,10 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     if (position != 0) {
-                        if (RouteData.spotTempInfo[position - 1].period != RouteData.spotTempInfo[position].period)
+                        if (RouteData.spotTempInfo[position - 1].period != RouteData.spotTempInfo[position].period) {
+                            notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, -1);
                             RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position - 1].period;
-                        else {
+                        } else {
                             RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
                             RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position - 1]);
                             RouteData.spotTempInfo[position - 1] = new RouteData.SpotTemp(temp);
@@ -125,9 +123,10 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     if (position != RouteData.spotTempInfo.length - 1) {
-                        if (RouteData.spotTempInfo[position + 1].period != RouteData.spotTempInfo[position].period)
+                        if (RouteData.spotTempInfo[position + 1].period != RouteData.spotTempInfo[position].period) {
+                            notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, 1);
                             RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position + 1].period;
-                        else {
+                        } else {
                             RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
                             RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position + 1]);
                             RouteData.spotTempInfo[position + 1] = new RouteData.SpotTemp(temp);
@@ -136,7 +135,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                     }
                 }
             });
-        } else {
+        } else if (RouteData.spotTempInfo[position].type == RouteData.ActivityType.ACCOMMODATION) {
             holder.up.setVisibility(View.GONE);
             holder.down.setVisibility(View.GONE);
             holder.type.setImageResource(R.drawable.ic_accomodation);
@@ -147,6 +146,15 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                     Toast.makeText(context, "修改" + RouteData.spotTempInfo[position].detail, Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            holder.up.setVisibility(View.GONE);
+            holder.down.setVisibility(View.GONE);
+            holder.change.setVisibility(View.GONE);
+            holder.map.setVisibility(View.GONE);
+            if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo[position].period] != 1)
+                convertView.setVisibility(View.GONE);
+            else
+                convertView.setVisibility(View.VISIBLE);
         }
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +166,10 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
         return convertView;
     }
 
+    private void notifyEmptyStateChanged(int period, int direction) {
+        RouteData.spotTempPeriodItemCount[period]--;
+        RouteData.spotTempPeriodItemCount[period + direction]++;
+    }
 
     class ViewHolder {
         ImageView type;

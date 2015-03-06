@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
-import com.eztrip.routemaker.data.RouteData;
+import com.eztrip.model.RouteData;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 

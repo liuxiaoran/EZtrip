@@ -1,4 +1,4 @@
-package com.eztrip.routemaker.data;
+package utils;
 
 import java.util.ArrayList;
 

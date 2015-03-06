@@ -29,18 +29,18 @@ import android.widget.Toast;
 import com.eztrip.MainActivity;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
+import com.eztrip.model.RouteData;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.adapter.BasicSettingsSpotAdapter;
 import com.eztrip.routemaker.adapter.DietSettingsAdapter;
 import com.eztrip.routemaker.adapter.SpotSettingsAdapter;
 import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
-import com.eztrip.routemaker.data.RouteAutoGenerator;
-import com.eztrip.routemaker.data.RouteData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import utils.RouteAutoGenerator;
 
 
 /**
@@ -52,7 +52,7 @@ public class RouteMakerFragment extends Fragment {
     private ArrayList<Fragment> fragments;
     private int currStep;
     private final String titleHead = "发起旅行-";
-    private String[] titles = new String[]{"基本设置", "景点及住宿设置", "交通设置", "饮食设置", "时间安排微调", "最后一步"};
+    private String[] titles = new String[]{"基本设置", "景点及住宿设置", "饮食设置", "时间安排微调", "最后一步"};
     private Toolbar toolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
@@ -257,23 +257,15 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                RouteData.spotTempInfo = new RouteData.SpotTemp[3];
-                for (int i = 0; i < 3; i++) {
-                    RouteData.spotTempInfo[i] = new RouteData.SpotTemp();
-                }
-                RouteData.spotTempInfo[1].detail = "景点1";
-                RouteData.spotTempInfo[1].period = 1;
-                RouteData.spotTempInfo[1].type = RouteData.ActivityType.SPOT;
-                RouteData.spotTempInfo[0].detail = "景点0";
-                RouteData.spotTempInfo[0].period = 0;
-                RouteData.spotTempInfo[0].type = RouteData.ActivityType.SPOT;
-                RouteData.spotTempInfo[2].detail = "宾馆2";
-                RouteData.spotTempInfo[2].period = 1;
-                RouteData.spotTempInfo[2].type = RouteData.ActivityType.ACCOMMODATION;
+                RouteData.setSpotTempInfoInstance(3, 2);
+                RouteData.spotTempInfo[0].setSpotTemp(RouteData.ActivityType.NONE, 0, "无");
+                RouteData.spotTempInfo[1].setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0");
+                RouteData.spotTempInfo[2].setSpotTemp(RouteData.ActivityType.NONE, 1, "无");
+                RouteData.spotTempInfo[3].setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1");
+                RouteData.spotTempInfo[4].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-
                 newSpots = new ArrayList<>();
                 newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), newSpots, newSpotListView);
                 newSpotListView.setAdapter(newSpotAdapter);
@@ -313,9 +305,8 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                RouteData.dietTempInfo = new RouteData.DietTemp[4];
+                RouteData.setDietTempInfoInstance(4);
                 for (int i = 0; i < 4; i++) {
-                    RouteData.dietTempInfo[i] = new RouteData.DietTemp();
                     RouteData.dietTempInfo[i].period = i;
                     RouteData.dietTempInfo[i].detail = "饭店" + Integer.toString(i);
                 }
@@ -351,9 +342,7 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initListView() {
-                RouteData.singleEvents = new ArrayList<>();
-                for (int i = 0; i < 3; i++)
-                    RouteData.singleEvents.add(new RouteData.SingleEvent());
+                RouteData.setSingleEventsInstance(2);
                 RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
                 RouteData.singleEvents.get(0).startTime = "9:00";
                 RouteData.singleEvents.get(0).finishTime = "11:00";
@@ -467,13 +456,17 @@ public class RouteMakerFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.routemaker_last_step) {
-            int nextStep = getFragment(-1, currStep);
-            if (nextStep >= 0) {
-                fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, fragments.get(nextStep)).commit();
-                setTitle();
-            }
+            moveToLastStep();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void moveToLastStep() {
+        int nextStep = getFragment(-1, currStep);
+        if (nextStep >= 0) {
+            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, fragments.get(nextStep)).commit();
+            setTitle();
+        }
     }
 
     private int getFragment(int direction, int currentStep) {
@@ -518,5 +511,9 @@ public class RouteMakerFragment extends Fragment {
         params.height = totalHeight + listView.getDividerHeight() * (adapter.getCount() - 1);
         listView.setLayoutParams(params);
         listView.setDividerHeight(0);
+    }
+
+    public FragmentManager getManager() {
+        return this.fragmentManager;
     }
 }
