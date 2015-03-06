@@ -342,7 +342,7 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initListView() {
-                RouteData.setSingleEventsInstance(2);
+                RouteData.setSingleEventsInstance(3);
                 RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
                 RouteData.singleEvents.get(0).startTime = "9:00";
                 RouteData.singleEvents.get(0).finishTime = "11:00";
