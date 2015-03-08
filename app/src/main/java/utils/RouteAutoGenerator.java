@@ -7,26 +7,29 @@ import java.util.ArrayList;
  * 在每一步结束之后处理数据
  */
 public class RouteAutoGenerator {
-    public static void executeBasicSettings(String cityName, ArrayList<String> spots, int day, String trafficInfo, ArrayList<String> dietInfo) {
+    public static final String success = "success";
 
+    public static String executeBasicSettings(String cityName, ArrayList<String> spots, int day, String trafficInfo, ArrayList<String> dietInfo) {
+        return success;
     }
 
-    public static void regenerateSpotSettings() {
-
+    public static String regenerateSpotSettings() {
+        return success;
     }
 
-    public static void executeSpotSettings() {
-
+    public static String executeSpotSettings() {
+        return success;
     }
 
-    public static void executeDietSettings() {
-
+    public static String executeDietSettings() {
+        return success;
     }
 
-    public static void executeTimeSettings() {
+    public static String executeTimeSettings() {
+        return success;
     }
 
-    public static void executeFinishSettings() {
-
+    public static String executeFinishSettings() {
+        return success;
     }
 }

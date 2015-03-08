@@ -14,12 +14,6 @@
         android:layout_height="wrap_content"
         android:hint="请输入省市中文名称或拼音首字母" />
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="搜索" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

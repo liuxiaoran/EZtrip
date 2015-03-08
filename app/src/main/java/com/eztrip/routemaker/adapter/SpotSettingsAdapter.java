@@ -107,14 +107,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     if (position != 0) {
-                        if (RouteData.spotTempInfo[position - 1].period != RouteData.spotTempInfo[position].period) {
-                            notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, -1);
-                            RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position - 1].period;
-                        } else {
-                            RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
-                            RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position - 1]);
-                            RouteData.spotTempInfo[position - 1] = new RouteData.SpotTemp(temp);
-                        }
+                        moveListItem(position, -1);
                         notifyDataSetChanged();
                     }
                 }
@@ -123,14 +116,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     if (position != RouteData.spotTempInfo.length - 1) {
-                        if (RouteData.spotTempInfo[position + 1].period != RouteData.spotTempInfo[position].period) {
-                            notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, 1);
-                            RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position + 1].period;
-                        } else {
-                            RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
-                            RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position + 1]);
-                            RouteData.spotTempInfo[position + 1] = new RouteData.SpotTemp(temp);
-                        }
+                        moveListItem(position, 1);
                         notifyDataSetChanged();
                     }
                 }
@@ -151,8 +137,9 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.down.setVisibility(View.GONE);
             holder.change.setVisibility(View.GONE);
             holder.map.setVisibility(View.GONE);
-            if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo[position].period] != 1)
+            if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo[position].period] != 1) {
                 convertView.setVisibility(View.GONE);
+            }
             else
                 convertView.setVisibility(View.VISIBLE);
         }
@@ -164,6 +151,25 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             }
         });
         return convertView;
+    }
+
+    private void moveListItem(int position, int direction) {
+        if (RouteData.spotTempInfo[position].period == RouteData.spotTempInfo[position + direction].period && RouteData.spotTempInfo[position + direction].detail.equals("无")) {
+            swapListItem(position, direction);
+            position = position + direction;
+        }
+        if (position != 0)
+            if (RouteData.spotTempInfo[position + direction].period != RouteData.spotTempInfo[position].period) {
+                notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, +direction);
+                RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position + direction].period;
+            } else
+                swapListItem(position, direction);
+    }
+
+    private void swapListItem(int position, int direction) {
+        RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
+        RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position + direction]);
+        RouteData.spotTempInfo[position + direction] = new RouteData.SpotTemp(temp);
     }
 
     private void notifyEmptyStateChanged(int period, int direction) {

@@ -1,12 +1,15 @@
 package com.eztrip.routemaker.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.eztrip.R;
@@ -67,7 +70,7 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
@@ -105,7 +108,45 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到餐厅信息页面
-                Toast.makeText(context, "修改时间 " + RouteData.singleEvents.get(position).detail, Toast.LENGTH_LONG).show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View view = inflater.inflate(R.layout.routemaker_timesettings_timepicker, null);
+                builder.setView(view);
+                builder.setTitle(RouteData.singleEvents.get(position).detail);
+                final TimePicker startTime = (TimePicker) view.findViewById(R.id.timepicker_starttime);
+                final TimePicker finishTime = (TimePicker) view.findViewById(R.id.timepicker_finishtime);
+                int startHour = Integer.parseInt(RouteData.singleEvents.get(position).startTime.split(":")[0]);
+                final int startMinute = Integer.parseInt(RouteData.singleEvents.get(position).startTime.split(":")[1]);
+                int finishHour = Integer.parseInt(RouteData.singleEvents.get(position).finishTime.split(":")[0]);
+                int finishMinute = Integer.parseInt(RouteData.singleEvents.get(position).finishTime.split(":")[1]);
+                startTime.setCurrentHour(startHour);
+                startTime.setCurrentMinute(startMinute);
+                finishTime.setCurrentHour(finishHour);
+                finishTime.setCurrentMinute(finishMinute);
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int newStartHour = startTime.getCurrentHour();
+                        int newStartMinute = startTime.getCurrentMinute();
+                        int newFinishHour = finishTime.getCurrentHour();
+                        int newFinishMinute = finishTime.getCurrentMinute();
+                        int startMinuteCount = newStartHour * 60 + newStartMinute;
+                        int finishMinuteCount = newFinishHour * 60 + newFinishMinute;
+                        if (startMinuteCount >= finishMinuteCount)
+                            Toast.makeText(context, "请将开始时间设置在结束时间之前", Toast.LENGTH_LONG).show();
+                        else {
+                            RouteData.singleEvents.get(position).startTime = new StringBuilder().append(Integer.toString(newStartHour)).append(":").append((newStartMinute < 10) ? "0" + newStartMinute : newStartMinute).toString();
+                            RouteData.singleEvents.get(position).finishTime = new StringBuilder().append(Integer.toString(newFinishHour)).append(":").append((newFinishMinute < 10) ? "0" + newFinishMinute : newFinishMinute).toString();
+                            TimeSettingsAdapter.this.notifyDataSetChanged();
+                            dialog.dismiss();
+                        }
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             }
         });
         convertView.setOnClickListener(new View.OnClickListener() {

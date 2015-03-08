@@ -63,6 +63,7 @@
             android:layout_marginRight="@dimen/default_margin_horizontal">
 
             <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                android:dividerHeight="0dp"
                 android:id="@+id/routemaker_spotsettings_spotlist"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />

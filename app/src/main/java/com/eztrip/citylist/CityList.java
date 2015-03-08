@@ -9,17 +9,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,7 +49,6 @@ public class CityList extends ActionBarActivity {
     private OverlayThread overlayThread;
     private SQLiteDatabase database;
     private ArrayList<CityModel> mCityNames;
-    private Button btn;
     private EditText et;
     public static final int RESULT_CODE_SEARCH_CITY = 1;
 
@@ -57,16 +56,24 @@ public class CityList extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.city_list);
-        btn = (Button) findViewById(R.id.btn);
         et = (EditText) findViewById(R.id.et);
         overlay = (TextView) findViewById(R.id.overlay);
-        btn.setOnClickListener(new OnClickListener() {
+        et.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String content = et.getText().toString().trim();
                 mCityNames.clear();
                 mCityNames = getSelectCityNames(content);
                 setAdapter(mCityNames);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
