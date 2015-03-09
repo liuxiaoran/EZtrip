@@ -160,10 +160,11 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initSpotList(String city) {
-                String[] favoriteSpot;
-                //TODO 从用户信息中得到该城市收藏的景点 添加至favoritespot
-                //test case
-                spots = new ArrayList<String>();
+                //get a set of spots of the city user collected from the server
+                //ArrayList<String> favoriteSpot = RouteMakerService.getSpotsCollection(city,getActivity());
+                ArrayList<String> favoriteSpot = new ArrayList<>();
+                spots = (ArrayList<String>) favoriteSpot.clone();
+                //test case:
                 spots.add("景点1");
                 spots.add("景点2");
                 adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotList);
@@ -193,7 +194,7 @@ public class RouteMakerFragment extends Fragment {
                         trafficInfo = getResources().getString(R.string.routemaker_trafficsettings_public);
                     else
                         trafficInfo = getResources().getString(R.string.routemaker_trafficsettings_private);
-                    ArrayList<String> dietInfo = new ArrayList<String>();
+                    ArrayList<String> dietInfo = new ArrayList<>();
                     if (breakfast.isChecked())
                         dietInfo.add(getResources().getString(R.string.routemaker_dietsettings_breakfast));
                     if (lunch.isChecked())
@@ -240,7 +241,7 @@ public class RouteMakerFragment extends Fragment {
                 nextStep = (Button) view.findViewById(R.id.routemaker_spotsettings_next_step);
                 stickyListHeadersListView = (StickyListHeadersListView) view.findViewById(R.id.routemaker_spotsettings_spotlist);
                 newSpotListView = (ListView) view.findViewById(R.id.routemaker_spotsettings_newspotlist);
-                if (RouteData.warning != null && RouteData.warning != "") {
+                if (RouteData.warning != null && !RouteData.warning.equals("")) {
                     warning.setText(RouteData.warning);
                 } else {
                     warningLayout.setVisibility(View.GONE);
@@ -539,15 +540,13 @@ public class RouteMakerFragment extends Fragment {
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
+//        int itemHeight = getActivity().getResources().getDimension(R.dimen.)
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + listView.getDividerHeight() * (adapter.getCount() - 1);
         listView.setLayoutParams(params);
         listView.setDividerHeight(0);
     }
 
-    public FragmentManager getManager() {
-        return this.fragmentManager;
-    }
 
     class GeneratorTask extends AsyncTask<Void, Void, String> {
         private ProgressDialog progressDialog;
@@ -561,7 +560,7 @@ public class RouteMakerFragment extends Fragment {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-            if (result == RouteAutoGenerator.success)
+            if (result.equals(RouteAutoGenerator.success))
                 nextStep();
             else
                 Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
