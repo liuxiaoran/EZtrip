@@ -122,7 +122,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         if (phone.equals("") || pw.equals("")) {
             Toast.makeText(this, "电话或者密码不能为空", Toast.LENGTH_LONG).show();
         } else if (pwRet && phoneRet) {
-            //TODO:短信验证andvalidate success之后向后台注册
+            //  短信验证andvalidate success之后向后台注册
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("验证手机号");
             builder.setMessage("将发送验证码到您的手机");

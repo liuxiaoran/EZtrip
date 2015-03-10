@@ -2,22 +2,19 @@ package utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
+import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.model.ScenerySpot;
-import com.loopj.android.http.*;
 import com.thinkland.sdk.android.DataCallBack;
 import com.thinkland.sdk.android.JuheData;
 import com.thinkland.sdk.android.Parameters;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import cn.smssdk.gui.DefaultContactViewItem;
 
 /**
  * Created by liuxiaoran on 2015/2/26.
@@ -71,7 +68,6 @@ public class FindSpotService {
         JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
-                // TODO Auto-generated method stub
                 if (err == 0) {
                     try {
                     JSONObject object = new JSONObject(result);
@@ -82,10 +78,38 @@ public class FindSpotService {
                 }
 
                 } else {
-                    Log.v(TAG, "failed" + result);
+                    Log.v("failed", "failed" + result+"  "+err );
                 }
             }
         });
+    }
+
+    //通过查询框查询之后 得到结果
+    public static void getSearchSceneryList(final ArrayList<ScenerySpot> arrayList, String query, final FindSpotMainFragment fragment){
+        Parameters params = new Parameters();
+        params.add("pname", APIConstants.PACKAGE_NAME);
+        params.add("v", "1");
+        params.add("title",query);
+        JuheData.executeWithAPI(APIConstants.ID,APIConstants.IP,JuheData.GET,params,new DataCallBack() {
+            @Override
+            public void resultLoaded(int error, String reason, String result) {
+                if(error==0){
+                    try{
+                         JSONObject object =new JSONObject(result);
+                         addSpotIntoList(arrayList,object);
+                         fragment.popQueryListDialog();
+
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }else {
+                    Log.v(TAG,"failed"+result);
+                }
+            }
+        });
+
+
     }
 
     public static void addSpotIntoList(ArrayList<ScenerySpot> arrayList, JSONObject object) {

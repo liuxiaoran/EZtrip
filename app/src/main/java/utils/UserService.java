@@ -219,15 +219,13 @@ public class UserService {
             //构造post的表单实体
             UrlEncodedFormEntity form = new UrlEncodedFormEntity(params);
             httpPost.setEntity(form);
-            Log.v(TAG, "arrive prev");
             HttpResponse response = client.execute(httpPost);
-            Log.v(TAG, "arrive later" + response.getStatusLine().getStatusCode());
             if (response.getStatusLine().getStatusCode() == 200) {
                 String result = EntityUtils.toString(response.getEntity());
                 Log.v(TAG, result);
                 JSONObject object = new JSONObject(result);
-                String message = object.getString("message");
-                if (message.equals("success")) {
+                int status = object.getInt("status");
+                if (status==1) {
                     userId = object.getString("id");
                     HashMap map = new HashMap();
                     map.put("id", userId);

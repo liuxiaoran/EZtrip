@@ -2,7 +2,6 @@ package com.eztrip.findspot;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.eztrip.R;
+
+import java.util.ArrayList;
+
+import utils.FindSpotService;
 
 /**
  * Created by liuxiaoran on 2015/2/25.
@@ -25,6 +31,10 @@ public class FindSpotMainFragment extends Fragment {
 
     public static Context context;
     public static String TAG = "FindSpotMainFragment";
+    public ArrayList spotsList;
+    public  LinearLayout searchlayout;
+
+    public LinearLayout mainLayout;
 
     public static FindSpotMainFragment newInstance(Context context) {
         FindSpotMainFragment.context = context;
@@ -41,6 +51,7 @@ public class FindSpotMainFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search, menu);
+
         // Associate searchable configuration with the SearchView 
         SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
@@ -53,10 +64,18 @@ public class FindSpotMainFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
-                intent.putExtra("query", s);
-                intent.putExtra("isSearch", true);
-                startActivity(intent);
+
+                searchlayout.setVisibility(View.VISIBLE);
+                mainLayout.setVisibility(View.INVISIBLE);
+
+                FindSpotService.getSearchSceneryList(spotsList,s,FindSpotMainFragment.this);
+
+
+
+//                Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
+//                intent.putExtra("query", s);
+//                intent.putExtra("isSearch", true);
+//                startActivity(intent);
                 return true;
             }
 
@@ -68,10 +87,35 @@ public class FindSpotMainFragment extends Fragment {
 
     }
 
+    //当得到结果 弹出dialog
+    public void popQueryListDialog(){
+        searchlayout.setVisibility(View.INVISIBLE);
+        mainLayout.setVisibility(View.VISIBLE);
+        MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity()).title("查询结果")
+                .adapter(new QueryListDialogAdapter(getActivity(),spotsList)).build();
+        ListView listView = materialDialog.getListView();
+        if (listView != null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Toast.makeText(MainActivity.this, "Clicked item " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        materialDialog.show();
+
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);//必须在oncreate中setHasOptionsMenu（）表示愿意增添item到actionbar中，否则fragment接受不到oncreateoptionmenu函数
+
+        //初始化spotlist
+        spotsList= new ArrayList();
+
     }
 
     @Override
@@ -82,6 +126,8 @@ public class FindSpotMainFragment extends Fragment {
         View view = inflater.inflate(R.layout.findspot_fragment_main, null);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.findspot_level_spn);
+        searchlayout =(LinearLayout)view.findViewById(R.id.findspot_searchlayout);
+        mainLayout=(LinearLayout)view.findViewById(R.id.findspot_mainlayout);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, levelData);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);

@@ -1,41 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/findspot_searchlayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="match_parent"
+        android:background="@color/searchlayout_background"
+        android:visibility="invisible"
+        android:orientation="vertical">
+      <ProgressBar
+        android:id="@+id/findspot_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+          android:layout_marginTop="250dp"
+        android:visibility="visible" />
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/findspot_divider_iv"
-            android:layout_width="1dp"
-            android:layout_height="60dp"
-            android:layout_centerInParent="true" />
 
-        <Spinner
-            android:id="@+id/findspot_level_spn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_toLeftOf="@id/findspot_divider_iv">
-
-        </Spinner>
-
-        <Button
-            android:id="@+id/findspot_recommand_btn"
-            android:text="推荐"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:layout_toRightOf="@id/findspot_divider_iv" />
-
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/findspot_framelayout"
+    <LinearLayout
+        android:id="@+id/findspot_mainlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/findspot_divider_iv"
+                android:layout_width="1dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true" />
+
+            <Spinner
+                android:id="@+id/findspot_level_spn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toLeftOf="@id/findspot_divider_iv">
+
+            </Spinner>
+
+            <Button
+                android:id="@+id/findspot_recommand_btn"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@id/findspot_divider_iv"
+                android:text="推荐" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/findspot_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+    </LinearLayout>
     </FrameLayout>
-</LinearLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
 
     private String level;
     public ArrayList<ScenerySpot> scenerySpotArrayList = new ArrayList<>();
+
+    public ProgressBar progressBar;
     public static final String TAG = "LevelResultFragment";
 
     @Override
@@ -46,6 +49,9 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
         FindSpotService.getScenerySpotsByLevel(scenerySpotArrayList, level, adapter);
         // 得到 recyclerview
         View view = inflater.inflate(R.layout.findspot_fragment_levelresult, null);
+        progressBar= (ProgressBar) view.findViewById(R.id.findspot_level_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -85,6 +91,9 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             // 加载Item的布局.布局中用到的真正的CardView.
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.findspot_cardview_sceneryspotitem, viewGroup, false);
+
+            progressBar.setVisibility(View.INVISIBLE);
+
             // ViewHolder参数一定要是Item的Root节点.
             return new ViewHolder(view);
         }

@@ -27,6 +27,7 @@
     <!--<color name="secondary">#727272</color>-->
     <!--<color name="hint">#B8B8B8</color>-->
     <color name="dividers">#DADADA</color>
+    <color name="searchlayout_background">#7f8c8d</color>
 
     <color name="colorPrimary">#43a9f4</color>
 
