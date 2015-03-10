@@ -22,4 +22,13 @@ public class URLConstants {
 
     // 聚合数据网 api constant
 //    public static final String SCENERY_LIST = "http://web.juhe.cn:8080/travel/scenery/sceneryList.json" + "?key=" + APIConstants.APPKEY + "&pname=" + APIConstants.PACKAGE_NAME + "&v=1";
+
+    /**
+     * routemaker API constants
+     */
+    public static final String USER_COLECTION_SPOT = SERVER_IP + "/users/profile/collections";
+
+    public static final String SPOT_VISIT_TIME = SERVER_IP + "/spots/profile";
+
+    public static final String ROUTE_SUBMIT = SERVER_IP + "/users/profile/routes";
 }
