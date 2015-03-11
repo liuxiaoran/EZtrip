@@ -14,13 +14,14 @@
     <!--routemaker-->
     <string name="last_step">上一步</string>
     <string name="next_step">下一步</string>
-    <string name="routemaker_basicsettings_destination">目的地：</string>
+    <string name="routemaker_basicsettings_hint">首先，请设置本次旅行的一些基本信息。</string>
+    <string name="routemaker_basicsettings_destination">目的地</string>
     <string name="routemaker_basicsettings_destination_edittext">填入城市名</string>
     <string name="routemaker_basicsettings_favoritespot_hint1">选择您在</string>
     <string name="routemaker_basicsettings_favoritespot_hint2">要游览的景点</string>
-    <string name="routemaker_basicsettings_favoritespot_hint3">您的心愿景点将会被自动添加。</string>
+    <string name="routemaker_basicsettings_favoritespot_hint3">您的必去景点如下（已包含您在该城市收藏的景点）</string>
     <string name="routemaker_basicsettings_favoritespot_new">添加景点</string>
-    <string name="routemaker_basicsettings_favoritespot_day">旅行天数:</string>
+    <string name="routemaker_basicsettings_favoritespot_day">旅行天数</string>
     <string name="routemaker_basicsettings_favoritespot_day_default">1</string>
     <string name="routemaker_spotsettings_spot_hint">为您定制了下面的景点游览和住宿计划，可排序</string>
     <string name="routemaker_spotsettings_spot_hint_spotadded">您的旅行计划看起来有点少，我们给您推荐了下面的景点，点击可删除</string>
@@ -30,7 +31,7 @@
     <string name="routemaker_spotsettings_hotel_nohotel">如果您不住宾馆，请输入大致的住宿位置</string>
     <string name="routemaker_spotsettings_change_hint">更改信息后，需重新生成计划，我们会为您自动生成最佳的计划</string>
     <string name="routemaker_spotsettings_regeneration">重新生成</string>
-    <string name="routemaker_basicsettings_traffic_hint">选择旅途中交通工具类型</string>
+    <string name="routemaker_basicsettings_traffic_hint">旅途中交通工具</string>
     <string name="routemaker_trafficsettings_private">自驾游/出租车</string>
     <string name="routemaker_trafficsettings_public">公共交通</string>
     <string name="routemaker_dietsettings_time">需要安排就餐的时间</string>
@@ -66,4 +67,6 @@
     <string name="action_clear_cache">清楚缓存</string>
     <string name="search_title">景点名称</string>
     <string name="search_hint">输入景点名称</string>
+
+    <string name="nothing">无</string>
 </resources>

@@ -1,14 +1,16 @@
 package com.eztrip.routemaker;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,14 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,27 +80,30 @@ public class RouteMakerFragment extends Fragment {
         fragmentManager = getActivity().getSupportFragmentManager();
         Fragment basicSettings = new Fragment() {
             private View view;
-            ImageView selectCity;
+            RelativeLayout selectCity
+                    ,
+                    addSpot
+                    ,
+                    traffic
+                    ,
+                    diet
+                    ,
+                    dayLength;
             TextView city
                     ,
-                    city2;
-            Button addSpot
+                    city2
                     ,
-                    nextStep;
-            RadioGroup traffic;
-            RadioButton publicTraffic
+                    trafficTV
                     ,
-                    privateTraffic;
-            CheckBox breakfast
+                    dayTV
                     ,
-                    lunch
-                    ,
-                    dinner;
-            EditText dayLength;
+                    dietTV;
+            Button nextStep;
             private ListView spotList;
             private ArrayList<String> spots;
             private BasicSettingsSpotAdapter adapter;
-
+            private boolean[] dietStatus;
+            private EditText dayET;
 
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,17 +115,19 @@ public class RouteMakerFragment extends Fragment {
             private void initView() {
                 city = (TextView) view.findViewById(R.id.routemaker_basicsettings_city);
                 city2 = (TextView) view.findViewById(R.id.routemaker_basicsettings_city2);
-                selectCity = (ImageView) view.findViewById(R.id.routemaker_basicsettings_city_change);
+                selectCity = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_city_change);
                 spotList = (ListView) view.findViewById(R.id.routemaker_basicsettings_spotlist);
-                addSpot = (Button) view.findViewById(R.id.routemaker_basicsettings_spot_add);
-                traffic = (RadioGroup) view.findViewById(R.id.routemaker_basicsettings_traffic_radiogroup);
-                publicTraffic = (RadioButton) view.findViewById(R.id.routemaker_basicsettings_traffic_public);
-                privateTraffic = (RadioButton) view.findViewById(R.id.routemaker_basicsettings_traffic_private);
-                breakfast = (CheckBox) view.findViewById(R.id.routemaker_basicsettings_breakfast);
-                lunch = (CheckBox) view.findViewById(R.id.routemaker_basicsettings_lunch);
-                dinner = (CheckBox) view.findViewById(R.id.routemaker_basicsettings_dinner);
+                addSpot = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_spot_add);
+                traffic = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_traffic);
+                trafficTV = (TextView) view.findViewById(R.id.routemaker_basicsettings_traffic_textview);
+                dietTV = (TextView) view.findViewById(R.id.routemaker_basicsettings_diet_textview);
                 nextStep = (Button) view.findViewById(R.id.routemaker_basicsettings_next_step);
-                dayLength = (EditText) view.findViewById(R.id.routemaker_basicsettings_favoritespot_day);
+                dayLength = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_day);
+                dayTV = (TextView) view.findViewById(R.id.routemaker_basicsettings_day_textview);
+                diet = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_diet);
+                dietStatus = new boolean[3];
+                for (boolean i : dietStatus)
+                    i = false;
                 selectCity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -142,6 +146,70 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         new GenerateSpotListAsyncTask().execute();
+                    }
+                });
+                diet.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_dietsettings_time))
+                                .setMultiChoiceItems(new String[]{getActivity().getResources().getString(R.string.routemaker_dietsettings_breakfast), getActivity().getResources().getString(R.string.routemaker_dietsettings_lunch), getActivity().getResources().getString(R.string.routemaker_dietsettings_dinner)}, dietStatus,
+                                        new DialogInterface.OnMultiChoiceClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                                dietStatus[which] = isChecked;
+                                            }
+                                        }).setNegativeButton("取消", null)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        StringBuilder text = new StringBuilder();
+                                        if (dietStatus[0])
+                                            text = text.append(getActivity().getResources().getString(R.string.routemaker_dietsettings_breakfast));
+                                        if (dietStatus[1])
+                                            text = text.append((text.toString().equals("") ? "" : "，") + getActivity().getResources().getString(R.string.routemaker_dietsettings_lunch));
+                                        if (dietStatus[2])
+                                            text = text.append((text.toString().equals("") ? "" : "，") + getActivity().getResources().getString(R.string.routemaker_dietsettings_dinner));
+                                        if (text.toString().equals(""))
+                                            text = text.append(getActivity().getResources().getString(R.string.nothing));
+                                        dietTV.setText(text.toString());
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                    }
+                });
+                traffic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_basicsettings_traffic_hint))
+                                .setSingleChoiceItems(new String[]{getActivity().getResources().getString(R.string.routemaker_trafficsettings_public), getActivity().getResources().getString(R.string.routemaker_trafficsettings_private)}, 0,
+                                        new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                trafficTV.setText(which == 0 ? getActivity().getResources().getString(R.string.routemaker_trafficsettings_public) : getActivity().getResources().getString(R.string.routemaker_trafficsettings_private));
+                                                dialog.dismiss();
+                                            }
+                                        }).setNegativeButton("取消", null)
+                                .show();
+                    }
+                });
+                dayLength.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dayET = new EditText(getActivity());
+                        dayET.setKeyListener(new DigitsKeyListener(false, true));
+                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_basicsettings_favoritespot_day) + "（1-10天）")
+                                .setView(dayET)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (dayET.getText().toString().equals("") || Integer.parseInt(dayET.getText().toString()) < 1 || Integer.parseInt(dayET.getText().toString()) > 10)
+                                            Toast.makeText(getActivity(), "请设置旅行天数在1-10之间", Toast.LENGTH_LONG).show();
+                                        else
+                                            dayTV.setText(dayET.getText().toString());
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .show();
                     }
                 });
                 initSpotList("北京");
@@ -168,6 +236,28 @@ public class RouteMakerFragment extends Fragment {
                 //test case:
                 spots.add("景点1");
                 spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+                spots.add("景点1");
+                spots.add("景点2");
+
+
                 adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotList);
                 spotList.setAdapter(adapter);
                 adaptListViewHeight(spotList, adapter);
@@ -185,23 +275,12 @@ public class RouteMakerFragment extends Fragment {
                     String cityName = city.getText().toString();
                     int day;
                     try {
-                        day = Integer.parseInt(dayLength.getText().toString());
+                        day = Integer.parseInt(dayTV.getText().toString());
                     } catch (Exception e) {
                         day = 1;
                     }
-                    String trafficInfo;
-                    int trafficInfoId = traffic.getCheckedRadioButtonId();
-                    if (trafficInfoId == R.id.routemaker_basicsettings_traffic_public)
-                        trafficInfo = getResources().getString(R.string.routemaker_trafficsettings_public);
-                    else
-                        trafficInfo = getResources().getString(R.string.routemaker_trafficsettings_private);
-                    ArrayList<String> dietInfo = new ArrayList<>();
-                    if (breakfast.isChecked())
-                        dietInfo.add(getResources().getString(R.string.routemaker_dietsettings_breakfast));
-                    if (lunch.isChecked())
-                        dietInfo.add(getResources().getString(R.string.routemaker_dietsettings_lunch));
-                    if (dinner.isChecked())
-                        dietInfo.add(getResources().getString(R.string.routemaker_dietsettings_dinner));
+                    String trafficInfo = trafficTV.getText().toString();
+                    String dietInfo = dietTV.getText().toString();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -212,10 +291,8 @@ public class RouteMakerFragment extends Fragment {
             }
         };
         final Fragment spotSettings = new Fragment() {
-            private LinearLayout warningLayout
-                    ,
-                    hintLayout;
-            private TextView warning;
+            private LinearLayout hintLayout;
+            private TextView hint;
             private View view;
             private Button regenerate
                     ,
@@ -234,19 +311,13 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initView() {
-                warningLayout = (LinearLayout) view.findViewById(R.id.routemaker_spotsettings_warning_layout);
-                warning = (TextView) view.findViewById(R.id.routemaker_spotsettings_warning);
+                hint = (TextView) view.findViewById(R.id.routemaker_spotsettings_hint);
                 hintLayout = (LinearLayout) view.findViewById(R.id.routemaker_spotsettings_change_hint);
                 hintLayout.setVisibility(View.GONE);
                 regenerate = (Button) view.findViewById(R.id.routemaker_spotsettings_regeneration);
                 nextStep = (Button) view.findViewById(R.id.routemaker_spotsettings_next_step);
                 stickyListHeadersListView = (StickyListHeadersListView) view.findViewById(R.id.routemaker_spotsettings_spotlist);
                 newSpotListView = (ListView) view.findViewById(R.id.routemaker_spotsettings_newspotlist);
-                if (RouteData.warning != null && !RouteData.warning.equals("")) {
-                    warning.setText(RouteData.warning);
-                } else {
-                    warningLayout.setVisibility(View.GONE);
-                }
                 regenerate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -267,12 +338,17 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                RouteData.setSpotTempInfoInstance(3, 2);
+                RouteData.setSpotTempInfoInstance(8, 2);
                 RouteData.spotTempInfo[0].setSpotTemp(RouteData.ActivityType.NONE, 0, "无");
                 RouteData.spotTempInfo[1].setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0");
                 RouteData.spotTempInfo[2].setSpotTemp(RouteData.ActivityType.NONE, 1, "无");
                 RouteData.spotTempInfo[3].setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1");
                 RouteData.spotTempInfo[4].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[5].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[6].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[7].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[8].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[9].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -280,6 +356,11 @@ public class RouteMakerFragment extends Fragment {
                 newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), newSpots, newSpotListView);
                 newSpotListView.setAdapter(newSpotAdapter);
                 newSpotAdapter.notifyDataSetChanged();
+                float totalHeaderHeight = RouteData.spotTempPeriodItemCount.length * getActivity().getResources().getDimension(R.dimen.day_header_height);
+                float totalItemHeight = (adapter.getCount() - RouteData.spotTempPeriodItemCount.length) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
+                ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
+                params.height = (int) (totalHeaderHeight + totalItemHeight);
+                stickyListHeadersListView.setLayoutParams(params);
             }
 
             @Override
@@ -392,9 +473,8 @@ public class RouteMakerFragment extends Fragment {
             }
         };
         Fragment finishSettings = new Fragment() {
-            private Button nextStep
-                    ,
-                    changeDate;
+            private Button nextStep;
+            private RelativeLayout changeDate;
             private View view;
             private TextView date;
             private int startYear
@@ -414,7 +494,7 @@ public class RouteMakerFragment extends Fragment {
 
             private void initView() {
                 nextStep = (Button) view.findViewById(R.id.routemaker_timesettings_next_step);
-                changeDate = (Button) view.findViewById(R.id.routemaker_finishsettings_settime);
+                changeDate = (RelativeLayout) view.findViewById(R.id.routemaker_finishsettings_settime);
                 date = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date);
                 hint = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date_hint);
                 hint.setVisibility(View.GONE);

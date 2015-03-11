@@ -7,155 +7,181 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/light_grey"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/routemaker_spotsettings_warning_layout">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginTop="@dimen/default_margin_vertical"
-                android:layout_marginBottom="@dimen/default_margin_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/routemaker_spotsettings_warning"
-                    android:textColor="@color/red" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_horizontal_small"
+            android:layout_marginRight="@dimen/margin_horizontal_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:background="@drawable/layout_border"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginTop="@dimen/default_margin_vertical"
-                android:layout_marginBottom="@dimen/default_margin_vertical">
+                android:layout_height="@dimen/default_listitem_height">
 
                 <TextView
+                    android:id="@+id/routemaker_spotsettings_hint"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/default_margin_horizontal"
+                    android:layout_marginStart="@dimen/default_margin_horizontal"
                     android:gravity="center_vertical"
                     android:text="@string/routemaker_spotsettings_spot_hint"
+                    android:textColor="@color/red"
                     android:textSize="@dimen/body_text_size" />
-
-
             </RelativeLayout>
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/default_margin_vertical"
-            android:layout_marginLeft="@dimen/default_margin_horizontal"
-            android:layout_marginRight="@dimen/default_margin_horizontal">
-
-            <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                android:dividerHeight="0dp"
-                android:id="@+id/routemaker_spotsettings_spotlist"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
-        </RelativeLayout>
+            android:layout_height="@dimen/default_blank_height"
+            android:orientation="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_horizontal_small"
+            android:layout_marginRight="@dimen/margin_horizontal_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:background="@drawable/layout_border"
+            android:orientation="vertical">
+
+            <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                android:id="@+id/routemaker_spotsettings_spotlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_small"
+                android:layout_marginTop="@dimen/margin_vertical_small"
+                android:dividerHeight="0dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_blank_height"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_horizontal_small"
+            android:layout_marginRight="@dimen/margin_horizontal_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:background="@drawable/layout_border"
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/routemaker_spotsettings_spotautoadd"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginTop="@dimen/default_margin_vertical">
+                android:layout_height="@dimen/default_listitem_height">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/default_margin_horizontal"
+                    android:layout_marginLeft="@dimen/default_margin_horizontal"
+                    android:layout_marginRight="@dimen/default_margin_horizontal"
+                    android:layout_marginStart="@dimen/default_margin_horizontal"
                     android:gravity="center_vertical"
                     android:text="@string/routemaker_spotsettings_spot_hint_spotadded"
+                    android:textColor="@color/red"
                     android:textSize="@dimen/body_text_size" />
-
-
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/routemaker_spotsettings_spotlist_autoadded"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal">
+                android:layout_height="@dimen/divider_height"
+                android:background="@color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_listitem_height">
 
                 <ListView
+                    android:id="@+id/routemaker_spotsettings_newspotlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/routemaker_spotsettings_newspotlist">
+                    android:layout_height="wrap_content">
 
                 </ListView>
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_vertical"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:paddingTop="@dimen/default_padding">
+                android:layout_height="@dimen/divider_height"
+                android:background="@color/black" />
 
-                <Button
+            <RelativeLayout
+                android:id="@+id/routemaker_basicsettings_city_change"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_listitem_height">
+
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/default_widget_height"
-                    android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_add"
-                    android:drawableStart="@drawable/ic_add"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/default_margin_horizontal"
+                    android:layout_marginRight="@dimen/default_margin_horizontal"
+                    android:gravity="center_vertical"
                     android:text="@string/routemaker_basicsettings_favoritespot_new"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/body_text_size" />
 
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/default_margin_horizontal"
+                    android:layout_marginRight="@dimen/default_margin_horizontal"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/icon_right" />
             </RelativeLayout>
         </LinearLayout>
 
 
         <LinearLayout
+            android:id="@+id/routemaker_spotsettings_change_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/routemaker_spotsettings_change_hint">
+            android:layout_marginLeft="@dimen/margin_horizontal_small"
+            android:layout_marginRight="@dimen/margin_horizontal_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:background="@drawable/layout_border"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginTop="@dimen/default_margin_vertical"
-                android:layout_marginBottom="@dimen/default_margin_vertical">
+                android:layout_height="@dimen/default_listitem_height">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/default_margin_horizontal"
+                    android:layout_marginLeft="@dimen/default_margin_horizontal"
+                    android:layout_marginRight="@dimen/default_margin_horizontal"
+                    android:layout_marginStart="@dimen/default_margin_horizontal"
+                    android:gravity="center_vertical"
                     android:text="@string/routemaker_spotsettings_change_hint"
-                    android:textColor="@color/red" />
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/body_text_size" />
             </RelativeLayout>
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="@dimen/default_blank_height"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -163,9 +189,9 @@
                 android:layout_weight="0.5">
 
                 <Button
+                    android:id="@+id/routemaker_spotsettings_regeneration"
                     style="@style/match_parent_rounded_rectangle_button"
-                    android:text="@string/routemaker_spotsettings_regeneration"
-                    android:id="@+id/routemaker_spotsettings_regeneration" />
+                    android:text="@string/routemaker_spotsettings_regeneration" />
             </LinearLayout>
 
             <LinearLayout
@@ -174,12 +200,17 @@
                 android:layout_weight="0.5">
 
                 <Button
+                    android:id="@+id/routemaker_spotsettings_next_step"
                     style="@style/match_parent_rounded_rectangle_button"
-                    android:text="@string/next_step"
-                    android:id="@+id/routemaker_spotsettings_next_step" />
+                    android:text="@string/next_step" />
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_vertical_small"
+            android:orientation="vertical" />
     </LinearLayout>
+
 
 </ScrollView>

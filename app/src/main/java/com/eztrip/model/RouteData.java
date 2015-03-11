@@ -61,13 +61,14 @@ public class RouteData {
     }
 
     /**
-     * Temporarily store data resulted from generating a plan for spots and accommodation
+     * Temporarily store data resulted from generating a plan of spots and accommodation
      * {@link utils.RouteAutoGenerator#executeBasicSettings}
+     * At each period of the trip plan, an item named "无" should be added in
      */
     public static SpotTemp[] spotTempInfo;
     /**
      * Temporarily store the count of items each period has.
-     * It is for showing the list of spotTempInfo
+     * It is defined for showing the list of spotTempInfo
      */
     public static int[] spotTempPeriodItemCount;
 

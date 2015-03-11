@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class RouteAutoGenerator {
     public static final String success = "success";
 
-    public static String executeBasicSettings(String cityName, ArrayList<String> spots, int day, String trafficInfo, ArrayList<String> dietInfo) {
+    public static String executeBasicSettings(String cityName, ArrayList<String> spots, int day, String trafficInfo, String dietInfo) {
         return success;
     }
 
