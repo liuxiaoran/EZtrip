@@ -32,6 +32,7 @@ public class MyContext {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
     }
+
     public SharedPreferences  getSharedPreferences(){
         return sharedPreferences;
     }
@@ -55,15 +56,17 @@ public class MyContext {
     }
     public User getCurrentUser (){
         String userstring = getSharedPreferences().getString("user",null);
-        byte []base64 = Base64.decode(userstring,Base64.DEFAULT);
-        ByteArrayInputStream bai =new ByteArrayInputStream(base64);
-        try {
-            ObjectInputStream ois =new ObjectInputStream(bai);
-            User user = (User)ois.readObject();
-            return user;
+        if (userstring != null) {
+            byte[] base64 = Base64.decode(userstring.getBytes(), Base64.DEFAULT);
+            ByteArrayInputStream bai = new ByteArrayInputStream(base64);
+            try {
+                ObjectInputStream ois = new ObjectInputStream(bai);
+                User user = (User) ois.readObject();
+                return user;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
 

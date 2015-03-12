@@ -1,9 +1,12 @@
 package utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.eztrip.MyContext;
 import com.eztrip.login.LoginActivity;
+import com.eztrip.model.User;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -34,24 +37,10 @@ import java.util.regex.Pattern;
  */
 public class UserService {
     public static final String TAG = "UserService";
-    public static String userId;
-    public static boolean isNew;
     public static String registerErrorMessage;
 
-    public static void writeMapIntoSp(HashMap<String, String> map) {
-        SharedPreferences.Editor editor = LoginActivity.sharedPreferences.edit();
-        Iterator iterator = map.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next().toString();
-            String value = map.get(key);
-            editor.putString(key, value);
-        }
 
-        editor.commit();
-
-    }
-
-    public static String userLogin(String userphone, String password) {
+    public static String userLogin(String userphone, String password, Context context) {
         String result = null;
         String ret = "登陆成功";
         HttpClient client = new DefaultHttpClient();
@@ -71,16 +60,9 @@ public class UserService {
                 Log.v("login", "---status: " + status);
                 if (status == 0) {
                     ret = "success";
-                    userId = object.getString("id");
-                    String token = object.getString("token");
-                    HashMap map = new HashMap();
-                    map.put("id", userId);
-                    map.put("token", token);
-                    map.put("name", object.getString("name"));
-                    map.put("sex", object.getString("sex"));
-                    map.put("phone", object.getString("phone"));
-                    map.put("email", object.getString("email"));
-                    writeMapIntoSp(map);
+                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
+                            object.getString("name"), object.getString("nickname"),
+                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
                 } else
                     ret = "用户名或密码错误";
 
@@ -103,7 +85,7 @@ public class UserService {
      * @param otherplatformId
      * @return
      */
-    public static boolean isRegisted(int otherplatformType, String otherplatformId) {
+    public static boolean isRegisted(int otherplatformType, String otherplatformId, Context context) {
 
         boolean ret = false;
         String result;
@@ -125,16 +107,10 @@ public class UserService {
                     ret = false;
                 else {
                     ret = true;
-                    userId = object.getString("id");
-                    String token = object.getString("token");
-                    HashMap map = new HashMap();
-                    map.put("id", userId);
-                    map.put("token", token);
-                    map.put("name", object.getString("name"));
-                    map.put("sex", object.getString("sex"));
-                    map.put("phone", object.getString("phone"));
-                    map.put("email", object.getString("email"));
-                    writeMapIntoSp(map);
+                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
+                            object.getString("name"), object.getString("nickname"),
+                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+
                 }
 
 
@@ -148,7 +124,7 @@ public class UserService {
         return ret;
     }
 
-    public static void registerByAsynchronous(String phone, String plat_type, String plat_id) {
+    public static void registerByAsynchronous(String phone, String plat_type, String plat_id, final Context context) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("phone", phone);
@@ -160,10 +136,11 @@ public class UserService {
                 //第三方用户注册成功
                 Log.v("UserService", "---" + new String(responseBody));
                 try {
-                    userId = new JSONObject(new String(responseBody)).getString("id");
-                    HashMap map = new HashMap();
-                    map.put("id", userId);
-                    writeMapIntoSp(map);
+                    JSONObject object = new JSONObject(new String(responseBody));
+                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
+                            object.getString("name"), object.getString("nickname"),
+                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -185,7 +162,7 @@ public class UserService {
      * @param p
      * @return
      */
-    public static boolean userRegister(String phone, String... p) {
+    public static boolean userRegister(String phone, Context context, String... p) {
         boolean ret = false;
         String pw = "";
         String plat_id = "";
@@ -226,10 +203,10 @@ public class UserService {
                 int status = object.getInt("status");
                 if (status==1) {
                     Log.v(TAG,object.getString("message"));
-                    userId = object.getString("id");
-                    HashMap map = new HashMap();
-                    map.put("id", userId);
-                    writeMapIntoSp(map);
+                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
+                            object.getString("name"), object.getString("nickname"),
+                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+
                     ret = true;
                 } else {
                     registerErrorMessage = object.getString("message");

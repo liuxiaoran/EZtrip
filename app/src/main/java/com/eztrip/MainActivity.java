@@ -28,6 +28,8 @@ import java.io.File;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private long exitTime;
+
     private static final int ACTIVITY_PICKLOCAL = 2;
     private static final int ACTIVITY_PICKCAMERA = 1;
     public static Bitmap bitmap;
@@ -245,10 +247,17 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (currFragment instanceof RouteMakerFragment) {
                 ((RouteMakerFragment) currFragment).moveToLastStep();
             }
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                Toast.makeText(this, "在点一次返回退出应用", Toast.LENGTH_LONG);
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+        }
         return true;
     }
 }

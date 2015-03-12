@@ -16,4 +16,5 @@ public class MyApplication extends Application {
         SDKInitializer.initialize(getApplicationContext());
     }
 
+
 }

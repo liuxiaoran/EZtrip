@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import com.eztrip.MainActivity;
+import com.eztrip.MyContext;
 import com.eztrip.R;
 import com.eztrip.login.LoginActivity;
 import com.eztrip.register.RegisterActivity;
@@ -18,6 +20,14 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!checkIsFirstIn()) {
+            //不是第一次进入系统
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+
+        //第一次进入系统
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
 
@@ -29,6 +39,13 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
     }
 
 
+    public boolean checkIsFirstIn() {
+        if (MyContext.newInstance(getApplicationContext()).getCurrentUser() == null) {
+            return true;
+        }
+        return false;
+
+    }
     @Override
     public void onClick(View view) {
         Intent intent;

@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eztrip.MainActivity;
 import com.eztrip.R;
 
 import cn.smssdk.EventHandler;
@@ -165,7 +166,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            return UserService.userRegister(objects[0].toString(), objects[1].toString());
+            return UserService.userRegister(objects[0].toString(), getApplicationContext(), objects[1].toString());
         }
 
         protected void onPostExecute(Object result) {
@@ -173,8 +174,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             boolean ret = Boolean.parseBoolean(result.toString());
             if (ret) {
 //                //注册成功,进入系统
-//                ConnectToIM connectToIM=new ConnectToIM(RegisterActivity.this);
-//                connectToIM.connectToIM();
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
 
             } else {
                 Toast.makeText(RegisterActivity.this, UserService.registerErrorMessage, Toast.LENGTH_LONG).show();

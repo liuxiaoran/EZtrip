@@ -9,13 +9,38 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
+    //姓名
     private String name;
+    //昵称
     private String nickname;
+    //电话
     private String telephone;
+    //邮箱
     private String email;
+    //性别
     private String sex;
+    //头像
     private String avatar;
 
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public User(String id, String name, String nickname, String telephone, String email, String sex, String avatar) {
+        this.id = id;
+        this.name = name;
+        this.nickname = nickname;
+        this.telephone = telephone;
+        this.email = email;
+        this.sex = sex;
+        this.avatar = avatar;
+    }
     public String getAvatar() {
         return avatar;
     }

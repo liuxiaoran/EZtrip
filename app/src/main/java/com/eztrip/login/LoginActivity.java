@@ -3,6 +3,7 @@ package com.eztrip.login;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.eztrip.MainActivity;
 import com.eztrip.R;
 
 import java.util.HashMap;
@@ -77,11 +79,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
         qq_login_button.setOnClickListener(this);
         weixin_login_button.setOnClickListener(this);
         weibo_login_button.setOnClickListener(this);
-        if (sharedPreferences.getBoolean("ischecked", false)) {
-//            //TODO:进入系统
-//            String phone = sharedPreferences.getString("phone", "");
-//            connectToIM.connectToIM();
-        }
 
 
         //第三方用户注册时短信验证需要的做的初始化操作
@@ -261,11 +258,11 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
             nickName = platform.getDb().getUserName();
             otherplatformId = platform.getDb().getUserId();
             // 判断这个平台的用户是否注册过
-            boolean ret = UserService.isRegisted(otherplatformType, otherplatformId);
+            boolean ret = UserService.isRegisted(otherplatformType, otherplatformId, getApplicationContext());
             if (ret) {
                 //用户注册过
-                //用户ID
-//                connectToIM.connectToIM();
+                enterEztrip();
+
 
             } else {
                 //用户没注册过，进入第三方注册流程
@@ -280,10 +277,10 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
                             HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
                             String country = (String) phoneMap.get("country");
                             String phone = (String) phoneMap.get("phone");
-                            //TODO：验证成功，进入系统并且向后台注册
+                            // 验证成功，进入系统并且向后台注册
 //                          UserService.userRegister(phone,Integer.toString(otherplatformType),otherplatformId); 不能在主线程中使用网络操作
-                            UserService.registerByAsynchronous(phone, Integer.toString(otherplatformType), otherplatformId);
-//                          connectToIM.connectToIM();
+                            UserService.registerByAsynchronous(phone, Integer.toString(otherplatformType), otherplatformId, getApplicationContext());
+                            enterEztrip();
                         }
                     }
                 });
@@ -292,6 +289,11 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
             }
         }
 
+    }
+
+    private void enterEztrip() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -338,7 +340,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
         protected Object doInBackground(Object[] objects) {
             phone = objects[0].toString();
             pw = objects[1].toString();
-            String result = UserService.userLogin(phone, pw);
+            String result = UserService.userLogin(phone, pw, getApplicationContext());
             return result;
         }
 
