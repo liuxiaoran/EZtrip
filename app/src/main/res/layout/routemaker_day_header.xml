@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/day_header_height"
     android:background="@color/green">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textSize="@dimen/body_text_size"
         android:layout_marginLeft="@dimen/default_margin_horizontal"
         android:id="@+id/day_header_date"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
         android:text="1" />
 
 </RelativeLayout>
