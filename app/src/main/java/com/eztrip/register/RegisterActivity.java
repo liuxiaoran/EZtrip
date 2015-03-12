@@ -49,6 +49,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
                     Toast.makeText(getApplicationContext(), "提交验证码成功", Toast.LENGTH_SHORT).show();
                     //短信验证成功，注册
+
                     new RegisterTask().execute(phone, pw);
 
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {

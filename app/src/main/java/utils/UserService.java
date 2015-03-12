@@ -190,8 +190,7 @@ public class UserService {
         String pw = "";
         String plat_id = "";
         String plat_type = "0";
-        Log.v("UserService", "phone  " + phone);
-        Log.v("UserService", "pw  " + pw);
+
         HttpPost httpPost = new HttpPost(URLConstants.REGISTER);
         List params = new ArrayList<BasicNameValuePair>();
 
@@ -226,6 +225,7 @@ public class UserService {
                 JSONObject object = new JSONObject(result);
                 int status = object.getInt("status");
                 if (status==1) {
+                    Log.v(TAG,object.getString("message"));
                     userId = object.getString("id");
                     HashMap map = new HashMap();
                     map.put("id", userId);

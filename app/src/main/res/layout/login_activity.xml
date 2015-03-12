@@ -53,19 +53,23 @@
         android:layout_height="60dp"
         android:layout_weight="0">
 
-        <ImageButton
+        <Button
             android:id="@+id/qq_login_btn"
+            style="@style/rounded_rectangle_button"
             android:layout_width="100dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/login_qq_selector" />
+            android:text="QQ登录"
+             />
 
-        <ImageButton
+        <Button
             android:id="@+id/weixin_login_btn"
+            style="@style/rounded_rectangle_button"
             android:layout_width="100dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/login_weixin_selector" />
+            android:text="微信登录"
+             />
 
         <Button
             android:id="@+id/weibo_login_btn"

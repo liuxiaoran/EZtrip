@@ -49,8 +49,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
     private Button login_btn;
     private EditText login_phone;
     private EditText login_pw;
-    private ImageButton qq_login_button;
-    private ImageButton weixin_login_button;
+    private Button qq_login_button;
+    private Button weixin_login_button;
     private Button weibo_login_button;
     private String nickName;
     private String otherplatformId;
@@ -71,8 +71,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
         login_btn.setOnClickListener(this);
         login_phone = (EditText) findViewById(R.id.login_phone);
         login_pw = (EditText) findViewById(R.id.login_pw);
-        qq_login_button = (ImageButton) findViewById(R.id.qq_login_btn);
-        weixin_login_button = (ImageButton) findViewById(R.id.weixin_login_btn);
+        qq_login_button = (Button) findViewById(R.id.qq_login_btn);
+        weixin_login_button = (Button) findViewById(R.id.weixin_login_btn);
         weibo_login_button = (Button) findViewById(R.id.weibo_login_btn);
         qq_login_button.setOnClickListener(this);
         weixin_login_button.setOnClickListener(this);
