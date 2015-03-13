@@ -87,6 +87,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
 
     }
 
+
     private void initSDK() {
         // 初始化短信SDK
         SMSSDK.initSDK(this, APPKEY, APPSECRET);
@@ -142,7 +143,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
             } else {
                 Toast.makeText(this, UserService.userInputError, Toast.LENGTH_SHORT).show();
             }
-            view.setEnabled(false);
+
 
         } else {
             //click  other platform button
@@ -349,18 +350,13 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
             dialog.cancel();
             Log.v("login", result.toString());
             Toast.makeText(LoginActivity.this, result.toString(), Toast.LENGTH_LONG).show();
-            SharedPreferences.Editor edit = sharedPreferences.edit();
             if (result.equals("success")) {
+                //登陆成功
+                enterEztrip();
 
-                edit.putBoolean("ischecked", true);
-                edit.putString("phone", phone);
-                edit.putString("pw", pw);
-                //注意等登陆成功之后才能进入聊天
-//                connectToIM.connectToIM();
             } else {
-                edit.putBoolean("ischecked", false);
+                //登陆不成功
             }
-            edit.commit();
         }
     }
 

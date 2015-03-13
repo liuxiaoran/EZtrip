@@ -1,6 +1,7 @@
 package com.eztrip.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by liuxiaoran on 2015/2/26.
@@ -126,6 +127,23 @@ public class ScenerySpot implements Serializable {
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
+    }
+
+
+    public HashMap<String, String> toHashMap() {
+        HashMap hashMap = new HashMap();
+        hashMap.put("sid", sid);
+        hashMap.put("city_id", cityId);
+        hashMap.put("url", url);
+        hashMap.put("seller", seller);
+        hashMap.put("title", title);
+        hashMap.put("grade", grade);
+        hashMap.put("price_min", price_min);
+        hashMap.put("comm_cnt", comm_cnt);
+        hashMap.put("address", address);
+        hashMap.put("imgurl", imgurl);
+        hashMap.put("intro", intro);
+        return hashMap;
     }
 
 

@@ -49,7 +49,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
         FindSpotService.getScenerySpotsByLevel(scenerySpotArrayList, level, adapter);
         // 得到 recyclerview
         View view = inflater.inflate(R.layout.findspot_fragment_levelresult, null);
-        progressBar= (ProgressBar) view.findViewById(R.id.findspot_level_progressbar);
+        progressBar = (ProgressBar) view.findViewById(R.id.findspot_level_progressbar);
         progressBar.setVisibility(View.VISIBLE);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
@@ -65,7 +65,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.card_add_btn) {
-            //TODO: 加入行囊
+            //  加入行囊
             TravelBag bag = TravelBag.getDefaultTravelBag();
             bag.addScenery((ScenerySpot) view.getTag());
             Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();

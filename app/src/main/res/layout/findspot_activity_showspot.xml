@@ -175,21 +175,14 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp">
 
-            <View
-                android:id="@+id/showscenery_divider_iv"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:background="?android:attr/listDivider" />
-
             <info.hoang8f.widget.FButton
-                android:id="@+id/showscenery_add_btn"
+                android:id="@+id/showscenery_look_btn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/showscenery_divider_iv"
-                android:text="加入"
+                android:layout_marginLeft="5dp"
+                android:layout_centerHorizontal="true"
+                android:text="详情"
                 android:textColor="@color/white"
                 fbutton:buttonColor="@color/customize"
                 fbutton:cornerRadius="8dp"
@@ -197,13 +190,28 @@
                 fbutton:shadowEnabled="false" />
 
             <info.hoang8f.widget.FButton
-                android:id="@+id/showscenery_look_btn"
+                android:id="@+id/showscenery_add_btn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/showscenery_divider_iv"
-                android:text="详情"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/showscenery_look_btn"
+                android:text="加入行囊"
+                android:textColor="@color/white"
+                fbutton:buttonColor="@color/customize"
+                fbutton:cornerRadius="8dp"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="false" />
+
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/showscenery_collection_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/showscenery_look_btn"
+                android:text="收藏景点"
                 android:textColor="@color/white"
                 fbutton:buttonColor="@color/customize"
                 fbutton:cornerRadius="8dp"

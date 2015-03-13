@@ -59,5 +59,8 @@ dependencies {
     //dialog material design
     compile 'com.afollestad:material-dialogs:0.6.3.5'
 
+    //iconfy
+    compile 'com.joanzapata.android:android-iconify:1.0.9'
+
 
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by liuxiaoran on 15/3/11.
- *
+ * <p/>
  * 用户类，在登录时得到User  并且将User写入sp
  */
 public class User implements Serializable {
@@ -41,6 +41,12 @@ public class User implements Serializable {
         this.sex = sex;
         this.avatar = avatar;
     }
+
+    //当用户刚注册完之后，只是存了用户的id
+    public User(String id) {
+        this.id = id;
+    }
+
     public String getAvatar() {
         return avatar;
     }
@@ -88,11 +94,6 @@ public class User implements Serializable {
     public void setSex(String sex) {
         this.sex = sex;
     }
-
-
-
-
-
 
 
 }

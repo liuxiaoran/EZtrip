@@ -57,8 +57,8 @@ public class UserService {
                 result = EntityUtils.toString(response.getEntity());
                 JSONObject object = new JSONObject(result);
                 int status = object.getInt("status");
-                Log.v("login", "---status: " + status);
-                if (status == 0) {
+                Log.v("login", "---result: " + result);
+                if (status == 1) {
                     ret = "success";
                     MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
                             object.getString("name"), object.getString("nickname"),
@@ -137,9 +137,7 @@ public class UserService {
                 Log.v("UserService", "---" + new String(responseBody));
                 try {
                     JSONObject object = new JSONObject(new String(responseBody));
-                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
-                            object.getString("name"), object.getString("nickname"),
-                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+                    MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -201,8 +199,8 @@ public class UserService {
                 Log.v(TAG, result);
                 JSONObject object = new JSONObject(result);
                 int status = object.getInt("status");
-                if (status==1) {
-                    Log.v(TAG,object.getString("message"));
+                if (status == 1) {
+                    Log.v(TAG, object.getString("message"));
                     MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
                             object.getString("name"), object.getString("nickname"),
                             object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));

@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.eztrip.MyContext;
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
 import com.eztrip.model.TravelBag;
@@ -23,7 +25,10 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import utils.APIConstants;
+import utils.EztripHttpUtil;
 import utils.FindSpotService;
 import utils.URLConstants;
 
@@ -37,7 +42,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private ImageView sceneryIv;
     private TextView titleTv, commTv, priceTv, gradeTv, addressTv, introTv;
     private ScenerySpot targetSpot;
-    private Button addBtn, lookBtn;
+    private Button addBtn, lookBtn, collectBtn;
     private int mScreenWidth;
 
     @Override
@@ -81,9 +86,10 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         introTv = (TextView) findViewById(R.id.showscenery_intro_tv);
         addBtn = (Button) findViewById(R.id.showscenery_add_btn);
         lookBtn = (Button) findViewById(R.id.showscenery_look_btn);
+        collectBtn = (Button) findViewById(R.id.showscenery_collection_btn);
         addBtn.setOnClickListener(this);
         lookBtn.setOnClickListener(this);
-
+        collectBtn.setOnClickListener(this);
 
     }
 
@@ -100,6 +106,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         introTv.setText("介绍: " + targetSpot.getIntro());
         addBtn.setTag(targetSpot);
         lookBtn.setTag(targetSpot.getUrl());
+        collectBtn.setTag(targetSpot);
     }
 
     //    private void getSpotFromInternet(String title) {
@@ -140,7 +147,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
-                // TODO Auto-generated method stub
+
                 if (err == 0) {
                     JSONObject object = null;
                     try {
@@ -151,7 +158,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
                     targetSpot = FindSpotService.getSpot(object);
                     fillViewsContent(targetSpot);
                 } else {
-
+                    //request error
                 }
             }
         });
@@ -164,11 +171,29 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
             TravelBag bag = TravelBag.getDefaultTravelBag();
             bag.addScenery((ScenerySpot) view.getTag());
 
-        } else {
+        } else if (view.getId() == R.id.showscenery_look_btn) {
             // lookBtn
             Intent intent = new Intent(this, SceneryWebView.class);
             intent.putExtra("url", view.getTag().toString());
             startActivity(intent);
+        } else {
+            // collection btn
+            HashMap hashMap = ((ScenerySpot) view.getTag()).toHashMap();
+            hashMap.put("id", MyContext.newInstance(getApplicationContext()).getCurrentUser().getId());
+            EztripHttpUtil.post(URLConstants.USER_COLECTION_SPOT, hashMap, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Toast.makeText(getApplicationContext(), "收藏成功", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                }
+            });
+
+
+
         }
     }
 }

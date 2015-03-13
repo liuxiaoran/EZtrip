@@ -31,4 +31,6 @@ public class URLConstants {
     public static final String SPOT_VISIT_TIME = SERVER_IP + "/spots/profile";
 
     public static final String ROUTE_SUBMIT = SERVER_IP + "/users/profile/routes";
+
+
 }
