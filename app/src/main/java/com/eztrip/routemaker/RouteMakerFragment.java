@@ -286,7 +286,7 @@ public class RouteMakerFragment extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    return RouteAutoGenerator.executeBasicSettings(cityName, spots, day, trafficInfo, dietInfo);
+                    return RouteAutoGenerator.executeBasicSettings(cityName, spots, day, trafficInfo, dietInfo, getActivity());
                 }
             }
         };
@@ -339,16 +339,11 @@ public class RouteMakerFragment extends Fragment {
             private void initListView() {
                 //假数据
                 RouteData.setSpotTempInfoInstance(8, 2);
-                RouteData.spotTempInfo[0].setSpotTemp(RouteData.ActivityType.NONE, 0, "无");
-                RouteData.spotTempInfo[1].setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0");
-                RouteData.spotTempInfo[2].setSpotTemp(RouteData.ActivityType.NONE, 1, "无");
-                RouteData.spotTempInfo[3].setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1");
-                RouteData.spotTempInfo[4].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
-                RouteData.spotTempInfo[5].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
-                RouteData.spotTempInfo[6].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
-                RouteData.spotTempInfo[7].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
-                RouteData.spotTempInfo[8].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
-                RouteData.spotTempInfo[9].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2");
+                RouteData.spotTempInfo[0].setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0);
+                RouteData.spotTempInfo[1].setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200);
+                RouteData.spotTempInfo[2].setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0);
+                RouteData.spotTempInfo[3].setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120);
+                RouteData.spotTempInfo[4].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1);
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -474,16 +469,22 @@ public class RouteMakerFragment extends Fragment {
         };
         Fragment finishSettings = new Fragment() {
             private Button nextStep;
-            private RelativeLayout changeDate;
+            private RelativeLayout changeDate
+                    ,
+                    changeName;
             private View view;
-            private TextView date;
+            private TextView date
+                    ,
+                    name
+                    ,
+                    hint;
             private int startYear
                     ,
                     startMonth
                     ,
                     startDay;
-            private TextView hint;
             private DatePickerDialog dialog;
+            private EditText nameET;
 
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -495,6 +496,8 @@ public class RouteMakerFragment extends Fragment {
             private void initView() {
                 nextStep = (Button) view.findViewById(R.id.routemaker_timesettings_next_step);
                 changeDate = (RelativeLayout) view.findViewById(R.id.routemaker_finishsettings_settime);
+                changeName = (RelativeLayout) view.findViewById(R.id.routemaker_finishisettings_name_layout);
+                name = (TextView) view.findViewById(R.id.routemaker_finishisettings_name);
                 date = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date);
                 hint = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date_hint);
                 hint.setVisibility(View.GONE);
@@ -509,7 +512,22 @@ public class RouteMakerFragment extends Fragment {
                     public void onClick(View v) {
                         dialog = new DatePickerDialog(getActivity(), mDateSetListener, startYear, startMonth, startDay);
                         dialog.show();
-                        Toast.makeText(getActivity(), "1", Toast.LENGTH_LONG).show();
+                    }
+                });
+                changeName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        nameET = new EditText(getActivity());
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle(getActivity().getResources().getString(R.string.routemaker_finishsettings_name))
+                                .setView(nameET)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        name.setText(nameET.getText().toString());
+                                    }
+                                }).setNegativeButton("取消", null)
+                                .show();
                     }
                 });
                 nextStep.setOnClickListener(new View.OnClickListener() {

@@ -9,14 +9,16 @@ import java.util.Calendar;
  * Single instance mode
  */
 public class RouteData {
-    public static String destination;//Destination of the trip
+    public static String city;//Destination of the trip
     public static ArrayList<SingleEvent> singleEvents;//An array which storing one single event of the trip
     public static int dayLength;//The length of the trip
     public static Calendar startDay;//The start doy of the trip(Format:YYYY-MM-DD)
-    public static String wayToTravel;//method of traffic during the trip()
+    public static String trafficInfo;//method of traffic during the trip()
     public static String warning;
-
+    public static String dietInfo;
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
+
+    public static String spotSettingsHint;//hint that is shown when spotSettingsFragment is created
 
     /**
      * Initializing member variable singleEvents
@@ -38,7 +40,8 @@ public class RouteData {
         public String startTime;//the start day of this event ex：11:00
         public String finishTime;//the finish day of this event
         public String detail;//the description of this event
-        public String[] places;//相关地点
+        public String[] places;//relative places
+
 
         /**
          * Constructor of Class SingleEvent
@@ -96,22 +99,25 @@ public class RouteData {
             this.type = spotTemp.type;
             this.period = spotTemp.period;
             this.detail = spotTemp.detail;
+            this.recommendTime = spotTemp.recommendTime;
             //spotTempPeriodItemCount[period]++;
         }
 
         public SpotTemp() {
         }
 
-        public void setSpotTemp(ActivityType activityType, int period, String detail) {
+        public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime) {
             this.type = activityType;
             this.period = period;
             this.detail = detail;
+            this.recommendTime = recommendTime;
             spotTempPeriodItemCount[period]++;
         }
 
-        public ActivityType type;//type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
-        public int period;//period of the time period the event at that is relative to the morning of the startDay, each day is divided into three periods(morning, afternoon, evening)
-        public String detail;//description of this event
+        public ActivityType type; //type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
+        public int period; //period of the time period the event at that is relative to the morning of the startDay, each day is divided into three periods(morning, afternoon, evening)
+        public String detail; //description of this event
+        public int recommendTime; //unit : minute
     }
 
     /**
