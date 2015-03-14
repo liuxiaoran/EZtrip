@@ -11,13 +11,14 @@
         android:background="@color/searchlayout_background"
         android:visibility="invisible"
         android:orientation="vertical">
-      <ProgressBar
-        android:id="@+id/findspot_progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-          android:layout_marginTop="250dp"
-        android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/findspot_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="250dp"
+            android:visibility="visible" />
     </LinearLayout>
 
 
@@ -33,15 +34,17 @@
 
             <ImageView
                 android:id="@+id/findspot_divider_iv"
-                android:layout_width="1dp"
+                android:src="@drawable/findspot_tab_divider"
+                android:layout_width="2dp"
                 android:layout_height="60dp"
-                android:layout_centerInParent="true" />
+                android:layout_centerHorizontal="true" />
 
             <Spinner
                 android:id="@+id/findspot_level_spn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_toLeftOf="@id/findspot_divider_iv">
+                android:layout_toLeftOf="@id/findspot_divider_iv"
+                android:gravity="center">
 
             </Spinner>
 
@@ -61,4 +64,4 @@
 
         </FrameLayout>
     </LinearLayout>
-    </FrameLayout>
+</FrameLayout>

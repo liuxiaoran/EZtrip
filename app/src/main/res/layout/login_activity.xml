@@ -28,7 +28,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="25dp"
-            android:hint="填写度度密码"
+            android:hint="填写密码"
             android:password="true"
             android:textColor="#aaaaaa"
             android:textSize="@dimen/body_text_size" />
@@ -59,8 +59,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="QQ登录"
-             />
+            android:text="QQ登录" />
 
         <Button
             android:id="@+id/weixin_login_btn"
@@ -68,8 +67,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="微信登录"
-             />
+            android:text="微信登录" />
 
         <Button
             android:id="@+id/weibo_login_btn"

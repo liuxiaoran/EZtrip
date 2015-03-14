@@ -178,8 +178,9 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        if (item.getItemId() == R.id.action_clear_cache) {
-            cleanInternalCache(MainActivity.this);
+        if (item.getItemId() == R.id.action_contact_us) {
+            //联系我们
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -190,19 +191,6 @@ public class MainActivity extends ActionBarActivity
 //        if (currFragment instanceof DesignChooseFragment)
 //            currFragment.onActivityResult(requestCode, resultCode, data);
 //    }
-
-    public void cleanInternalCache(Context context) {//清除缓存
-        deleteFilesByDirectory(context.getCacheDir());
-    }
-
-    private void deleteFilesByDirectory(File directory) {
-        if (directory != null && directory.exists() && directory.isDirectory()) {
-            for (File item : directory.listFiles()) {
-                item.delete();
-            }
-            Toast.makeText(MainActivity.this, "缓存清理完毕", Toast.LENGTH_LONG).show();
-        }
-    }
 
 
     /**
@@ -252,7 +240,7 @@ public class MainActivity extends ActionBarActivity
                 ((RouteMakerFragment) currFragment).moveToLastStep();
             }
             if (System.currentTimeMillis() - exitTime > 2000) {
-                Toast.makeText(this, "在点一次返回退出应用", Toast.LENGTH_LONG);
+                Toast.makeText(this, "再点一次退出应用", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();

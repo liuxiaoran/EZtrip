@@ -64,4 +64,5 @@ public class EztripHttpUtil {
         httpClient.post(url, params, handler);
 
     }
+
 }

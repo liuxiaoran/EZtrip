@@ -2,8 +2,14 @@ package com.eztrip.findspot;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +20,7 @@ import com.eztrip.MyContext;
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
 import com.eztrip.model.TravelBag;
+import com.eztrip.navigator.NavigationDrawerFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -44,6 +51,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private ScenerySpot targetSpot;
     private Button addBtn, lookBtn, collectBtn;
     private int mScreenWidth;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +73,41 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
             fillViewsContent(scenerySpot);
         }
 
+
     }
 
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("景点");
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Only show items in the action bar relevant to this screen
+        // if the drawer is not showing. Otherwise, let the drawer
+        // decide what to show in the action bar.
+        getMenuInflater().inflate(R.menu.main, menu);
+        restoreActionBar();
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        //实现android.R.home键的功能
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
 
     private void handleIntent(String query) {
 
@@ -77,6 +118,10 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     }
 
     private void initView() {
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         sceneryIv = (ImageView) findViewById(R.id.showscenery_scenery_iv);
         titleTv = (TextView) findViewById(R.id.showscenery_title_tv);
         commTv = (TextView) findViewById(R.id.showscenery_comm_tv);
@@ -96,7 +141,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private void fillViewsContent(ScenerySpot targetSpot) {
 
         //修改控件值
-        Picasso.with(ShowScenerySpot.this).load(targetSpot.getImgurl()).resize(mScreenWidth - 6, 200).centerCrop().error(R.drawable.main_foreground).placeholder(R.drawable.main_foreground)
+        Picasso.with(ShowScenerySpot.this).load(targetSpot.getImgurl()).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.main_foreground)
                 .into(sceneryIv);
         titleTv.setText(targetSpot.getTitle());
         commTv.setText("去过：" + targetSpot.getComm_cnt() + "人");
@@ -109,34 +154,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         collectBtn.setTag(targetSpot);
     }
 
-    //    private void getSpotFromInternet(String title) {
-//
-//        String url = URLConstants.SCENERY_LIST + "&cityId=" + "1_1" + "&title=" + title;
-//
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        client.get(url, new AsyncHttpResponseHandler() {
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                String result = new String(responseBody);
-//                JSONObject object = null;
-//                try {
-//                    object = new JSONObject(result);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                targetSpot = FindSpotService.getSpot(object);
-//                fillViewsContent(targetSpot);
-//
-//
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//
-//            }
-//        });
-//    }
+
     private void getSpotFromInternet(String title) {
 
         Parameters params = new Parameters();
@@ -191,7 +209,6 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
 
                 }
             });
-
 
 
         }

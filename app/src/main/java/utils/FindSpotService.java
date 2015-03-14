@@ -3,6 +3,8 @@ package utils;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.model.ScenerySpot;
@@ -59,7 +61,7 @@ public class FindSpotService {
 //        });
 //
 //    }
-    public static void getScenerySpotsByLevel(final ArrayList<ScenerySpot> arrayList, String level, final RecyclerView.Adapter adapter) {
+    public static void getScenerySpotsByLevel(final ArrayList<ScenerySpot> arrayList, String level, final BaseAdapter adapter, final ProgressBar progressBar) {
         Parameters params = new Parameters();
         params.add("pname", APIConstants.PACKAGE_NAME);
         params.add("v", "1");
@@ -72,7 +74,9 @@ public class FindSpotService {
                     try {
                     JSONObject object = new JSONObject(result);
                     addSpotIntoList(arrayList, object);
+                        Log.v("test", arrayList.size() + "  size");
                     adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.INVISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -117,10 +121,8 @@ public class FindSpotService {
         try {
             scenery = object.getJSONObject("result");
             JSONArray sceneryList = scenery.getJSONArray("sceneryList");
-            Log.v(TAG, "" + sceneryList);
             for (int i = 0; i < sceneryList.length(); i++) {
                 JSONObject oj = sceneryList.getJSONObject(i);
-                Log.v(TAG, "" + oj);
                 arrayList.add(new ScenerySpot(oj.getString("title"), oj.getString("price_min"), oj.getString("comm_cnt"), oj.getString("url"),
                         oj.getString("imgurl"), oj.getString("intro"), oj.getString("address")));
             }
@@ -136,10 +138,8 @@ public class FindSpotService {
         try {
             scenery = object.getJSONObject("result");
             JSONArray sceneryList = scenery.getJSONArray("sceneryList");
-            Log.v(TAG, "" + sceneryList);
 
             JSONObject oj = sceneryList.getJSONObject(0);  // 找列表的第一个
-            Log.v(TAG, "" + oj);
             scenerySpot = new ScenerySpot(oj.getString("title"), oj.getString("price_min"), oj.getString("comm_cnt"), oj.getString("url"),
                     oj.getString("imgurl"), oj.getString("intro"), oj.getString("address"), oj.getString("grade"));
 

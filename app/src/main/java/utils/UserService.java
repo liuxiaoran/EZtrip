@@ -55,14 +55,15 @@ public class UserService {
             HttpResponse response = client.execute(httpPost);
             if (response.getStatusLine().getStatusCode() == 200) {
                 result = EntityUtils.toString(response.getEntity());
-                JSONObject object = new JSONObject(result);
-                int status = object.getInt("status");
-                Log.v("login", "---result: " + result);
-                if (status == 1) {
+                JSONObject retobject = new JSONObject(result);
+                JSONObject object = retobject.getJSONObject("profile");
+                String status = retobject.getString("status");
+                if (status.equals("1")) {
                     ret = "success";
+
                     MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
                             object.getString("name"), object.getString("nickname"),
-                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+                            object.getString("phone"), object.getString("email"), object.getString("gender"), object.getString("avatar")));
                 } else
                     ret = "用户名或密码错误";
 
@@ -102,14 +103,14 @@ public class UserService {
             if (response.getStatusLine().getStatusCode() == 200) {
                 result = EntityUtils.toString(response.getEntity());
                 JSONObject object = new JSONObject(result);
-                int status = object.getInt("status");
-                if (status == 1001)
+                String status = object.getString("status");
+                if (status.equals("1001"))
                     ret = false;
                 else {
                     ret = true;
                     MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
                             object.getString("name"), object.getString("nickname"),
-                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+                            object.getString("phone"), object.getString("email"), object.getString("gender"), object.getString("avatar")));
 
                 }
 
@@ -198,12 +199,12 @@ public class UserService {
                 String result = EntityUtils.toString(response.getEntity());
                 Log.v(TAG, result);
                 JSONObject object = new JSONObject(result);
-                int status = object.getInt("status");
-                if (status == 1) {
+                String status = object.getString("status");
+                if (status.equals("1")) {
                     Log.v(TAG, object.getString("message"));
                     MyContext.newInstance(context).saveCurrentUser(new User(object.getString("id"),
                             object.getString("name"), object.getString("nickname"),
-                            object.getString("phone"), object.getString("email"), object.getString("sex"), object.getString("avatar")));
+                            object.getString("phone"), object.getString("email"), object.getString("gender"), object.getString("avatar")));
 
                     ret = true;
                 } else {

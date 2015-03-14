@@ -58,6 +58,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
     private String otherplatformId;
     private int otherplatformType = 0;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -348,14 +349,13 @@ public class LoginActivity extends Activity implements View.OnClickListener, Pla
         @Override
         protected void onPostExecute(Object result) {
             dialog.cancel();
-            Log.v("login", result.toString());
-            Toast.makeText(LoginActivity.this, result.toString(), Toast.LENGTH_LONG).show();
             if (result.equals("success")) {
                 //登陆成功
                 enterEztrip();
 
             } else {
                 //登陆不成功
+                Toast.makeText(LoginActivity.this, "网络不通，请重试", Toast.LENGTH_LONG).show();
             }
         }
     }

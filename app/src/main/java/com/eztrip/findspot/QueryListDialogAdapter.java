@@ -23,9 +23,9 @@ public class QueryListDialogAdapter extends BaseAdapter implements View.OnClickL
     private Context context;
     private ArrayList<ScenerySpot> spotList;
 
-    public QueryListDialogAdapter (Context context,ArrayList spotList){
-        this.context=context;
-        this.spotList=spotList;
+    public QueryListDialogAdapter(Context context, ArrayList spotList) {
+        this.context = context;
+        this.spotList = spotList;
     }
 
     @Override
@@ -48,18 +48,19 @@ public class QueryListDialogAdapter extends BaseAdapter implements View.OnClickL
         if (convertView == null)
             convertView = View.inflate(context, R.layout.findspot_dialog_queryresult_item, null);
         ((TextView) convertView.findViewById(R.id.query_dialog_item_tv)).setText(spotList.get(position).getTitle());
-        ImageView imageView =(ImageView)convertView.findViewById(R.id.query_dialog_item_iv);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.query_dialog_item_iv);
         imageView.setTag(position);
         imageView.setOnClickListener(this);
+        convertView.setOnClickListener(this);
         return convertView;
 
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(context,ShowScenerySpot.class);
+        Intent intent = new Intent(context, ShowScenerySpot.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("spot",spotList.get((int)v.getTag()));
+        bundle.putSerializable("spot", spotList.get((int) v.getTag()));
         intent.putExtras(bundle);
         context.startActivity(intent);
 

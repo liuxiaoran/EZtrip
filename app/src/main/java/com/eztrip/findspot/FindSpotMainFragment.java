@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.eztrip.MyContext;
 import com.eztrip.R;
 
 import java.util.ArrayList;
@@ -121,9 +124,10 @@ public class FindSpotMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        String[] levelData = {"A级", "AA级", "3A级", "4A级", "5A级"};
+        String[] levelData = {"5A级", "4A级", "3A级", "A级", "A级"};
 
         View view = inflater.inflate(R.layout.findspot_fragment_main, null);
+
 
         Spinner spinner = (Spinner) view.findViewById(R.id.findspot_level_spn);
         searchlayout =(LinearLayout)view.findViewById(R.id.findspot_searchlayout);
@@ -131,6 +135,8 @@ public class FindSpotMainFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, levelData);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setPrompt("请选择等级：");
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -142,13 +148,27 @@ public class FindSpotMainFragment extends Fragment {
 
             }
         });
+
+
+        // 设置spinner 和 推荐按钮的宽度
+
+        int width = MyContext.newInstance(getActivity()).getScreenWidth();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) spinner.getLayoutParams();
+        params.width = (width - 20) / 2;
+        spinner.setLayoutParams(params);
+
+        Button recommandBtn = (Button) view.findViewById(R.id.findspot_recommand_btn);
+        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) recommandBtn.getLayoutParams();
+        params2.width = (width - 20) / 2;
+        recommandBtn.setLayoutParams(params2);
+
         return view;
     }
 
     private void changeLevelResultFragment(int position) {
         //向fragment传递数据
         Bundle bundle = new Bundle();
-        bundle.putString("level", Integer.toString(position + 1));
+        bundle.putString("level", Integer.toString(5 - position));
         // 创建Fragment对象
         LevelResultFragment levelResultFragment = new LevelResultFragment();
 
