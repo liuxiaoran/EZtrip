@@ -2,16 +2,19 @@ package utils;
 
 import android.app.Activity;
 
+import com.eztrip.R;
+import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
  * Created by Steve on 2015/2/25.
- * 在每一步结束之后处理数据
+ * dispose data after each step of routemaker period
  */
 public class RouteAutoGenerator {
     public static final String success = "success";
@@ -85,7 +88,7 @@ public class RouteAutoGenerator {
             position[i] = position[temp[i]];
         }
 
-
+        //TODO; 将一天的计划分到上午、下午、晚上3个时间段，尽可能分在上午或下午
         return success;
     }
 
@@ -93,11 +96,85 @@ public class RouteAutoGenerator {
         return success;
     }
 
-    public static String executeSpotSettings() {
+    public static String executeSpotSettings(Activity activity) {
+        boolean breakfast = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_breakfast));
+        boolean lunch = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_lunch));
+        boolean dinner = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_dinner));
+        RouteData.setDietTempInfoInstance(RouteData.dayLength * 3);
+        int index = 0;
+        //try to give one advice for each diet, according to the position of its adjusting activities
+        for (int i = 0; i < RouteData.dayLength; i++) {
+            if (breakfast) {
+                while (RouteData.spotTempInfo[index].period <= 3 * i || !RouteData.spotTempInfo[index].type.equals(RouteData.ActivityType.SPOT))
+                    index++;
+                RouteData.dietTempInfo[i] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo[index].latitude, RouteData.spotTempInfo[index].longitude);
+            } else {
+                RouteData.dietTempInfo[i] = new RouteData.DietTemp("无");
+            }
+            if (lunch) {
+                int previousIndex = index;
+                while (RouteData.spotTempInfo[index].period <= 3 * i + 1 || !RouteData.spotTempInfo[index].type.equals(RouteData.ActivityType.SPOT)) {
+                    if (RouteData.spotTempInfo[index].type.equals(RouteData.ActivityType.SPOT))
+                        previousIndex = index;
+                    index++;
+                }
+                RouteData.dietTempInfo[i] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo[previousIndex].latitude, RouteData.spotTempInfo[previousIndex].longitude);
+            } else {
+                RouteData.dietTempInfo[i] = new RouteData.DietTemp("无");
+            }
+            if (dinner) {
+                int previousIndex = index;
+                while (RouteData.spotTempInfo[index].period <= 3 * i + 2 || !RouteData.spotTempInfo[index].type.equals(RouteData.ActivityType.SPOT)) {
+                    if (RouteData.spotTempInfo[index].type.equals(RouteData.ActivityType.SPOT))
+                        previousIndex = index;
+                    index++;
+                }
+                RouteData.dietTempInfo[i] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo[previousIndex].latitude, RouteData.spotTempInfo[previousIndex].longitude);
+            } else {
+                RouteData.dietTempInfo[i] = new RouteData.DietTemp("无");
+            }
+        }
         return success;
     }
 
     public static String executeDietSettings() {
+        Clock startTime = new Clock(8, 0);
+        Clock currtime = new Clock(8, 0);
+        int index = 0;
+        int period = -1;
+        String lastLatitude = RouteData.hotelInfo.latitude, lastLongitude = RouteData.hotelInfo.longitude, lastPlace = RouteData.hotelInfo.name;
+        while (index < RouteData.spotTempInfo.length) {
+            RouteData.SingleEvent trafficEvent = new RouteData.SingleEvent(), otherEvent = new RouteData.SingleEvent();
+            String finishLatitude, finishLongitude, finishPlace;
+            if (RouteData.spotTempInfo[period].type == RouteData.ActivityType.NONE)
+                index++;
+            if (RouteData.spotTempInfo[period].period > period && !RouteData.dietTempInfo[RouteData.spotTempInfo[period].period].detail.equals("无")) {
+                finishLatitude = RouteData.dietTempInfo[period + 1].latitude;
+                finishLongitude = RouteData.dietTempInfo[period + 1].longitude;
+                finishPlace = RouteData.dietTempInfo[period + 1].detail;
+                otherEvent.type = RouteData.ActivityType.DIET;
+                otherEvent.day = RouteData.dietTempInfo[period].period / 3 + 1;
+            } else {
+                finishLatitude = RouteData.spotTempInfo[index].latitude;
+                finishLongitude = RouteData.spotTempInfo[index].longitude;
+                finishPlace = RouteData.spotTempInfo[index].detail;
+                otherEvent.type = RouteData.spotTempInfo[index].type;
+                otherEvent.day = RouteData.spotTempInfo[period].period / 3 + 1;
+                index++;
+            }
+            otherEvent.detail = finishPlace;
+            HashMap<String, String> placeInfo = new HashMap<>();
+            placeInfo.put("latitude", finishLatitude);
+            placeInfo.put("longitude", finishLongitude);
+            otherEvent.latitudeAndLongitude.add(placeInfo);
+
+            if (RouteData.spotTempInfo[period].period > period)
+                period++;
+            //TODO:根据起终点信息和RouteData.trafficInfo确定线路 将其封装在trafficEvent里
+            RouteData.singleEvents.add(trafficEvent);
+            //TODO:设置otherEvent的startTime，finishTime
+            RouteData.singleEvents.add(otherEvent);
+        }
         return success;
     }
 
@@ -105,8 +182,8 @@ public class RouteAutoGenerator {
         return success;
     }
 
-    public static String executeFinishSettings() {
-        return success;
+    public static boolean executeFinishSettings() {
+        return true;
     }
 
     private static int addNextSpotForOneDay(int index, int spotNo, double averageSpotNo, int[] position, ArrayList<RouteData.SpotTemp> spots, int totalVisitTime, double newAverageVisitTime) {
@@ -137,3 +214,5 @@ public class RouteAutoGenerator {
         }
     }
 }
+
+

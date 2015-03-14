@@ -16,4 +16,7 @@ public class APIConstants {
 
     //聚合数据 旅游资讯大全id
     public static final int ID = 57;
+    //聚合数据 餐饮信息接口与ID
+    public static final String DIET_INFO_IP = "http://apis.juhe.cn/catering/query";
+    public static final int DIET_INFO_ID = 45;
 }
