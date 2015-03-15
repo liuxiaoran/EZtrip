@@ -182,8 +182,8 @@ public class RouteAutoGenerator {
         return success;
     }
 
-    public static boolean executeFinishSettings() {
-        return true;
+    public static String executeFinishSettings() {
+        return success;
     }
 
     private static int addNextSpotForOneDay(int index, int spotNo, double averageSpotNo, int[] position, ArrayList<RouteData.SpotTemp> spots, int totalVisitTime, double newAverageVisitTime) {
