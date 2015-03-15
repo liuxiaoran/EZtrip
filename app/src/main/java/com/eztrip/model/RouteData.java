@@ -217,5 +217,16 @@ public class RouteData {
         public String address;//the address of the hotel
         public String satisfaction;// the degree of satisfaction to the hotel
         public String imgsrc;//// the image url of the hotel
+
+        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc) {
+            this.name = name;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.grade = grade;
+            this.intro = intro;
+            this.address = address;
+            this.satisfaction = satisfaction;
+            this.imgsrc = imgsrc;
+        }
     }
 }

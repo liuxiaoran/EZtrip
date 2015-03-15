@@ -19,4 +19,10 @@ public class APIConstants {
     //聚合数据 餐饮信息接口与ID
     public static final String DIET_INFO_IP = "http://apis.juhe.cn/catering/query";
     public static final int DIET_INFO_ID = 45;
+
+    //聚合数据 城市信息IP
+    public static final String TOUR_CITY_LIST_IP = "http://web.juhe.cn:8080/travel/areaList.json";
+
+    //聚合数据 旅店列表IP
+    public static final String HOTEL_LIST_IP = "http://web.juhe.cn:8080/travel/hotel/hotelList.json";
 }

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Steve on 2015/3/9.
@@ -155,5 +156,52 @@ public class RouteMakerService {
             }
         });
         return diet[0];
+    }
+
+    public static void getHotel() {
+        Parameters parameters = new Parameters();
+        parameters.add("pname", APIConstants.PACKAGE_NAME);
+        parameters.add("v", "1");
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.TOUR_CITY_LIST_IP, JuheData.GET, parameters, new DataCallBack() {
+            @Override
+            public void resultLoaded(int err, String reason, String result) {
+                if (err == 0) {
+                    try {
+                        String cityID = new String();
+                        final JSONObject object = new JSONObject(result);
+                        JSONArray list = object.getJSONObject("result").getJSONArray("areaList");
+                        for (int i = 0; i < list.length(); i++) {
+                            if (((JSONObject) ((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {
+                                cityID = ((JSONObject) list.get(i)).getString("id");
+                            }
+                        }
+                        if (cityID.equals("")) {
+                            RouteData.hotelInfo.name = "无";
+                        } else {
+                            Parameters hotelParameters = new Parameters();
+                            hotelParameters.add("cityId", cityID);
+                            hotelParameters.add("pname", APIConstants.PACKAGE_NAME);
+                            hotelParameters.add("v", 1);
+                            JuheData.executeWithAPI(APIConstants.ID, APIConstants.HOTEL_LIST_IP, JuheData.GET, hotelParameters, new DataCallBack() {
+                                @Override
+                                public void resultLoaded(int err2, String reason2, String result2) {
+                                    if (err2 == 0) {
+                                        try {
+                                            JSONObject object1 = new JSONObject(result2);
+                                            JSONArray hotelList = object1.getJSONObject("result").getJSONArray("hotelList");
+                                            JSONObject hotel = (JSONObject) hotelList.get(new Random().nextInt(hotelList.length()));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

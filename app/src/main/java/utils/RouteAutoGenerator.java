@@ -87,8 +87,29 @@ public class RouteAutoGenerator {
         for (int i = 0; i < position.length; i++) {
             position[i] = position[temp[i]];
         }
+        //get a hotel
 
-        //TODO; 将一天的计划分到上午、下午、晚上3个时间段，尽可能分在上午或下午
+        //unit : minute
+        final int morningVisitTimeMax = 180;
+        final int afternoonVisitTimeMax = 240;
+        final int eveningVisitTimeMax = 180;
+        RouteData.setSpotTempInfoInstance(spotList.size() + totalDay, 3 * totalDay);
+        int spotTempInfoIndex = 0;
+
+        for (int i = 0; i < totalDay; i++) {
+            ArrayList<Integer> spotIndex = new ArrayList<>();
+            for (int j = 0; j < spotList.size(); j++) {
+                if (position[j] == i)
+                    spotIndex.add(j);
+            }
+            //add spots
+            spotTempInfoIndex = addSpotsToAPeriod(spotIndex, spotList, morningVisitTimeMax, 3 * i, spotTempInfoIndex);
+            spotTempInfoIndex = addSpotsToAPeriod(spotIndex, spotList, afternoonVisitTimeMax, 3 * i + 1, spotTempInfoIndex);
+            spotTempInfoIndex = addSpotsToAPeriod(spotIndex, spotList, eveningVisitTimeMax, 3 * i + 2, spotTempInfoIndex);
+            //add hotel
+            RouteData.spotTempInfo[spotTempInfoIndex].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 3 * i + 2, RouteData.hotelInfo.name, 0);
+            spotTempInfoIndex++;
+        }
         return success;
     }
 
@@ -212,6 +233,32 @@ public class RouteAutoGenerator {
                 position[start] = spots.size() - index;
             return -1;
         }
+    }
+
+    private static int addSpotsToAPeriod(ArrayList<Integer> spotTempInfoIndex, ArrayList<RouteData.SpotTemp> spotList, int maxTime, int period, int index) {
+        int usedTime = 0;
+        RouteData.spotTempInfo[index].detail = "无";
+        RouteData.spotTempInfo[index].period = period;
+        index++;
+        while (spotTempInfoIndex.size() > 0) {
+            int indexToRemove = 0;
+            boolean flag = false;
+            for (int i = 0; i < spotTempInfoIndex.size(); i++) {
+                int spotTime = spotList.get(spotTempInfoIndex.get(i)).recommendTime;
+                if (spotTime + usedTime < maxTime) {
+                    flag = true;
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            if (!flag)
+                return period + 1;
+            spotList.get(spotTempInfoIndex.get(indexToRemove)).period = period;
+            RouteData.spotTempInfo[index] = spotList.get(spotTempInfoIndex.get(indexToRemove));
+            index++;
+            spotTempInfoIndex.remove(indexToRemove);
+        }
+        return index;
     }
 }
 
