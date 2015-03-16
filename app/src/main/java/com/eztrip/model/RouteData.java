@@ -2,6 +2,8 @@ package com.eztrip.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Steve on 2015/2/5.
@@ -15,7 +17,7 @@ public class RouteData {
     public static Calendar startDay;//The start doy of the trip(Format:YYYY-MM-DD)
     public static String trafficInfo;//method of traffic during the trip()
     public static String warning;
-    public static String dietInfo;
+    public static String dietInfo;//it shows whether breakfast, lunch, and dinner need planning
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
 
     public static String spotSettingsHint;//hint that is shown when spotSettingsFragment is created
@@ -31,36 +33,33 @@ public class RouteData {
             RouteData.singleEvents.add(new RouteData.SingleEvent());
     }
 
+    public static void addSingleEvent(Object object) {
+
+    }
+
     /**
      * Class for expressing a event during a trip
      */
     public static class SingleEvent {
         public int day;//the number of the day that is relative to the startDay
         public ActivityType type;//Type of the event
-        public String startTime;//the start day of this event ex：11:00
-        public String finishTime;//the finish day of this event
+        public Clock startTime;//the start day of this event ex：11:00
+        public Clock finishTime;//the finish day of this event
         public String detail;//the description of this event
-        public String[] places;//relative places
+        public List<HashMap<String, String>> latitudeAndLongitude;//relative latitude and longitude information of this event
 
+        public SingleEvent() {
+        }
 
-        /**
-         * Constructor of Class SingleEvent
-         *
-         * @param day
-         * @param activityType
-         * @param startTime
-         * @param finishTime
-         * @param detail
-         * @param places
-         */
-        public void setSingleEvent(int day, ActivityType activityType, String startTime, String finishTime, String detail, String[] places) {
+        public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String detail, List<HashMap<String, String>> latitudeAndLongitude) {
             this.day = day;
             this.type = activityType;
             this.startTime = startTime;
             this.finishTime = finishTime;
             this.detail = detail;
-            this.places = places;
+            this.latitudeAndLongitude = latitudeAndLongitude;
         }
+
     }
 
     /**
@@ -100,6 +99,8 @@ public class RouteData {
             this.period = spotTemp.period;
             this.detail = spotTemp.detail;
             this.recommendTime = spotTemp.recommendTime;
+            this.latitude = spotTemp.latitude;
+            this.longitude = spotTemp.longitude;
             //spotTempPeriodItemCount[period]++;
         }
 
@@ -111,13 +112,17 @@ public class RouteData {
             this.period = period;
             this.detail = detail;
             this.recommendTime = recommendTime;
+            this.longitude = "0.0";
+            this.latitude = "0.0";
             spotTempPeriodItemCount[period]++;
         }
 
         public ActivityType type; //type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
-        public int period; //period of the time period the event at that is relative to the morning of the startDay, each day is divided into three periods(morning, afternoon, evening)
+        public int period; //period of the time period the event at that is relative to the morning of the startDay, each day is divided into three periods(morning, afternoon, evening). Start from 0
         public String detail; //description of this event
         public int recommendTime; //unit : minute
+        public String latitude;//the latitude value of the place
+        public String longitude;//the longitude of the place
     }
 
     /**
@@ -143,5 +148,85 @@ public class RouteData {
          */
         public int period;
         public String detail;//description of diet information
+        public String latitude;//the latitude value of the place
+        public String longitude;//the longitude of the place
+        public String address;//the address of the restaurant
+        public String phone;//the phone number of the restaurant
+        public String imgsrc;// the image url of the restaurant
+        public int goodRemarks;//Count of good remarks of the restaurant
+        public int commonRemarks;//Count of common remarks of the restaurant
+        public int badRemarks;//Count of bad remarks of the restaurant
+        public String recommendDishes;//Recommend dishes of the restaurant
+
+        public DietTemp() {
+        }
+
+        /**
+         * constructors which is used when no diet plan is set
+         *
+         * @param detail value = "无"
+         */
+        public DietTemp(String detail) {
+            this.detail = detail;
+        }
+
+        /**
+         * constructors which is used when complete information is provided
+         *
+         * @param period
+         * @param detail
+         * @param latitude
+         * @param longitude
+         * @param address
+         * @param phone
+         * @param imgsrc
+         * @param goodRemarks
+         * @param commonRemarks
+         * @param badRemarks
+         * @param recommendDishes
+         */
+        public DietTemp(int period, String detail, String latitude, String longitude, String address, String phone, String imgsrc, int goodRemarks, int commonRemarks, int badRemarks, String recommendDishes) {
+            this.period = period;
+            this.detail = detail;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.address = address;
+            this.phone = phone;
+            this.imgsrc = imgsrc;
+            this.goodRemarks = goodRemarks;
+            this.commonRemarks = commonRemarks;
+            this.badRemarks = badRemarks;
+            this.recommendDishes = recommendDishes;
+        }
+    }
+
+    /**
+     * the hotel of the trip
+     */
+    public static Hotel hotelInfo;
+
+    /**
+     * class for storing data of the hotel
+     */
+    public class Hotel {
+        public String name;//the name of the hotel
+        public String latitude;//the latitude of the hotel
+        public String longitude;//the longitude of the hotel
+        public int grade;//the grade level of the hotel (0-5)
+        public String intro;//the description of the hotel
+        public String address;//the address of the hotel
+        public String satisfaction;// the degree of satisfaction to the hotel
+        public String imgsrc;//// the image url of the hotel
+
+        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc) {
+            this.name = name;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.grade = grade;
+            this.intro = intro;
+            this.address = address;
+            this.satisfaction = satisfaction;
+            this.imgsrc = imgsrc;
+        }
     }
 }

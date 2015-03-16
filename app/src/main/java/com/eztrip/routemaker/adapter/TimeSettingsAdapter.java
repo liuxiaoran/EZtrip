@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -114,10 +115,10 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
                 builder.setTitle(RouteData.singleEvents.get(position).detail);
                 final TimePicker startTime = (TimePicker) view.findViewById(R.id.timepicker_starttime);
                 final TimePicker finishTime = (TimePicker) view.findViewById(R.id.timepicker_finishtime);
-                int startHour = Integer.parseInt(RouteData.singleEvents.get(position).startTime.split(":")[0]);
-                final int startMinute = Integer.parseInt(RouteData.singleEvents.get(position).startTime.split(":")[1]);
-                int finishHour = Integer.parseInt(RouteData.singleEvents.get(position).finishTime.split(":")[0]);
-                int finishMinute = Integer.parseInt(RouteData.singleEvents.get(position).finishTime.split(":")[1]);
+                int startHour = RouteData.singleEvents.get(position).startTime.hour;
+                final int startMinute = RouteData.singleEvents.get(position).startTime.minute;
+                int finishHour = RouteData.singleEvents.get(position).finishTime.hour;
+                int finishMinute = RouteData.singleEvents.get(position).finishTime.minute;
                 startTime.setCurrentHour(startHour);
                 startTime.setCurrentMinute(startMinute);
                 finishTime.setCurrentHour(finishHour);
@@ -134,8 +135,8 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
                         if (startMinuteCount >= finishMinuteCount)
                             Toast.makeText(context, "请将开始时间设置在结束时间之前", Toast.LENGTH_LONG).show();
                         else {
-                            RouteData.singleEvents.get(position).startTime = new StringBuilder().append(Integer.toString(newStartHour)).append(":").append((newStartMinute < 10) ? "0" + newStartMinute : newStartMinute).toString();
-                            RouteData.singleEvents.get(position).finishTime = new StringBuilder().append(Integer.toString(newFinishHour)).append(":").append((newFinishMinute < 10) ? "0" + newFinishMinute : newFinishMinute).toString();
+                            RouteData.singleEvents.get(position).startTime = new Clock(newStartHour, newStartMinute);
+                            RouteData.singleEvents.get(position).finishTime = new Clock(newFinishHour, newFinishMinute);
                             TimeSettingsAdapter.this.notifyDataSetChanged();
                             dialog.dismiss();
                         }

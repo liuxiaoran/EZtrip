@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.eztrip.MainActivity;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
+import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 import com.eztrip.routemaker.adapter.BasicSettingsSpotAdapter;
 import com.eztrip.routemaker.adapter.DietSettingsAdapter;
@@ -365,7 +366,7 @@ public class RouteMakerFragment extends Fragment {
 
             class GenerateDietListAsyncTask extends GeneratorTask {
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeSpotSettings();
+                    return RouteAutoGenerator.executeSpotSettings(getActivity());
                 }
             }
         };
@@ -441,18 +442,18 @@ public class RouteMakerFragment extends Fragment {
             private void initListView() {
                 RouteData.setSingleEventsInstance(3);
                 RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
-                RouteData.singleEvents.get(0).startTime = "9:00";
-                RouteData.singleEvents.get(0).finishTime = "11:00";
+                RouteData.singleEvents.get(0).startTime = new Clock(9, 0);
+                RouteData.singleEvents.get(0).finishTime = new Clock(11, 0);
                 RouteData.singleEvents.get(0).detail = "景点";
                 RouteData.singleEvents.get(0).day = 0;
                 RouteData.singleEvents.get(1).type = RouteData.ActivityType.DIET;
-                RouteData.singleEvents.get(1).startTime = "11:00";
-                RouteData.singleEvents.get(1).finishTime = "12:00";
+                RouteData.singleEvents.get(1).startTime = new Clock(11, 0);
+                RouteData.singleEvents.get(1).finishTime = new Clock(12, 0);
                 RouteData.singleEvents.get(1).detail = "就餐";
                 RouteData.singleEvents.get(1).day = 1;
                 RouteData.singleEvents.get(2).type = RouteData.ActivityType.ACCOMMODATION;
-                RouteData.singleEvents.get(2).startTime = "17:00";
-                RouteData.singleEvents.get(2).finishTime = "19:00";
+                RouteData.singleEvents.get(2).startTime = new Clock(17, 0);
+                RouteData.singleEvents.get(2).finishTime = new Clock(19, 0);
                 RouteData.singleEvents.get(2).detail = "住宿";
                 RouteData.singleEvents.get(2).day = 1;
                 adapter = new TimeSettingsAdapter(getActivity());
