@@ -64,6 +64,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v(TAG, "  " + position);
                 Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("spot", (ScenerySpot) view.getTag());
@@ -121,7 +122,20 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             lookBtn.setTag(scenerySpotArrayList.get(position));
             addBtn.setOnClickListener(LevelResultFragment.this);
             lookBtn.setOnClickListener(LevelResultFragment.this);
+            final int ppositon = position;
             convertView.setTag(scenerySpotArrayList.get(position));
+
+            //给convertView 设置点击事件，因为listview的子view中有checkbox和button,所以listview不能获取点击事件
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("spot", scenerySpotArrayList.get(ppositon));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
 
 
             return convertView;
