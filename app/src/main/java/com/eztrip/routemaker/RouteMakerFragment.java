@@ -39,6 +39,7 @@ import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import utils.RouteAutoGenerator;
@@ -101,7 +102,7 @@ public class RouteMakerFragment extends Fragment {
                     dietTV;
             Button nextStep;
             private ListView spotList;
-            private ArrayList<String> spots;
+            private ArrayList<HashMap<String, String>> spots;
             private BasicSettingsSpotAdapter adapter;
             private boolean[] dietStatus;
             private EditText dayET;
@@ -225,38 +226,24 @@ public class RouteMakerFragment extends Fragment {
                     initSpotList(cityName);
                 } else if (resultCode == 2)//添加新景点
                 {
-                    addOneSpot(data.getStringExtra("spot"));
+                    addOneSpot(data.getStringExtra("spot"), data.getStringExtra("address"));
                 }
             }
 
             private void initSpotList(String city) {
                 //get a set of spots of the city user collected from the server
-                //ArrayList<String> favoriteSpot = RouteMakerService.getSpotsCollection(city,getActivity());
-                ArrayList<String> favoriteSpot = new ArrayList<>();
-                spots = (ArrayList<String>) favoriteSpot.clone();
+                //ArrayList<HashMap<String,String>> favoriteSpot = RouteMakerService.getSpotsCollection(city,getActivity());
+                ArrayList<HashMap<String, String>> favoriteSpot = new ArrayList<>();
+                spots = (ArrayList<HashMap<String, String>>) favoriteSpot.clone();
                 //test case:
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
-                spots.add("景点1");
-                spots.add("景点2");
+                HashMap<String, String> test1 = new HashMap<>();
+                test1.put("name", "景点1");
+                test1.put("address", "地址1");
+                HashMap<String, String> test2 = new HashMap<>();
+                test2.put("name", "景点2");
+                test2.put("address", "地址2");
+                spots.add(test1);
+                spots.add(test2);
 
 
                 adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotList);
@@ -264,8 +251,11 @@ public class RouteMakerFragment extends Fragment {
                 adaptListViewHeight(spotList, adapter);
             }
 
-            private void addOneSpot(String spotName) {
-                spots.add(spotName);
+            private void addOneSpot(String spotName, String address) {
+                HashMap<String, String> test1 = new HashMap<>();
+                test1.put("name", spotName);
+                test1.put("address", address);
+                spots.add(test1);
                 adapter.notifyDataSetChanged();
                 adaptListViewHeight(spotList, adapter);
             }
@@ -301,7 +291,7 @@ public class RouteMakerFragment extends Fragment {
             private StickyListHeadersListView stickyListHeadersListView;
             private SpotSettingsAdapter adapter;
             private ListView newSpotListView;
-            private ArrayList<String> newSpots;
+            private ArrayList<HashMap<String, String>> newSpots;
             private BasicSettingsSpotAdapter newSpotAdapter;
 
             @Override

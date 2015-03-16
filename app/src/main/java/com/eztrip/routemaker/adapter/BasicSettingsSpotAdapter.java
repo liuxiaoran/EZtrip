@@ -13,6 +13,7 @@ import com.eztrip.R;
 import com.eztrip.routemaker.RouteMakerFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Steve on 2015/2/25.
@@ -20,10 +21,10 @@ import java.util.ArrayList;
  */
 public class BasicSettingsSpotAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<String> text;
+    private ArrayList<HashMap<String, String>> text;
     private ListView listView;
 
-    public BasicSettingsSpotAdapter(Context context, ArrayList<String> text, ListView listView) {
+    public BasicSettingsSpotAdapter(Context context, ArrayList<HashMap<String, String>> text, ListView listView) {
         this.context = context;
         this.text = text;
         this.listView = listView;
@@ -59,7 +60,7 @@ public class BasicSettingsSpotAdapter extends BaseAdapter {
         }
         final TextView textView = (TextView) view
                 .findViewById(R.id.routemaker_basicsettings_spotlist_name);
-        textView.setText(text.get(position));
+        textView.setText(text.get(position).get("name"));
         final ImageView imageView = (ImageView) view
                 .findViewById(R.id.routemaker_basicsettings_spotlist_namesimple_item_delete);
         imageView.setTag(position);
