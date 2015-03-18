@@ -15,6 +15,7 @@ public class MyApplication extends Application {
         super.onCreate();
         SDKInitializer.initialize(getApplicationContext());
         com.baidu.mapapi.SDKInitializer.initialize(getApplicationContext());
+
     }
 
 }
