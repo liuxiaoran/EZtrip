@@ -101,6 +101,7 @@ public class RouteData {
             this.recommendTime = spotTemp.recommendTime;
             this.latitude = spotTemp.latitude;
             this.longitude = spotTemp.longitude;
+            this.address = spotTemp.address;
             //spotTempPeriodItemCount[period]++;
         }
 
@@ -123,6 +124,11 @@ public class RouteData {
         public int recommendTime; //unit : minute
         public String latitude;//the latitude value of the place
         public String longitude;//the longitude of the place
+        public String address;//the address of the place
+        /**
+         * @see utils.RouteAutoGenerator#combineTwoSpots(utils.SortedDistance[], java.util.ArrayList, int)
+         */
+        public int combinedVisitTime, leftSpot, rightSpot;
     }
 
     /**

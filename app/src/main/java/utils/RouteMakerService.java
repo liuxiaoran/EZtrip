@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,8 +31,8 @@ public class RouteMakerService {
      * @param activity The activity which calls this method
      * @return user's collection of spots in that city
      */
-    public static ArrayList<String> getSpotsCollection(String city, final Activity activity) {
-        final ArrayList<String> result = new ArrayList<>();
+    public static List<HashMap<String, String>> getSpotsCollection(String city, final Activity activity) {
+        final List<HashMap<String, String>> result = new ArrayList<>();
         SharedPreferences sharedPreferences = activity.getSharedPreferences("user", Activity.MODE_PRIVATE);
         String id = sharedPreferences.getString("id", "0");
         AsyncHttpClient client = new AsyncHttpClient();
@@ -44,7 +46,10 @@ public class RouteMakerService {
                     JSONArray array = new JSONObject(new String(responseBody)).getJSONArray("detail");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject object = (JSONObject) array.get(i);
-                        result.add(object.getString("name"));
+                        HashMap<String, String> spot = new HashMap<>();
+                        spot.put("name", object.getString("name"));
+                        spot.put("address", object.getString("address"));
+                        result.add(spot);
                     }
                 } catch (JSONException e) {
                     Toast.makeText(activity, "数据出现错误", Toast.LENGTH_SHORT).show();
