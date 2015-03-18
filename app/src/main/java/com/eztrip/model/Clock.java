@@ -18,9 +18,20 @@ public class Clock {
     public Clock add(Clock anotherClock) {
         this.hour += anotherClock.hour;
         this.minute += anotherClock.minute;
-        if (minute > 59) {
+        if (this.minute > 59) {
             hour++;
-            minute -= 60;
+            this.minute -= 60;
+        }
+        this.hour = (hour > 23) ? hour - 23 : hour;
+        return this;
+    }
+
+    public Clock add(int minute) {
+        this.hour += minute / 60;
+        this.minute += minute % 60;
+        if (this.minute > 59) {
+            hour++;
+            this.minute -= 60;
         }
         this.hour = (hour > 23) ? hour - 23 : hour;
         return this;

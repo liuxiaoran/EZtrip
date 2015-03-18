@@ -313,7 +313,7 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         //TODO: 重新生成计划
-                        RouteAutoGenerator.regenerateSpotSettings();
+                        RouteAutoGenerator.regenerateSpotSettings(getActivity(), newSpots);
                         initListView();
 
                     }
@@ -330,11 +330,11 @@ public class RouteMakerFragment extends Fragment {
             private void initListView() {
                 //假数据
                 RouteData.setSpotTempInfoInstance(8, 2);
-                RouteData.spotTempInfo.get(0).setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0);
-                RouteData.spotTempInfo.get(1).setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200);
-                RouteData.spotTempInfo.get(2).setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0);
-                RouteData.spotTempInfo.get(3).setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120);
-                RouteData.spotTempInfo.get(4).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1);
+                RouteData.spotTempInfo.get(0).setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0, "");
+                RouteData.spotTempInfo.get(1).setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200, "");
+                RouteData.spotTempInfo.get(2).setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0, "");
+                RouteData.spotTempInfo.get(3).setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120, "");
+                RouteData.spotTempInfo.get(4).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1, "");
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -400,7 +400,7 @@ public class RouteMakerFragment extends Fragment {
             class GenerateTimeListAsyncTask extends GeneratorTask {
                 @Override
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeDietSettings();
+                    return RouteAutoGenerator.executeDietSettings(getActivity());
                 }
             }
         };

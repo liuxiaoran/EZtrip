@@ -196,6 +196,12 @@ public class RouteMakerService {
                                             JSONArray hotelList = object1.getJSONObject("result").getJSONArray("hotelList");
                                             JSONObject hotel = (JSONObject) hotelList.get(new Random().nextInt(hotelList.length()));
                                             RouteData.hotelInfo = new RouteData.Hotel();
+                                            RouteData.hotelInfo.name = hotel.getString("title");
+                                            RouteData.hotelInfo.imgsrc = hotel.getString("imgurl");
+                                            RouteData.hotelInfo.satisfaction = hotel.getString("manyidu");
+                                            RouteData.hotelInfo.address = hotel.getString("address");
+                                            RouteData.hotelInfo.grade = hotel.getInt("grade");
+                                            RouteData.hotelInfo.intro = hotel.getString("intro");
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
