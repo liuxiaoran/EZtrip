@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.eztrip.R;
 import com.eztrip.model.RouteData;
 
+import java.util.Collections;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -36,8 +38,8 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
         holder.date = (TextView) view.findViewById(R.id.day_header_date);
         view.setTag(holder);
         String headerText = new String();
-        int day = RouteData.spotTempInfo[i].period / 3;
-        int dayPeriod = RouteData.spotTempInfo[i].period % 3;
+        int day = RouteData.spotTempInfo.get(i).period / 3;
+        int dayPeriod = RouteData.spotTempInfo.get(i).period % 3;
         headerText += "第" + (Integer.toString(day + 1)) + "天";
         switch (dayPeriod) {
             case 0:
@@ -58,17 +60,17 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getHeaderId(int i) {
-        return RouteData.spotTempInfo[i].period;
+        return RouteData.spotTempInfo.get(i).period;
     }
 
     @Override
     public int getCount() {
-        return RouteData.spotTempInfo.length;
+        return RouteData.spotTempInfo.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return RouteData.spotTempInfo[position];
+        return RouteData.spotTempInfo.get(position);
     }
 
     @Override
@@ -96,11 +98,11 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到地图页面
-                Toast.makeText(context, "地图定位 " + RouteData.spotTempInfo[position].detail, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "地图定位 " + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
             }
         });
-        holder.detail.setText(RouteData.spotTempInfo[position].detail);
-        if (RouteData.spotTempInfo[position].type == RouteData.ActivityType.SPOT) {
+        holder.detail.setText(RouteData.spotTempInfo.get(position).detail);
+        if (RouteData.spotTempInfo.get(position).type == RouteData.ActivityType.SPOT) {
             holder.change.setVisibility(View.GONE);
             holder.type.setImageResource(R.drawable.ic_spot);
             holder.up.setOnClickListener(new View.OnClickListener() {
@@ -115,13 +117,13 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.down.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (position != RouteData.spotTempInfo.length - 1) {
+                    if (position != RouteData.spotTempInfo.size() - 1) {
                         moveListItem(position, 1);
                         notifyDataSetChanged();
                     }
                 }
             });
-        } else if (RouteData.spotTempInfo[position].type == RouteData.ActivityType.ACCOMMODATION) {
+        } else if (RouteData.spotTempInfo.get(position).type == RouteData.ActivityType.ACCOMMODATION) {
             holder.up.setVisibility(View.GONE);
             holder.down.setVisibility(View.GONE);
             holder.type.setImageResource(R.drawable.ic_accomodation);
@@ -129,7 +131,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     //TODO 跳转到宾馆信息页面
-                    Toast.makeText(context, "修改" + RouteData.spotTempInfo[position].detail, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "修改" + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
                 }
             });
         } else {
@@ -137,7 +139,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.down.setVisibility(View.GONE);
             holder.change.setVisibility(View.GONE);
             holder.map.setVisibility(View.GONE);
-            if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo[position].period] != 1) {
+            if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo.get(position).period] != 1) {
                 convertView.setVisibility(View.GONE);
             }
             else
@@ -147,29 +149,27 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到景点信息页面
-                Toast.makeText(context, "详细信息 " + RouteData.spotTempInfo[position].detail, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "详细信息 " + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
             }
         });
         return convertView;
     }
 
     private void moveListItem(int position, int direction) {
-        if (RouteData.spotTempInfo[position].period == RouteData.spotTempInfo[position + direction].period && RouteData.spotTempInfo[position + direction].detail.equals("无")) {
+        if (RouteData.spotTempInfo.get(position).period == RouteData.spotTempInfo.get(position + direction).period && RouteData.spotTempInfo.get(position + direction).detail.equals("无")) {
             swapListItem(position, direction);
             position = position + direction;
         }
         if (position != 0)
-            if (RouteData.spotTempInfo[position + direction].period != RouteData.spotTempInfo[position].period) {
-                notifyEmptyStateChanged(RouteData.spotTempInfo[position].period, +direction);
-                RouteData.spotTempInfo[position].period = RouteData.spotTempInfo[position + direction].period;
+            if (RouteData.spotTempInfo.get(position + direction).period != RouteData.spotTempInfo.get(position).period) {
+                notifyEmptyStateChanged(RouteData.spotTempInfo.get(position).period, +direction);
+                RouteData.spotTempInfo.get(position).period = RouteData.spotTempInfo.get(position + direction).period;
             } else
                 swapListItem(position, direction);
     }
 
     private void swapListItem(int position, int direction) {
-        RouteData.SpotTemp temp = new RouteData.SpotTemp(RouteData.spotTempInfo[position]);
-        RouteData.spotTempInfo[position] = new RouteData.SpotTemp(RouteData.spotTempInfo[position + direction]);
-        RouteData.spotTempInfo[position + direction] = new RouteData.SpotTemp(temp);
+        Collections.swap(RouteData.spotTempInfo, position, position + direction);
     }
 
     private void notifyEmptyStateChanged(int period, int direction) {

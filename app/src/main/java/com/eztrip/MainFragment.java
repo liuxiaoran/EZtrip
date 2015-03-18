@@ -1,11 +1,5 @@
 package com.eztrip;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.BDNotifyListener;//假如用到位置提醒功能，需要import该类
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 
 import utils.BaiduLocationHelper.LocationHelper;
 
@@ -41,7 +39,6 @@ public class MainFragment extends Fragment {
         locationListener = new MyLocationListener();
 
         LocationHelper.registerHelper(context, locationListener);
-
         return view;
     }
 
@@ -49,6 +46,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
+            Toast.makeText(getActivity(), "11", Toast.LENGTH_LONG).show();
             if (bdLocation == null)
                 return;
             else {

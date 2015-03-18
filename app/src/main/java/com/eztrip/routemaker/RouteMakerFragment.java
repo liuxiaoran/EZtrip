@@ -330,11 +330,11 @@ public class RouteMakerFragment extends Fragment {
             private void initListView() {
                 //假数据
                 RouteData.setSpotTempInfoInstance(8, 2);
-                RouteData.spotTempInfo[0].setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0);
-                RouteData.spotTempInfo[1].setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200);
-                RouteData.spotTempInfo[2].setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0);
-                RouteData.spotTempInfo[3].setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120);
-                RouteData.spotTempInfo[4].setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1);
+                RouteData.spotTempInfo.get(0).setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0);
+                RouteData.spotTempInfo.get(1).setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200);
+                RouteData.spotTempInfo.get(2).setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0);
+                RouteData.spotTempInfo.get(3).setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120);
+                RouteData.spotTempInfo.get(4).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1);
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

@@ -195,6 +195,7 @@ public class RouteMakerService {
                                             JSONObject object1 = new JSONObject(result2);
                                             JSONArray hotelList = object1.getJSONObject("result").getJSONArray("hotelList");
                                             JSONObject hotel = (JSONObject) hotelList.get(new Random().nextInt(hotelList.length()));
+                                            RouteData.hotelInfo = new RouteData.Hotel();
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

@@ -67,7 +67,7 @@ public class RouteData {
      * {@link utils.RouteAutoGenerator#executeBasicSettings}
      * At each period of the trip plan, an item named "无" should be added in
      */
-    public static SpotTemp[] spotTempInfo;
+    public static ArrayList<SpotTemp> spotTempInfo;
     /**
      * Temporarily store the count of items each period has.
      * It is defined for showing the list of spotTempInfo
@@ -81,10 +81,8 @@ public class RouteData {
      * @param periodNum numbers of period
      */
     public static void setSpotTempInfoInstance(int itemCount, int periodNum) {
-        spotTempInfo = new SpotTemp[itemCount + periodNum];
+        spotTempInfo = new ArrayList<>(itemCount + periodNum);
         spotTempPeriodItemCount = new int[periodNum];
-        for (int i = 0; i < itemCount + periodNum; i++)
-            RouteData.spotTempInfo[i] = new RouteData.SpotTemp();
     }
 
     public static class SpotTemp {
@@ -106,6 +104,7 @@ public class RouteData {
         }
 
         public SpotTemp() {
+            this.detail = "无";
         }
 
         public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime) {
@@ -128,7 +127,8 @@ public class RouteData {
         /**
          * @see utils.RouteAutoGenerator#combineTwoSpots(utils.SortedDistance[], java.util.ArrayList, int)
          */
-        public int combinedVisitTime, leftSpot, rightSpot;
+        public int combinedVisitTime, leftRoadTime, rightRoadTime;
+        public SpotTemp leftSpot, rightSpot;
     }
 
     /**
@@ -210,11 +210,10 @@ public class RouteData {
      * the hotel of the trip
      */
     public static Hotel hotelInfo;
-
     /**
      * class for storing data of the hotel
      */
-    public class Hotel {
+    public static class Hotel {
         public String name;//the name of the hotel
         public String latitude;//the latitude of the hotel
         public String longitude;//the longitude of the hotel
@@ -234,5 +233,11 @@ public class RouteData {
             this.satisfaction = satisfaction;
             this.imgsrc = imgsrc;
         }
+
+        public Hotel() {
+        }
     }
+
 }
+
+
