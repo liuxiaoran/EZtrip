@@ -1,5 +1,6 @@
 package com.eztrip.routemaker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -7,10 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,10 +27,19 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.eztrip.MainActivity;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
@@ -40,6 +53,7 @@ import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import utils.RouteAutoGenerator;
@@ -55,13 +69,15 @@ public class RouteMakerFragment extends Fragment {
     private int currStep;
     private final String titleHead = "发起旅行-";
     private String[] titles = new String[]{"基本设置", "景点及住宿设置", "饮食设置", "时间安排微调", "最后一步"};
-
     private final int REQUEST_CODE_SEARCH_CITY = 1;
     private FragmentManager fragmentManager;
+
+    private ArrayList<RouteData.SpotTemp> spotList;//it is not sorted by time
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);//必须在oncreate中setHasOptionsMenu（）表示愿意增添item到actionbar中，否则fragment接受不到oncreateoptionmenu函数
+        ProgressDialogController.init(getActivity());
     }
 
     @Override
@@ -101,7 +117,7 @@ public class RouteMakerFragment extends Fragment {
                     ,
                     dietTV;
             Button nextStep;
-            private ListView spotList;
+            private ListView spotListView;
             private ArrayList<HashMap<String, String>> spots;
             private BasicSettingsSpotAdapter adapter;
             private boolean[] dietStatus;
@@ -118,7 +134,7 @@ public class RouteMakerFragment extends Fragment {
                 city = (TextView) view.findViewById(R.id.routemaker_basicsettings_city);
                 city2 = (TextView) view.findViewById(R.id.routemaker_basicsettings_city2);
                 selectCity = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_city_change);
-                spotList = (ListView) view.findViewById(R.id.routemaker_basicsettings_spotlist);
+                spotListView = (ListView) view.findViewById(R.id.routemaker_basicsettings_spotlist);
                 addSpot = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_spot_add);
                 traffic = (RelativeLayout) view.findViewById(R.id.routemaker_basicsettings_traffic);
                 trafficTV = (TextView) view.findViewById(R.id.routemaker_basicsettings_traffic_textview);
@@ -147,7 +163,8 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new GenerateSpotListAsyncTask().execute();
+                        ProgressDialogController.show();
+                       new GenerateSpotListAsyncTask().execute();
                     }
                 });
                 diet.setOnClickListener(new View.OnClickListener() {
@@ -237,18 +254,22 @@ public class RouteMakerFragment extends Fragment {
                 spots = (ArrayList<HashMap<String, String>>) favoriteSpot.clone();
                 //test case:
                 HashMap<String, String> test1 = new HashMap<>();
-                test1.put("name", "景点1");
-                test1.put("address", "地址1");
+                test1.put("name", "雍和宫");
+                test1.put("address", "北京市东城区雍和宫大街12号");
                 HashMap<String, String> test2 = new HashMap<>();
-                test2.put("name", "景点2");
-                test2.put("address", "地址2");
+                test2.put("name", "天坛");
+                test2.put("address", "北京市崇文区天坛内东里7号");
+                HashMap<String, String> test3 = new HashMap<>();
+                test3.put("name", "恭王府");
+                test3.put("address", "北京市西城区柳荫街甲14号");
                 spots.add(test1);
                 spots.add(test2);
+                spots.add(test3);
 
 
-                adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotList);
-                spotList.setAdapter(adapter);
-                adaptListViewHeight(spotList, adapter);
+                adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotListView);
+                spotListView.setAdapter(adapter);
+                adaptListViewHeight(spotListView, adapter);
             }
 
             private void addOneSpot(String spotName, String address) {
@@ -257,12 +278,12 @@ public class RouteMakerFragment extends Fragment {
                 test1.put("address", address);
                 spots.add(test1);
                 adapter.notifyDataSetChanged();
-                adaptListViewHeight(spotList, adapter);
+                adaptListViewHeight(spotListView, adapter);
             }
 
             class GenerateSpotListAsyncTask extends GeneratorTask {
                 @Override
-                protected String doInBackground(Void... params) {
+                protected Object doInBackground(Void... params) {
                     String cityName = city.getText().toString();
                     int day;
                     try {
@@ -273,11 +294,20 @@ public class RouteMakerFragment extends Fragment {
                     String trafficInfo = trafficTV.getText().toString();
                     String dietInfo = dietTV.getText().toString();
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
                     return RouteAutoGenerator.executeBasicSettings(cityName, spots, day, trafficInfo, dietInfo, getActivity());
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+                    super.onPostExecute(result);
+                    MyHandler handler = new MyHandler(spots.size() + 1);
+                    spotList = (ArrayList<RouteData.SpotTemp>)result;
+                    RouteAutoGenerator.getSpotTimeAndHotel(handler,spotList,getActivity());
                 }
             }
         };
@@ -321,7 +351,9 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new GenerateDietListAsyncTask().execute();
+                        ProgressDialogController.show();
+                        RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler());
+//                        new GenerateDietListAsyncTask().execute();
                     }
                 });
                 initListView();
@@ -329,12 +361,6 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                RouteData.setSpotTempInfoInstance(8, 2);
-                RouteData.spotTempInfo.get(0).setSpotTemp(RouteData.ActivityType.NONE, 0, "无", 0, "");
-                RouteData.spotTempInfo.get(1).setSpotTemp(RouteData.ActivityType.SPOT, 0, "景点0", 200, "");
-                RouteData.spotTempInfo.get(2).setSpotTemp(RouteData.ActivityType.NONE, 1, "无", 0, "");
-                RouteData.spotTempInfo.get(3).setSpotTemp(RouteData.ActivityType.SPOT, 1, "景点1", 120, "");
-                RouteData.spotTempInfo.get(4).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, 1, "宾馆2", -1, "");
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -342,8 +368,8 @@ public class RouteMakerFragment extends Fragment {
                 newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), newSpots, newSpotListView);
                 newSpotListView.setAdapter(newSpotAdapter);
                 newSpotAdapter.notifyDataSetChanged();
-                float totalHeaderHeight = RouteData.spotTempPeriodItemCount.length * getActivity().getResources().getDimension(R.dimen.day_header_height);
-                float totalItemHeight = (adapter.getCount() - RouteData.spotTempPeriodItemCount.length) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
+                float totalHeaderHeight = RouteData.dayLength * 3 * getActivity().getResources().getDimension(R.dimen.day_header_height);
+                float totalItemHeight = (adapter.getCount() - RouteData.dayLength * 3) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
                 ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
                 params.height = (int) (totalHeaderHeight + totalItemHeight);
                 stickyListHeadersListView.setLayoutParams(params);
@@ -356,7 +382,12 @@ public class RouteMakerFragment extends Fragment {
 
             class GenerateDietListAsyncTask extends GeneratorTask {
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeSpotSettings(getActivity());
+                    return RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler(0));
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+                    super.onPostExecute(result);
                 }
             }
         };
@@ -387,11 +418,6 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                RouteData.setDietTempInfoInstance(4);
-                for (int i = 0; i < 4; i++) {
-                    RouteData.dietTempInfo[i].period = i;
-                    RouteData.dietTempInfo[i].detail = "饭店" + Integer.toString(i);
-                }
                 adapter = new DietSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -637,37 +663,87 @@ public class RouteMakerFragment extends Fragment {
         listView.setDividerHeight(0);
     }
 
+    public class MyHandler extends android.os.Handler{
+        private int count;
+        public MyHandler(int a){
+            this.count = a;
+        }
 
-    class GeneratorTask extends AsyncTask<Void, Void, String> {
-        private ProgressDialog progressDialog;
+        public MyHandler() {
+            this.count = 0;
+        }
+
+        public void setCount(int a) {
+            this.count = a;
+        }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.getData().getBoolean("minus")){
+                count--;
+                if(count <= 0){
+                    Log.e("success","success");
+                    if(msg.getData().getString("source").equals("basic")){
+                        for(int i = 0; i < spotList.size(); i++){
+                            for(int j = 0; j < spotList.size(); j++)
+                                RouteAutoGenerator.kSearch[i][j].destroy();
+                        }
+                        String result =  RouteAutoGenerator.generateSpotSettingsPlan(spotList, getActivity());
+                        if(result.equals("success")) {
+                            nextStep();
+                            ProgressDialogController.dismiss();
+                        }
+                    }else if(msg.getData().getString("source").equals("spot")) {
+                        nextStep();
+                        ProgressDialogController.dismiss();
+                    }
+                }
+            }
+        }
+    }
+
+    class GeneratorTask extends AsyncTask<Void, Object, Object> {
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Object result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
-            if (result.equals(RouteAutoGenerator.success))
-                nextStep();
-            else
-                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+//            if (result.equals(RouteAutoGenerator.success))
+//                nextStep();
+//            else
+//                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("处理中，请稍等。");
-            progressDialog.show();
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Object doInBackground(Void... params) {
             return null;
+        }
+    }
+
+    static class ProgressDialogController{
+        public static ProgressDialog progressDialog;
+        public static void init(Activity activity) {
+            ProgressDialogController.progressDialog = new ProgressDialog(activity);
+            ProgressDialogController.progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
+            ProgressDialogController.progressDialog.setMessage("处理中，请稍等。");
+        }
+
+        public static void show(){
+            ProgressDialogController.progressDialog.show();
+        }
+
+        public static void dismiss() {
+            ProgressDialogController.progressDialog.dismiss();
         }
     }
 }

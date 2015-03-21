@@ -2,12 +2,18 @@ package utils;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.widget.Toast;
 
 import com.eztrip.model.RouteData;
+import com.eztrip.routemaker.RouteMakerFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 import com.thinkland.sdk.android.DataCallBack;
 import com.thinkland.sdk.android.JuheData;
 import com.thinkland.sdk.android.Parameters;
@@ -72,7 +78,7 @@ public class RouteMakerService {
 
     public static int getVisitTime(String spot, final Activity activity) {
         final int[] time = {0};
-        AsyncHttpClient client = new AsyncHttpClient();
+        SyncHttpClient client = new SyncHttpClient();
         RequestParams params = new RequestParams();
         params.add("name", spot);
         client.get(activity, URLConstants.SPOT_VISIT_TIME, params, new AsyncHttpResponseHandler() {
@@ -88,6 +94,7 @@ public class RouteMakerService {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Looper.prepare();
                 Toast.makeText(activity, "连接服务器失败", Toast.LENGTH_SHORT).show();
             }
         });
@@ -128,7 +135,7 @@ public class RouteMakerService {
      * @return
      * @see com.eztrip.model.RouteData.SpotTemp.period
      */
-    public static RouteData.DietTemp getOneNearbyRestaurant(final int period, String latitude, String longitude) {
+    public static RouteData.DietTemp getOneNearbyRestaurant(final int period, String latitude, String longitude, final RouteMakerFragment.MyHandler handler) {
         Parameters parameters = new Parameters();
         parameters.add("lng", longitude);
         parameters.add("lat", latitude);
@@ -154,6 +161,12 @@ public class RouteMakerService {
                                 Integer.parseInt(restaurant.getString("common_remarks")),
                                 Integer.parseInt(restaurant.getString("bad_remarks")) + Integer.parseInt(restaurant.getString("very_bad_remarks")),
                                 new StringBuilder(restaurant.getString("recommend_dishes")).append(restaurant.getString("recommended_products").equals("") || restaurant.getString("recommend_dishes").equals("") ? "" : ",").append((restaurant.getString("recommended_products"))).toString());
+                                Message m = new Message();
+                                Bundle b = new Bundle();
+                                b.putBoolean("minus", true);
+                                b.putString("source", "spot");
+                                m.setData(b);
+                                handler.handleMessage(m);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -163,7 +176,7 @@ public class RouteMakerService {
         return diet[0];
     }
 
-    public static void getHotel() {
+    public static void getHotel(final Handler handler) {
         Parameters parameters = new Parameters();
         parameters.add("pname", APIConstants.PACKAGE_NAME);
         parameters.add("v", "1");
@@ -176,7 +189,7 @@ public class RouteMakerService {
                         final JSONObject object = new JSONObject(result);
                         JSONArray list = object.getJSONObject("result").getJSONArray("areaList");
                         for (int i = 0; i < list.length(); i++) {
-                            if (((JSONObject) ((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {
+                            if ((((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {
                                 cityID = ((JSONObject) list.get(i)).getString("id");
                             }
                         }
@@ -202,6 +215,12 @@ public class RouteMakerService {
                                             RouteData.hotelInfo.address = hotel.getString("address");
                                             RouteData.hotelInfo.grade = hotel.getInt("grade");
                                             RouteData.hotelInfo.intro = hotel.getString("intro");
+                                            Message m = new Message();
+                                            Bundle b = new Bundle();
+                                            b.putBoolean("minus", true);
+                                            b.putString("source", "basic");
+                                            m.setData(b);
+                                            handler.handleMessage(m);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

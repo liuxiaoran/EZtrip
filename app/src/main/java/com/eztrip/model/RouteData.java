@@ -23,6 +23,8 @@ public class RouteData {
     public static ArrayList<HashMap<String, String>> basicSettingsSpot;
     public static String spotSettingsHint;//hint that is shown when spotSettingsFragment is created
 
+    public static HashMap[][] distance;//Used in RouteAutoGenerator to store distances between every two spots
+
     /**
      * Initializing member variable singleEvents
      *
@@ -78,12 +80,18 @@ public class RouteData {
     /**
      * Initializing member variables spotTempInfo, spotTempPeriodItemCount
      *
-     * @param itemCount numbers of items
-     * @param periodNum numbers of period
+     * @param itemCount
+     *          numbers of items
+     * @param day
+     *          numbers of day
      */
-    public static void setSpotTempInfoInstance(int itemCount, int periodNum) {
-        spotTempInfo = new ArrayList<>(itemCount + periodNum);
-        spotTempPeriodItemCount = new int[periodNum];
+    public static void setSpotTempInfoInstance(int itemCount, int day) {
+        spotTempInfo = new ArrayList<>(itemCount + 6 * day);
+        spotTempPeriodItemCount = new int[3 * day];
+    }
+
+    public static void setSpotTempPeriodItemCount() {
+
     }
 
     public static class SpotTemp {
@@ -115,7 +123,7 @@ public class RouteData {
             this.recommendTime = recommendTime;
             this.longitude = "0.0";
             this.latitude = "0.0";
-            spotTempPeriodItemCount[period]++;
+            //spotTempPeriodItemCount[period]++;
             this.address = address;
             this.leftSpot = null;
             this.rightSpot = null;
@@ -179,8 +187,9 @@ public class RouteData {
          *
          * @param detail value = "无"
          */
-        public DietTemp(String detail) {
+        public DietTemp(String detail, int period) {
             this.detail = detail;
+            this.period = period;
         }
 
         /**
