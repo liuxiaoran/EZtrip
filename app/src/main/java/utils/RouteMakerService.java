@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.eztrip.model.RouteData;
@@ -135,32 +136,32 @@ public class RouteMakerService {
      * @return
      * @see com.eztrip.model.RouteData.SpotTemp.period
      */
-    public static RouteData.DietTemp getOneNearbyRestaurant(final int period, String latitude, String longitude, final RouteMakerFragment.MyHandler handler) {
+    public static void getOneNearbyRestaurant(final int period, String latitude, String longitude, final RouteMakerFragment.MyHandler handler) {
         Parameters parameters = new Parameters();
         parameters.add("lng", longitude);
         parameters.add("lat", latitude);
         parameters.add("radius", 1000);
-        final RouteData.DietTemp[] diet = new RouteData.DietTemp[1];
-        diet[0] = new RouteData.DietTemp();
         JuheData.executeWithAPI(APIConstants.DIET_INFO_ID, APIConstants.DIET_INFO_IP, JuheData.GET, parameters, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
+
                 if (err == 0) {
                     try {
                         JSONObject object = new JSONObject(result);
+                        Log.e("reason2",object.getString("reason"));
                         JSONArray list = object.getJSONArray("result");
-                        JSONObject restaurant = list.getJSONObject(0);
-                        diet[0] = new RouteData.DietTemp(period,
+                        JSONObject restaurant = list.getJSONObject(new Random().nextInt(list.length()));
+                        RouteData.dietTempInfo[period] = new RouteData.DietTemp(period,
                                 restaurant.getString("name"),
-                                restaurant.getString("address"),
                                 restaurant.getString("latitude"),
+                                restaurant.getString("longitude"),
                                 restaurant.getString("address"),
                                 restaurant.getString("phone"),
                                 restaurant.getString("photos"),
-                                Integer.parseInt(restaurant.getString("very_good_remarks")) + Integer.parseInt(restaurant.getString("good_remarks")),
-                                Integer.parseInt(restaurant.getString("common_remarks")),
-                                Integer.parseInt(restaurant.getString("bad_remarks")) + Integer.parseInt(restaurant.getString("very_bad_remarks")),
-                                new StringBuilder(restaurant.getString("recommend_dishes")).append(restaurant.getString("recommended_products").equals("") || restaurant.getString("recommend_dishes").equals("") ? "" : ",").append((restaurant.getString("recommended_products"))).toString());
+                                Integer.parseInt(restaurant.getString("very_good_remarks").equals("")?"0":restaurant.getString("very_good_remarks")) + Integer.parseInt(restaurant.getString("good_remarks").equals("")?"0":restaurant.getString("good_remarks")),
+                                Integer.parseInt(restaurant.getString("common_remarks").equals("")?"0":restaurant.getString("common_remarks")),
+                                Integer.parseInt(restaurant.getString("bad_remarks").equals("")?"0":restaurant.getString("bad_remarks")) + Integer.parseInt(restaurant.getString("very_bad_remarks").equals("")?"0":restaurant.getString("very_bad_remarks")),
+                                new StringBuilder(restaurant.getString("recommended_dishes")).append(restaurant.getString("recommended_products").equals("") || restaurant.getString("recommended_dishes").equals("") ? "" : ",").append((restaurant.getString("recommended_products"))).toString());
                                 Message m = new Message();
                                 Bundle b = new Bundle();
                                 b.putBoolean("minus", true);
@@ -173,7 +174,6 @@ public class RouteMakerService {
                 }
             }
         });
-        return diet[0];
     }
 
     public static void getHotel(final Handler handler) {
@@ -182,11 +182,24 @@ public class RouteMakerService {
         parameters.add("v", "1");
         JuheData.executeWithAPI(APIConstants.ID, APIConstants.TOUR_CITY_LIST_IP, JuheData.GET, parameters, new DataCallBack() {
             @Override
-            public void resultLoaded(int err, String reason, String result) {
+            public void resultLoaded(final int err, String reason, String result) {
+                Log.e("err",Integer.toString(err));
                 if (err == 0) {
                     try {
-                        String cityID = new String();
                         final JSONObject object = new JSONObject(result);
+                        String cityID = new String();
+                        Log.e("reason",object.getString("reason"));
+                        if(object.getString("reason").equals("key请求次数超限！")) {
+                            RouteData.hotelInfo = new RouteData.Hotel();
+                            RouteData.hotelInfo.name = "东直门智选假日酒店";
+                            Message m = new Message();
+                            Bundle b = new Bundle();
+                            b.putBoolean("minus", true);
+                            b.putString("source", "basic");
+                            m.setData(b);
+                            handler.handleMessage(m);
+                            return ;
+                        }
                         JSONArray list = object.getJSONObject("result").getJSONArray("areaList");
                         for (int i = 0; i < list.length(); i++) {
                             if ((((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {
@@ -194,7 +207,14 @@ public class RouteMakerService {
                             }
                         }
                         if (cityID.equals("")) {
+                            RouteData.hotelInfo = new RouteData.Hotel();
                             RouteData.hotelInfo.name = "无";
+                            Message m = new Message();
+                            Bundle b = new Bundle();
+                            b.putBoolean("minus", true);
+                            b.putString("source", "basic");
+                            m.setData(b);
+                            handler.handleMessage(m);
                         } else {
                             Parameters hotelParameters = new Parameters();
                             hotelParameters.add("cityId", cityID);
@@ -203,6 +223,7 @@ public class RouteMakerService {
                             JuheData.executeWithAPI(APIConstants.ID, APIConstants.HOTEL_LIST_IP, JuheData.GET, hotelParameters, new DataCallBack() {
                                 @Override
                                 public void resultLoaded(int err2, String reason2, String result2) {
+                                    Log.e("err2",Integer.toString(err2));
                                     if (err2 == 0) {
                                         try {
                                             JSONObject object1 = new JSONObject(result2);

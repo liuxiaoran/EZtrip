@@ -41,6 +41,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.eztrip.MainActivity;
+import com.eztrip.MainFragment;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
 import com.eztrip.model.Clock;
@@ -410,14 +411,16 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new GenerateTimeListAsyncTask().execute();
+//                        new GenerateTimeListAsyncTask().execute();
+                        ProgressDialogController.show();
+                        RouteAutoGenerator.executeDietSettings(getActivity());
+                        RouteAutoGenerator.getTrafficTimes(getActivity(),new MyHandler(1 + RouteData.singleEvents.size() / 2));
                     }
                 });
                 initListView();
             }
 
             private void initListView() {
-                //假数据
                 adapter = new DietSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -449,39 +452,32 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new GenerateFinishSettingsAsyncTask().execute();
+                        nextStep();
                     }
                 });
                 initListView();
             }
 
             private void initListView() {
-                RouteData.setSingleEventsInstance(3);
-                RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
-                RouteData.singleEvents.get(0).startTime = new Clock(9, 0);
-                RouteData.singleEvents.get(0).finishTime = new Clock(11, 0);
-                RouteData.singleEvents.get(0).detail = "景点";
-                RouteData.singleEvents.get(0).day = 0;
-                RouteData.singleEvents.get(1).type = RouteData.ActivityType.DIET;
-                RouteData.singleEvents.get(1).startTime = new Clock(11, 0);
-                RouteData.singleEvents.get(1).finishTime = new Clock(12, 0);
-                RouteData.singleEvents.get(1).detail = "就餐";
-                RouteData.singleEvents.get(1).day = 1;
-                RouteData.singleEvents.get(2).type = RouteData.ActivityType.ACCOMMODATION;
-                RouteData.singleEvents.get(2).startTime = new Clock(17, 0);
-                RouteData.singleEvents.get(2).finishTime = new Clock(19, 0);
-                RouteData.singleEvents.get(2).detail = "住宿";
-                RouteData.singleEvents.get(2).day = 1;
+//                RouteData.setSingleEventsInstance(3);
+//                RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
+//                RouteData.singleEvents.get(0).startTime = new Clock(9, 0);
+//                RouteData.singleEvents.get(0).finishTime = new Clock(11, 0);
+//                RouteData.singleEvents.get(0).detail = "景点";
+//                RouteData.singleEvents.get(0).day = 0;
+//                RouteData.singleEvents.get(1).type = RouteData.ActivityType.DIET;
+//                RouteData.singleEvents.get(1).startTime = new Clock(11, 0);
+//                RouteData.singleEvents.get(1).finishTime = new Clock(12, 0);
+//                RouteData.singleEvents.get(1).detail = "就餐";
+//                RouteData.singleEvents.get(1).day = 1;
+//                RouteData.singleEvents.get(2).type = RouteData.ActivityType.ACCOMMODATION;
+//                RouteData.singleEvents.get(2).startTime = new Clock(17, 0);
+//                RouteData.singleEvents.get(2).finishTime = new Clock(19, 0);
+//                RouteData.singleEvents.get(2).detail = "住宿";
+//                RouteData.singleEvents.get(2).day = 1;
                 adapter = new TimeSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-            }
-
-            class GenerateFinishSettingsAsyncTask extends GeneratorTask {
-                @Override
-                protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeTimeSettings();
-                }
             }
         };
         Fragment finishSettings = new Fragment() {
@@ -550,7 +546,12 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new FinishRouteAsyncTask().execute();
+                        String startTime = date.getText().toString();
+                        String name = nameET.getText().toString();
+                        if(hint.getVisibility() == View.VISIBLE)
+                            Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
+                        else
+                            RouteAutoGenerator.executeFinishSettings(new MyHandler(1), getActivity(), startTime, name);
                     }
                 });
             }
@@ -566,7 +567,7 @@ public class RouteMakerFragment extends Fragment {
             };
 
             private void updateDateDisplay() {
-                date.setText(startYear + "-" + (startMonth + 1) + "-" + startDay);
+                date.setText(startYear + "-" + (((startMonth + 1)<10)?("0" + Integer.toString(startMonth + 1)):Integer.toString(startMonth + 1)) + "-" + ((startDay<10)?("0" + Integer.toString(startDay)):Integer.toString(startDay)));
                 Calendar currentDay = Calendar.getInstance();
                 RouteData.startDay.set(startYear, startMonth, startDay);
                 if (!currentDay.before(RouteData.startDay))
@@ -578,7 +579,7 @@ public class RouteMakerFragment extends Fragment {
             class FinishRouteAsyncTask extends GeneratorTask {
                 @Override
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeFinishSettings();
+                    return null;
                 }
             }
         };
@@ -677,9 +678,14 @@ public class RouteMakerFragment extends Fragment {
             this.count = a;
         }
 
+        public void addCount() {
+            this.count++;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Log.e("Count",Integer.toString(count));
             if(msg.getData().getBoolean("minus")){
                 count--;
                 if(count <= 0){
@@ -697,6 +703,14 @@ public class RouteMakerFragment extends Fragment {
                     }else if(msg.getData().getString("source").equals("spot")) {
                         nextStep();
                         ProgressDialogController.dismiss();
+                    }else if(msg.getData().getString("source").equals("diet")) {
+                        RouteAutoGenerator.arrangeTimeSettingsTime();
+                        nextStep();
+                        ProgressDialogController.dismiss();
+                    }else if(msg.getData().getString("source").equals("finish")) {
+                        if(msg.getData().getBoolean("success")) {
+                            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, MainFragment.newInstance(getActivity())).commit();
+                        }
                     }
                 }
             }

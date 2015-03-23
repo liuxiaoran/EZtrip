@@ -15,6 +15,11 @@ public class Clock {
         this.minute = minute;
     }
 
+    public Clock(Clock clock) {
+        this.hour = clock.hour;
+        this.minute = clock.minute;
+    }
+
     public Clock add(Clock anotherClock) {
         this.hour += anotherClock.hour;
         this.minute += anotherClock.minute;
@@ -38,6 +43,6 @@ public class Clock {
     }
 
     public String toString() {
-        return new StringBuilder(hour < 10 ? "0" + Integer.toString(hour) : Integer.toString(hour)).append(":").append(minute < 60 ? "0" + Integer.toString(minute) : Integer.toString(minute)).toString();
+        return new StringBuilder(hour < 10 ? "0" + Integer.toString(hour) : Integer.toString(hour)).append(":").append(minute < 10 ? "0" + Integer.toString(minute) : Integer.toString(minute)).toString();
     }
 }
