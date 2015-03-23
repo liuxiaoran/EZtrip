@@ -20,7 +20,10 @@ public class RouteData {
     public static String dietInfo;//it shows whether breakfast, lunch, and dinner need planning
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
 
+    public static ArrayList<HashMap<String, String>> basicSettingsSpot;
     public static String spotSettingsHint;//hint that is shown when spotSettingsFragment is created
+
+    public static HashMap[][] distance;//Used in RouteAutoGenerator to store distances between every two spots
 
     /**
      * Initializing member variable singleEvents
@@ -47,7 +50,7 @@ public class RouteData {
         public Clock finishTime;//the finish day of this event
         public String detail;//the description of this event
         public List<HashMap<String, String>> latitudeAndLongitude;//relative latitude and longitude information of this event
-
+        public String address;
         public SingleEvent() {
         }
 
@@ -85,12 +88,18 @@ public class RouteData {
     /**
      * Initializing member variables spotTempInfo, spotTempPeriodItemCount
      *
-     * @param itemCount numbers of items
-     * @param periodNum numbers of period
+     * @param itemCount
+     *          numbers of items
+     * @param day
+     *          numbers of day
      */
-    public static void setSpotTempInfoInstance(int itemCount, int periodNum) {
-        spotTempInfo = new ArrayList<>(itemCount + periodNum);
-        spotTempPeriodItemCount = new int[periodNum];
+    public static void setSpotTempInfoInstance(int itemCount, int day) {
+        spotTempInfo = new ArrayList<>(itemCount + 6 * day);
+        spotTempPeriodItemCount = new int[3 * day];
+    }
+
+    public static void setSpotTempPeriodItemCount() {
+
     }
 
     public static class SpotTemp {
@@ -115,14 +124,20 @@ public class RouteData {
             this.detail = "无";
         }
 
-        public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime) {
+        public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime, String address) {
             this.type = activityType;
             this.period = period;
             this.detail = detail;
             this.recommendTime = recommendTime;
             this.longitude = "0.0";
             this.latitude = "0.0";
-            spotTempPeriodItemCount[period]++;
+            //spotTempPeriodItemCount[period]++;
+            this.address = address;
+            this.leftSpot = null;
+            this.rightSpot = null;
+            this.leftRoadTime = 0;
+            this.rightRoadTime = 0;
+            this.combinedVisitTime = this.recommendTime;
         }
 
         public ActivityType type; //type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
@@ -180,8 +195,9 @@ public class RouteData {
          *
          * @param detail value = "无"
          */
-        public DietTemp(String detail) {
+        public DietTemp(String detail, int period) {
             this.detail = detail;
+            this.period = period;
         }
 
         /**

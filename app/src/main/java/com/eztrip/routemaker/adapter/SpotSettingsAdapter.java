@@ -173,8 +173,8 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
     }
 
     private void notifyEmptyStateChanged(int period, int direction) {
-        RouteData.spotTempPeriodItemCount[period]--;
-        RouteData.spotTempPeriodItemCount[period + direction]++;
+//        RouteData.spotTempPeriodItemCount[period]--;
+//        RouteData.spotTempPeriodItemCount[period + direction]++;
     }
 
     class ViewHolder {
