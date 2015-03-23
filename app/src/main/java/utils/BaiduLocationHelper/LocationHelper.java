@@ -33,12 +33,17 @@ public class LocationHelper {
         this.locationListener = locationListener;
 
         mLocationClient = new LocationClient(context.getApplicationContext());     //声明LocationClient类
+        mLocationClient.start();
         mLocationClient.registerLocationListener(locationListener);    //注册监听函数
 
         LocationClientOption locationOption = new LocationClientOption();
         locationOption.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         locationOption.setIsNeedAddress(true);
         mLocationClient.setLocOption(locationOption);
+    }
+
+    public void stopLocation() {
+        mLocationClient.stop();
     }
 
 

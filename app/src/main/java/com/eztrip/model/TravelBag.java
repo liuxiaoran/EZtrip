@@ -8,13 +8,17 @@ import java.util.ArrayList;
  */
 public class TravelBag {
 
-    public ArrayList<ScenerySpot> scenerySpotArrayList = new ArrayList<>();
+    public static ArrayList<ScenerySpot> scenerySpotArrayList;
 
-    private static TravelBag travelBag = new TravelBag();
+    private static TravelBag travelBag;
 
     // 使用这个方法得到默认bag
-    public static TravelBag getDefaultTravelBag() {
-        return TravelBag.travelBag;
+    public static TravelBag getInstance() {
+        if (travelBag != null) {
+            travelBag = new TravelBag();
+            scenerySpotArrayList = new ArrayList<>();
+        }
+        return travelBag;
     }
 
     public void addScenery(ScenerySpot scenerySpot) {

@@ -2,8 +2,6 @@ package com.eztrip.findspot;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,8 +18,6 @@ import com.eztrip.MyContext;
 import com.eztrip.R;
 import com.eztrip.model.ScenerySpot;
 import com.eztrip.model.TravelBag;
-import com.eztrip.navigator.NavigationDrawerFragment;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 import com.thinkland.sdk.android.DataCallBack;
@@ -162,7 +158,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         params.add("v", "1");
         params.add("cityId", "1_1");
         params.add("title", title);
-        JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.SCENERYLIST_IP, JuheData.GET, params, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
 
@@ -186,7 +182,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     public void onClick(View view) {
         if (view.getId() == R.id.showscenery_add_btn) {
             //加入行囊
-            TravelBag bag = TravelBag.getDefaultTravelBag();
+            TravelBag bag = TravelBag.getInstance();
             bag.addScenery((ScenerySpot) view.getTag());
 
         } else if (view.getId() == R.id.showscenery_look_btn) {

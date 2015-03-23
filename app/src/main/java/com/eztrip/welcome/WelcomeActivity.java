@@ -10,8 +10,11 @@ import android.widget.Button;
 import com.eztrip.MainActivity;
 import com.eztrip.MyContext;
 import com.eztrip.R;
+import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.login.LoginActivity;
 import com.eztrip.register.RegisterActivity;
+
+import utils.FindSpotService;
 
 /**
  * Created by xiaoran on 2015/1/19.
@@ -28,6 +31,9 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
         }
 
         //第一次进入系统
+        //将城市列表写入数据库
+        FindSpotService.getCityListAndWriteToDB(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
 
@@ -46,6 +52,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
         return false;
 
     }
+
     @Override
     public void onClick(View view) {
         Intent intent;

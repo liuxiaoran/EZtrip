@@ -57,8 +57,15 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.6.3.5'
     //iconfy
     compile 'com.joanzapata.android:android-iconify:1.0.9'
+
+    // baidu map
     compile files('libs/BaiduLBS_Android.jar')
     compile files('libs/android_api_1.1_forsdk.jar')
     compile files('libs/galaxy_mini.jar')
     compile files('libs/baidumapapi_v3_3_0.jar')
+
+    // ormlite databases
+    compile files('ormlite-android-4.48.jar')
+    compile files('ormlite-core-4.48.jar')
+
 }

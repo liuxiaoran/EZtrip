@@ -26,6 +26,11 @@ public class MyContext {
 
     private Context context;
 
+    // 旅游想去的目的地
+    public static String destinationCity;
+
+    public static String startCity;
+
     public static MyContext newInstance(Context context) {
 
         return new MyContext(context);

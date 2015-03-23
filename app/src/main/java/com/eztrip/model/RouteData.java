@@ -60,6 +60,14 @@ public class RouteData {
             this.latitudeAndLongitude = latitudeAndLongitude;
         }
 
+        public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String detail) {
+            this.day = day;
+            this.type = activityType;
+            this.startTime = startTime;
+            this.finishTime = finishTime;
+            this.detail = detail;
+        }
+
     }
 
     /**

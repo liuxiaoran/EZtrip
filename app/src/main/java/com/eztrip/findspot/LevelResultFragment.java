@@ -146,7 +146,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         if (view.getId() == R.id.card_add_btn) {
             //  加入行囊
-            TravelBag bag = TravelBag.getDefaultTravelBag();
+            TravelBag bag = TravelBag.getInstance();
             bag.addScenery((ScenerySpot) view.getTag());
             Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();
 

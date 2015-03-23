@@ -1,12 +1,14 @@
 package utils;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 
+import com.eztrip.database.CityDao;
 import com.eztrip.findspot.FindSpotMainFragment;
+import com.eztrip.model.City;
 import com.eztrip.model.ScenerySpot;
 import com.thinkland.sdk.android.DataCallBack;
 import com.thinkland.sdk.android.JuheData;
@@ -67,48 +69,91 @@ public class FindSpotService {
         params.add("v", "1");
         params.add("cityId", "1_1");
         params.add("grade", level);
-        JuheData.executeWithAPI(APIConstants.ID, APIConstants.IP, JuheData.GET, params, new DataCallBack() {
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.SCENERYLIST_IP, JuheData.GET, params, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
                 if (err == 0) {
                     try {
-                    JSONObject object = new JSONObject(result);
-                    addSpotIntoList(arrayList, object);
+                        JSONObject object = new JSONObject(result);
+                        addSpotIntoList(arrayList, object);
                         Log.v("test", arrayList.size() + "  size");
-                    adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.INVISIBLE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 } else {
-                    Log.v("failed", "failed" + result+"  "+err );
+                    Log.v("failed", "failed" + result + "  " + err);
                 }
             }
         });
     }
 
     //通过查询框查询之后 得到结果
-    public static void getSearchSceneryList(final ArrayList<ScenerySpot> arrayList, String query, final FindSpotMainFragment fragment){
+    public static void getSearchSceneryList(final ArrayList<ScenerySpot> arrayList, String query, final FindSpotMainFragment fragment) {
         Parameters params = new Parameters();
         params.add("pname", APIConstants.PACKAGE_NAME);
         params.add("v", "1");
-        params.add("title",query);
-        JuheData.executeWithAPI(APIConstants.ID,APIConstants.IP,JuheData.GET,params,new DataCallBack() {
+        params.add("title", query);
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.SCENERYLIST_IP, JuheData.GET, params, new DataCallBack() {
             @Override
             public void resultLoaded(int error, String reason, String result) {
-                if(error==0){
-                    try{
-                         JSONObject object =new JSONObject(result);
-                         addSpotIntoList(arrayList,object);
-                         fragment.popQueryListDialog();
+                if (error == 0) {
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        addSpotIntoList(arrayList, object);
+                        fragment.popQueryListDialog();
 
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else {
-                    Log.v(TAG,"failed"+result);
+                } else {
+                    Log.v(TAG, "failed" + result);
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * 获得城市列表,并将城市列表写入数据库
+     */
+    public static void getCityListAndWriteToDB(final Context context) {
+
+        final GB2Alpha gb2Alpha = new GB2Alpha();
+        Parameters parameters = new Parameters();
+        parameters.add("pname", APIConstants.PACKAGE_NAME);
+        parameters.add("v", 1);
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.AREALIST_IP, JuheData.GET, parameters, new DataCallBack() {
+            @Override
+            public void resultLoaded(int error, String reason, String result) {
+                if (error == 0) {
+
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        JSONObject resultObject = object.getJSONObject("result");
+                        JSONArray areaList = resultObject.getJSONArray("areaList");
+                        for (int i = 0; i < areaList.length(); i++) {
+                            JSONObject areaObject = areaList.getJSONObject(i);
+                            JSONArray nameList = areaObject.getJSONArray("name");
+                            String name = nameList.get(0).toString();
+                            int level = areaObject.getInt("level");
+                            String cid = areaObject.getString("id");
+                            String fid = areaObject.getString("fid");
+                            String firstName = gb2Alpha.String2Alpha(name).charAt(0) + "";
+                            City city = new City(name, cid, fid, level, firstName);
+                            CityDao cityDao = new CityDao(context);
+                            cityDao.addCity(city);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         });
@@ -148,4 +193,6 @@ public class FindSpotService {
         }
         return scenerySpot;
     }
+
+
 }

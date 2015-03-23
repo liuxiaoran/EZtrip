@@ -2,9 +2,13 @@ package com.eztrip.findspot;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,10 +22,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.eztrip.MyContext;
 import com.eztrip.R;
+import com.eztrip.citylist.CityList;
 
 import java.util.ArrayList;
 
@@ -35,10 +41,13 @@ public class FindSpotMainFragment extends Fragment {
     public static Context context;
     public static String TAG = "FindSpotMainFragment";
     public ArrayList spotsList;
-    public  LinearLayout searchlayout;
+    public LinearLayout searchlayout;
 
     public LinearLayout mainLayout;
 
+    public TextView actionBarDestination;
+
+    //在actionbar上显示，选择城市
     public static FindSpotMainFragment newInstance(Context context) {
         FindSpotMainFragment.context = context;
         return new FindSpotMainFragment();
@@ -71,8 +80,7 @@ public class FindSpotMainFragment extends Fragment {
                 searchlayout.setVisibility(View.VISIBLE);
                 mainLayout.setVisibility(View.INVISIBLE);
 
-                FindSpotService.getSearchSceneryList(spotsList,s,FindSpotMainFragment.this);
-
+                FindSpotService.getSearchSceneryList(spotsList, s, FindSpotMainFragment.this);
 
 
 //                Intent intent = new Intent(getActivity(), ShowScenerySpot.class);
@@ -91,11 +99,11 @@ public class FindSpotMainFragment extends Fragment {
     }
 
     //当得到结果 弹出dialog
-    public void popQueryListDialog(){
+    public void popQueryListDialog() {
         searchlayout.setVisibility(View.INVISIBLE);
         mainLayout.setVisibility(View.VISIBLE);
         MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity()).title("查询结果")
-                .adapter(new QueryListDialogAdapter(getActivity(),spotsList)).build();
+                .adapter(new QueryListDialogAdapter(getActivity(), spotsList)).build();
         ListView listView = materialDialog.getListView();
         if (listView != null) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,7 +125,40 @@ public class FindSpotMainFragment extends Fragment {
         setHasOptionsMenu(true);//必须在oncreate中setHasOptionsMenu（）表示愿意增添item到actionbar中，否则fragment接受不到oncreateoptionmenu函数
 
         //初始化spotlist
-        spotsList= new ArrayList();
+        spotsList = new ArrayList();
+
+
+        //将自定义view显示在actionbar中
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+
+        View customView = getActivity().getLayoutInflater().inflate(R.layout.actionbar_customview, null);
+        actionBarDestination = (TextView) customView.findViewById(R.id.actionbar_custom_view_destination_city);
+
+        customView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.actionbar_custom_view_destination_city) {
+                    // 点击了选择城市的textview
+                    Intent intent = new Intent(getActivity(), CityList.class);
+                    startActivityForResult(intent, 1);
+
+                }
+            }
+        });
+        actionBar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.RIGHT));
+        int flags = ActionBar.DISPLAY_SHOW_CUSTOM;
+        int change = actionBar.getDisplayOptions() ^ flags;
+        actionBar.setDisplayOptions(change, flags);
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String city = data.getStringExtra("city");
+        actionBarDestination.setText(city);
 
     }
 
@@ -130,8 +171,8 @@ public class FindSpotMainFragment extends Fragment {
 
 
         Spinner spinner = (Spinner) view.findViewById(R.id.findspot_level_spn);
-        searchlayout =(LinearLayout)view.findViewById(R.id.findspot_searchlayout);
-        mainLayout=(LinearLayout)view.findViewById(R.id.findspot_mainlayout);
+        searchlayout = (LinearLayout) view.findViewById(R.id.findspot_searchlayout);
+        mainLayout = (LinearLayout) view.findViewById(R.id.findspot_mainlayout);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, levelData);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -178,6 +219,8 @@ public class FindSpotMainFragment extends Fragment {
         android.support.v4.app.FragmentManager manager = getFragmentManager();
         manager.beginTransaction().replace(R.id.findspot_framelayout, levelResultFragment).commit();
     }
+
+
 }
 
 
