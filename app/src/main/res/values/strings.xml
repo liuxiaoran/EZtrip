@@ -54,8 +54,8 @@
 
     <!--通用-->
     <string name="change">修改</string>
-    <string name="title_section1">个人中心</string>
-    <string name="title_section2">首页</string>
+    <string name="title_section1">首页</string>
+    <string name="title_section2">个人中心</string>
     <string name="title_section3">发现景点</string>
     <string name="title_section4_fragment1">发起旅行-基本设置</string>
     <string name="title_section4">发起旅行</string>

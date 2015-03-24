@@ -129,27 +129,27 @@ public class FindSpotMainFragment extends Fragment {
 
 
         //将自定义view显示在actionbar中
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.actionbar_customview, null);
-        actionBarDestination = (TextView) customView.findViewById(R.id.actionbar_custom_view_destination_city);
-
-        customView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v.getId() == R.id.actionbar_custom_view_destination_city) {
-                    // 点击了选择城市的textview
-                    Intent intent = new Intent(getActivity(), CityList.class);
-                    startActivityForResult(intent, 1);
-
-                }
-            }
-        });
-        actionBar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.RIGHT));
-        int flags = ActionBar.DISPLAY_SHOW_CUSTOM;
-        int change = actionBar.getDisplayOptions() ^ flags;
-        actionBar.setDisplayOptions(change, flags);
+//        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+//
+//        View customView = getActivity().getLayoutInflater().inflate(R.layout.actionbar_customview, null);
+//        actionBarDestination = (TextView) customView.findViewById(R.id.actionbar_custom_view_destination_city);
+//
+//        customView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (v.getId() == R.id.actionbar_custom_view_destination_city) {
+//                    // 点击了选择城市的textview
+//                    Intent intent = new Intent(getActivity(), CityList.class);
+//                    startActivityForResult(intent, 1);
+//
+//                }
+//            }
+//        });
+//        actionBar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+//                Gravity.RIGHT));
+//        int flags = ActionBar.DISPLAY_SHOW_CUSTOM;
+//        int change = actionBar.getDisplayOptions() ^ flags;
+//        actionBar.setDisplayOptions(change, flags);
 
 
     }

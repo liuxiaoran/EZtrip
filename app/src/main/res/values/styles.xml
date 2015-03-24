@@ -5,6 +5,11 @@
 
     </style>
 
+    <style name="WelcomeStyle" parent="@android:style/Animation.Activity">
+
+        <item name="android:activityOpenEnterAnimation">@anim/welcome_anim_begin</item>
+    </style>
+
     <style name="Toolbar" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#e0000000</item>

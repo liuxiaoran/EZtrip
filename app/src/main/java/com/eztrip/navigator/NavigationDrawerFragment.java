@@ -110,10 +110,10 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
                         getString(R.string.title_section5),
-                        getString(R.string.title_section6)
+
                 },
                 new int[]{
-                        R.drawable.ic_hot_car_show,  //用户的头像
+                        R.drawable.user_default_avatar,  //用户的头像
                         R.drawable.ic_hot_car_show,
                         R.drawable.ic_list_products,
                         R.drawable.ic_furniture_models,
@@ -252,7 +252,9 @@ public class NavigationDrawerFragment extends Fragment {
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
+
+            //将menu去掉
+//            inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);

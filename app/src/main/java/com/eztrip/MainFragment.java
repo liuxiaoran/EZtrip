@@ -127,6 +127,7 @@ public class MainFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_SELECT_CITY_CODE);
             } else if (((int) v.getTag()) == 1) {
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天安门");
+                RouteData.SingleEvent transport1 = new RouteData.SingleEvent(1, RouteData.ActivityType.TRAFFIC, new Clock(11, 0), new Clock(11, 30), "天安门--毛主席纪念堂");
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "毛主席纪念堂");
                 RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "故宫");
                 RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北海公园");

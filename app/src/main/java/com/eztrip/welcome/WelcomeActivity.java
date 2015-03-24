@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.eztrip.MainActivity;
 import com.eztrip.MyContext;
 import com.eztrip.R;
+import com.eztrip.database.CityDao;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.login.LoginActivity;
 import com.eztrip.register.RegisterActivity;
@@ -30,9 +31,6 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
             startActivity(intent);
         }
 
-        //第一次进入系统
-        //将城市列表写入数据库
-        FindSpotService.getCityListAndWriteToDB(this);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
@@ -46,10 +44,8 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
 
 
     public boolean checkIsFirstIn() {
-        if (MyContext.newInstance(getApplicationContext()).getCurrentUser() == null) {
-            return true;
-        }
-        return false;
+        return MyContext.newInstance(getApplicationContext()).getSharedPreferences().getBoolean("firstin", false);
+
 
     }
 

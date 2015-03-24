@@ -1,11 +1,16 @@
 package utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 
+import com.eztrip.MainActivity;
+import com.eztrip.R;
 import com.eztrip.database.CityDao;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.model.City;
@@ -144,16 +149,21 @@ public class FindSpotService {
                             String cid = areaObject.getString("id");
                             String fid = areaObject.getString("fid");
                             String firstName = gb2Alpha.String2Alpha(name).charAt(0) + "";
-                            Log.v(TAG, name + " " + cid + " " + fid + " " + level + " " + firstName);
-                            City city = new City(name, cid, fid, level, firstName);
-                            CityDao cityDao = new CityDao(context);
-                            cityDao.addCity(city);
+                            //有些复杂的字取得的一个字是0，将这些城市不加入数据库中
+                            if (!firstName.equals("0")) {
+                                City city = new City(name, cid, fid, level, firstName);
+                                CityDao cityDao = new CityDao(context);
+                                cityDao.addCity(city);
+                            }
+
 
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
+                    Intent i = new Intent(context, MainActivity.class);
+                    context.startActivity(i);
+                    ((Activity) context).overridePendingTransition(R.anim.welcome_anim_begin, R.anim.welcome_anim_end);
 
                 }
             }

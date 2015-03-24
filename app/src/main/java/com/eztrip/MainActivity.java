@@ -18,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.RouteMakerFragment;
+import com.eztrip.usercenter.UserCenterMainFragment;
 
 import java.io.File;
 
@@ -79,10 +81,11 @@ public class MainActivity extends ActionBarActivity
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, currFragment)
                         .commit();
+
                 break;
             case 1:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = MainFragment.newInstance(getBaseContext());
+                currFragment = UserCenterMainFragment.newInstance(getBaseContext());
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, currFragment)
                         .commit();
@@ -101,13 +104,13 @@ public class MainActivity extends ActionBarActivity
                         .replace(R.id.container, currFragment)
                         .commit();
                 break;
-//            case 4:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = FinalModelSpaceFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+            case 4:
+                fragmentManager = getSupportFragmentManager();
+                currFragment = TravelHelpFragment.newInstance(getBaseContext());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, currFragment)
+                        .commit();
+                break;
 //            case 5:
 //                fragmentManager = getSupportFragmentManager();
 ////                currFragment = DesignChooseFragment.newInstance(getBaseContext());
@@ -140,9 +143,9 @@ public class MainActivity extends ActionBarActivity
             case 5:
                 mTitle = getString(R.string.title_section5);
                 break;
-            case 6:
-                mTitle = getString(R.string.title_section6);
-                break;
+//            case 6:
+//                mTitle = getString(R.string.title_section6);
+//                break;
         }
     }
 
@@ -166,7 +169,7 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+//            getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }
@@ -178,10 +181,10 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        if (item.getItemId() == R.id.action_contact_us) {
-            //联系我们
-
-        }
+//        if (item.getItemId() == R.id.action_contact_us) {
+//            //联系我们
+//
+//        }
         return super.onOptionsItemSelected(item);
     }
 

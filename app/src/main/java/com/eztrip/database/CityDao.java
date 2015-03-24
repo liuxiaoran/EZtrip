@@ -45,16 +45,36 @@ public class CityDao {
         ArrayList result = null;
         try {
             result = (ArrayList) cityDao.queryForAll();
+            for (int i = 0; i < result.size(); i++) {
+                Log.v("test", ((City) result.get(i)).getId() + ((City) result.get(i)).getName() + ((City) result.get(i)).getNameSort());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    public void update(City tag) {
+    public void update(City city) {
 
         try {
-            cityDao.update(tag);
+            cityDao.update(city);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateRaw(String sql) {
+
+        try {
+            cityDao.updateRaw(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void executeRaw(String sql) {
+        try {
+            cityDao.executeRaw(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
