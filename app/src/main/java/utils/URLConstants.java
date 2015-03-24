@@ -14,6 +14,8 @@ public class URLConstants {
     public static final String LOGIN = SERVER_IP + "/auth/login";
     public static final String REGISTER = SERVER_IP + "/auth/register";
 
+    public static final String SUBMIT_ROUTE = SERVER_IP + "/users/profile/routes";
+
     /**
      * 得到用户信息
      */

@@ -28,12 +28,9 @@ public class RouteData {
     /**
      * Initializing member variable singleEvents
      *
-     * @param dayNum the length of the trip
      */
-    public static void setSingleEventsInstance(int dayNum) {
+    public static void setSingleEventsInstance() {
         RouteData.singleEvents = new ArrayList<>();
-        for (int i = 0; i < dayNum; i++)
-            RouteData.singleEvents.add(new RouteData.SingleEvent());
     }
 
     public static void addSingleEvent(Object object) {
@@ -49,18 +46,18 @@ public class RouteData {
         public Clock startTime;//the start day of this event ex：11:00
         public Clock finishTime;//the finish day of this event
         public String detail;//the description of this event
-        public List<HashMap<String, String>> latitudeAndLongitude;//relative latitude and longitude information of this event
-        public String address;
+        public List<HashMap<String, String>> locationInfo;//relative latitude and longitude information of this event
+        public int timeLength;//unit : minute
         public SingleEvent() {
         }
 
-        public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String detail, List<HashMap<String, String>> latitudeAndLongitude) {
+        public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String detail, List<HashMap<String, String>> locationInfo) {
             this.day = day;
             this.type = activityType;
             this.startTime = startTime;
             this.finishTime = finishTime;
             this.detail = detail;
-            this.latitudeAndLongitude = latitudeAndLongitude;
+            this.locationInfo = locationInfo;
         }
 
         public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String detail) {
@@ -122,6 +119,7 @@ public class RouteData {
 
         public SpotTemp() {
             this.detail = "无";
+            this.type = ActivityType.NONE;
         }
 
         public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime, String address) {

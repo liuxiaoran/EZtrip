@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
@@ -24,12 +25,20 @@ import com.eztrip.R;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 import com.eztrip.routemaker.RouteMakerFragment;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -215,9 +224,6 @@ public class RouteAutoGenerator {
 //            }
 //            return failure;
 //        }
-        for (int i = 0; i < spotList.size(); i++) {
-            Log.e("spot", spotList.get(i).detail);
-        }
         int spotIndex = 0;
         ArrayList<Integer> visitedSpotIndex = new ArrayList<>();
         for (int i = 0; i < RouteData.dayLength; i++) {
@@ -303,26 +309,32 @@ public class RouteAutoGenerator {
             timesToEat++;
         if (dinner)
             timesToEat++;
-        handler.setCount(3 * timesToEat + 1);
+        handler.setCount(RouteData.dayLength * timesToEat + 1);
         int index = 0;
         //try to give one advice for each diet, according to the position of its adjusting activities
         for (int i = 0; i < RouteData.dayLength; i++) {
             if (breakfast) {
-                while (RouteData.spotTempInfo.get(index).period <= 3 * i || !RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT))
+                while (RouteData.spotTempInfo.get(index).period <= 3 * i || !RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)){
                     index++;
-                RouteData.dietTempInfo[3 * i] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo.get(index).latitude, RouteData.spotTempInfo.get(index).longitude, handler);
+                }
+                RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo.get(index).latitude, RouteData.spotTempInfo.get(index).longitude, handler);
 
             } else {
                 RouteData.dietTempInfo[3 * i] = new RouteData.DietTemp("无",3*i);
             }
+            Log.e("details",RouteData.spotTempInfo.get(index).period + " " + RouteData.spotTempInfo.get(index).detail);
             if (lunch) {
                 int previousIndex = index;
-                while (RouteData.spotTempInfo.get(index).period <= 3 * i + 1 || !RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)) {
-                    if (RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT))
-                        previousIndex = index;
+                while (RouteData.spotTempInfo.get(index).period <= 3 * i + 1) {
+                    if (RouteData.spotTempInfo.get(index).period == 3 * i + 1 && RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)) {
+                        break;
+                    }
+                    if(RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT))
+                    previousIndex = index;
+                    Log.e("previousIndex",Integer.toString(previousIndex));
                     index++;
                 }
-                RouteData.dietTempInfo[3 * i + 1] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
+                RouteMakerService.getOneNearbyRestaurant(3 * i + 1, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
             } else {
                 RouteData.dietTempInfo[3 * i + 1] = new RouteData.DietTemp("无",3*i+1);
             }
@@ -333,7 +345,7 @@ public class RouteAutoGenerator {
                         previousIndex = index;
                     index++;
                 }
-                RouteData.dietTempInfo[3 * i + 2] = RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
+                RouteMakerService.getOneNearbyRestaurant(3 * i + 2, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
             } else {
                 RouteData.dietTempInfo[3 * i + 2] = new RouteData.DietTemp("无",3*i+2);
             }
@@ -353,10 +365,11 @@ public class RouteAutoGenerator {
         currTime[0] = new Clock(8, 0);
         int index = 0;
         int period = -1;
+        RouteData.setSingleEventsInstance();
         String lastLatitude = RouteData.hotelInfo.latitude, lastLongitude = RouteData.hotelInfo.longitude, lastPlace = RouteData.hotelInfo.name, lastAddress = RouteData.hotelInfo.address;
         while (index < RouteData.spotTempInfo.size()) {
             final RouteData.SingleEvent trafficEvent = new RouteData.SingleEvent(), otherEvent = new RouteData.SingleEvent();
-            int recommendVisitTime;
+            otherEvent.locationInfo = new ArrayList<>() ;
             String finishLatitude, finishLongitude, finishPlace, finishAddress;
             if (RouteData.spotTempInfo.get(index).type == RouteData.ActivityType.NONE)
                 index++;
@@ -365,87 +378,220 @@ public class RouteAutoGenerator {
                 finishLongitude = RouteData.dietTempInfo[period + 1].longitude;
                 finishPlace = RouteData.dietTempInfo[period + 1].detail;
                 otherEvent.type = RouteData.ActivityType.DIET;
-                otherEvent.day = RouteData.dietTempInfo[period + 1].period / 3 + 1;
+                otherEvent.day = RouteData.dietTempInfo[period + 1].period / 3;
                 finishAddress = RouteData.dietTempInfo[period + 1].address;
-                recommendVisitTime = 60;
+                otherEvent.timeLength =  60;
             } else {
                 finishLatitude = RouteData.spotTempInfo.get(index).latitude;
                 finishLongitude = RouteData.spotTempInfo.get(index).longitude;
                 finishPlace = RouteData.spotTempInfo.get(index).detail;
                 otherEvent.type = RouteData.spotTempInfo.get(index).type;
-                otherEvent.day = RouteData.spotTempInfo.get(index).period / 3 + 1;
+                otherEvent.day = RouteData.spotTempInfo.get(index).period / 3;
                 finishAddress = RouteData.spotTempInfo.get(index).address;
+                otherEvent.timeLength = RouteData.spotTempInfo.get(index).recommendTime;
                 index++;
-                recommendVisitTime = RouteData.spotTempInfo.get(index).recommendTime;
             }
             otherEvent.detail = finishPlace;
             HashMap<String, String> placeInfo = new HashMap<>();
             placeInfo.put("latitude", finishLatitude);
             placeInfo.put("longitude", finishLongitude);
-            otherEvent.latitudeAndLongitude.add(placeInfo);
-            otherEvent.address = finishAddress;
+            placeInfo.put("address",finishAddress);
+            otherEvent.locationInfo.add(placeInfo);
 
-            if (RouteData.spotTempInfo.get(index).period > period)
+            if (index < RouteData.spotTempInfo.size() && RouteData.spotTempInfo.get(index).period > period)
                 period++;
             //TODO:根据起终点信息和RouteData.trafficInfo确定线路 将其封装在trafficEvent里
-            RoutePlanSearch mSearch = RoutePlanSearch.newInstance();
-            OnGetRoutePlanResultListener listener = new OnGetRoutePlanResultListener() {
-                public void onGetWalkingRouteResult(WalkingRouteResult result) {
-                }
-
-                public void onGetTransitRouteResult(TransitRouteResult result) {
-                    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                        //TODO: 抛异常
-                    }
-                    if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
-                        //起终点或途经点地址有岐义，通过以下接口获取建议查询信息
-                        //result.getSuggestAddrInfo()
-                    }
-                    if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public))) {
-                        trafficEvent.detail = result.getRouteLines().get(0).getAllStep().toString();
-                        int duration = result.getRouteLines().get(0).getDuration();
-                        trafficEvent.startTime = currTime[0];
-                        trafficEvent.finishTime = currTime[0].add(new Clock(duration / 3600, duration / 60 % 60));
-                        currTime[0] = trafficEvent.finishTime;
-                    }
-                }
-
-                public void onGetDrivingRouteResult(DrivingRouteResult result) {
-                    if (result.error == SearchResult.ERRORNO.NO_ERROR) {
-                        if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
-                            trafficEvent.detail = result.getRouteLines().get(0).getAllStep().toString();
-                            int duration = result.getRouteLines().get(0).getDuration();
-                            trafficEvent.startTime = currTime[0];
-                            trafficEvent.finishTime = currTime[0].add(new Clock(duration / 3600, duration / 60 % 60));
-                            currTime[0] = trafficEvent.finishTime;
-                        }
-                    }
-                }
-            };
-            mSearch.setOnGetRoutePlanResultListener(listener);
-            PlanNode stNode = PlanNode.withCityNameAndPlaceName(RouteData.city, lastAddress);
-            PlanNode enNode = PlanNode.withCityNameAndPlaceName(RouteData.city, finishAddress);
-            mSearch.transitSearch((new TransitRoutePlanOption())
-                    .from(stNode)
-                    .city(RouteData.city)
-                    .to(enNode));
-            mSearch.destroy();
+            trafficEvent.type = RouteData.ActivityType.TRAFFIC;
+            trafficEvent.detail = "traffic";
             RouteData.singleEvents.add(trafficEvent);
             //TODO:设置otherEvent的startTime，finishTime
-            otherEvent.startTime = currTime[0];
-            currTime[0] = currTime[0].add(recommendVisitTime);
-            otherEvent.finishTime = currTime[0];
             RouteData.singleEvents.add(otherEvent);
-            lastAddress = finishAddress;
+        }
+        for(int i = 0; i < RouteData.singleEvents.size(); i++) {
+            Log.e("singleevents",RouteData.singleEvents.get(i).detail);
         }
         return success;
     }
 
-    public static String executeTimeSettings() {
-        return success;
+    public static void getTrafficTimes(Activity activity, RouteMakerFragment.MyHandler handler) {
+        Log.e("length",Integer.toString(RouteData.singleEvents.size()));
+        int index = 0;
+        String lastAddress, finishAddress;
+        while(index != -1) {
+            while (index < RouteData.singleEvents.size() && !RouteData.singleEvents.get(index).type.equals(RouteData.ActivityType.TRAFFIC)){
+                index++;
+            }
+            if(index == RouteData.singleEvents.size())
+                break;
+            if(index == 0)
+                lastAddress = RouteData.hotelInfo.name;
+            else
+                lastAddress = RouteData.singleEvents.get(index-1).detail;
+            finishAddress = RouteData.singleEvents.get(index + 1).detail;
+            RouteData.singleEvents.get(index).detail = lastAddress + "-" + finishAddress;
+            HashMap<String, String> startPlaceInfo = new HashMap<>();
+            startPlaceInfo.put("address",lastAddress);
+            RouteData.singleEvents.get(index).locationInfo.add(startPlaceInfo);
+            HashMap<String, String> finishPlaceInfo = new HashMap<>();
+            finishPlaceInfo.put("address",finishAddress);
+            RouteData.singleEvents.get(index).locationInfo.add(finishPlaceInfo);
+            index = getSingleTrafficTime(activity,handler,index,lastAddress, finishAddress);
+        }
+        Message m = new Message();
+        Bundle b = new Bundle();
+        b.putBoolean("minus", true);
+        b.putString("source", "diet");
+        m.setData(b);
+        handler.handleMessage(m);
     }
 
-    public static String executeFinishSettings() {
+    public static int getSingleTrafficTime(final Activity activity, final RouteMakerFragment.MyHandler handler, int index, String lastAddress, String finishAddress) {
+        Log.e("index",Integer.toString(index));
+        final int trafficIndex = index;
+        final RoutePlanSearch mSearch = RoutePlanSearch.newInstance();
+        OnGetRoutePlanResultListener listener = new OnGetRoutePlanResultListener() {
+            public void onGetWalkingRouteResult(WalkingRouteResult result) {
+            }
+
+            public void onGetTransitRouteResult(TransitRouteResult result) {
+                if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                    //TODO: 抛异常
+                }
+                if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
+                    //起终点或途经点地址有岐义，通过以下接口获取建议查询信息
+                    //result.getSuggestAddrInfo()
+                }
+                if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public))) {
+//                    RouteData.singleEvents.get(trafficIndex).detail = result.getRouteLines().get(0).getAllStep().toString();
+                    int duration = result.getRouteLines().get(0).getDuration() / 60;
+                    RouteData.singleEvents.get(trafficIndex).timeLength = duration;
+
+                    Message m = new Message();
+                    Bundle b = new Bundle();
+                    b.putBoolean("minus", true);
+                    b.putString("source", "diet");
+                    m.setData(b);
+                    handler.handleMessage(m);
+                    mSearch.destroy();
+                }
+            }
+
+            public void onGetDrivingRouteResult(DrivingRouteResult result) {
+                if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+                    if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+//                        RouteData.singleEvents.get(trafficIndex).detail = result.getRouteLines().get(0).getAllStep().toString();
+                        int duration = result.getRouteLines().get(0).getDuration() / 60;
+                        RouteData.singleEvents.get(trafficIndex).timeLength = duration;
+
+                        Message m = new Message();
+                        Bundle b = new Bundle();
+                        b.putBoolean("minus", true);
+                        b.putString("source", "diet");
+                        m.setData(b);
+                        handler.handleMessage(m);
+                        mSearch.destroy();
+                    }
+                }
+            }
+        };
+        mSearch.setOnGetRoutePlanResultListener(listener);
+        PlanNode stNode = PlanNode.withCityNameAndPlaceName(RouteData.city, lastAddress);
+        PlanNode enNode = PlanNode.withCityNameAndPlaceName(RouteData.city, finishAddress);
+        Log.e("traffichint",Integer.toString(index) + lastAddress + finishAddress);
+        if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+            mSearch.drivingSearch((new DrivingRoutePlanOption())
+                    .from(stNode)
+                    .to(enNode));
+        } else {
+            mSearch.transitSearch((new TransitRoutePlanOption())
+                    .from(stNode)
+                    .city("北京")
+                    .to(enNode));
+        }
+        index++;
+        return index;
+    }
+
+    public static void arrangeTimeSettingsTime() {
+        final Clock startTime = new Clock(8,0);
+        Clock currTime = startTime;
+        int index = 0, currDay = 0;
+        while(index < RouteData.singleEvents.size()) {
+            Log.e(currTime.toString(),Integer.toString(RouteData.singleEvents.get(index).timeLength));
+            if(RouteData.singleEvents.get(index).day > currDay)
+                currTime = startTime;
+            RouteData.singleEvents.get(index).startTime = new Clock(currTime);
+            RouteData.singleEvents.get(index).finishTime = new Clock(currTime.add(RouteData.singleEvents.get(index).timeLength));
+            currTime = new Clock(RouteData.singleEvents.get(index).finishTime);
+            index++;
+        }
+        for(int i = 0; i < RouteData.singleEvents.size(); i++) {
+            Log.e("time",RouteData.singleEvents.get(i).startTime.toString());
+        }
+    }
+
+
+    public static String executeFinishSettings(final RouteMakerFragment.MyHandler handler, final Activity activity, String startTime, String name) {
+        EztripHttpUtil eztripHttpUtil = new EztripHttpUtil();
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Toast.makeText(activity,"线路生成成功，您可以在“行程规划”中查看生成的线路",Toast.LENGTH_LONG).show();
+                Message m = new Message();
+                Bundle b = new Bundle();
+                b.putBoolean("minus", true);
+                b.putString("source","finish");
+                b.putBoolean("success",true);
+                m.setData(b);
+                handler.handleMessage(m);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(activity,"连接服务器失败",Toast.LENGTH_LONG).show();
+                Message m = new Message();
+                Bundle b = new Bundle();
+                b.putBoolean("minus", true);
+                b.putString("source","finish");
+                b.putBoolean("success",false);
+                m.setData(b);
+                handler.handleMessage(m);
+            }
+        };
+        JSONObject parameter = new JSONObject();
+        try {
+            //TODO: id来源
+            parameter.put("id",1);
+            parameter.put("name",name);
+            parameter.put("city",RouteData.city);
+            parameter.put("start_date",startTime);
+            parameter.put("day_length",RouteData.dayLength);
+            List<Map> eventList = new ArrayList<>();
+            for(int i = 0; i < RouteData.singleEvents.size(); i++) {
+                Map<String,Object> map = new HashMap<>();
+                map.put("day",RouteData.singleEvents.get(i).day);
+                map.put("type",RouteData.singleEvents.get(i).type.toString().toLowerCase());
+                map.put("start_time",RouteData.singleEvents.get(i).startTime);
+                map.put("finish_time",RouteData.singleEvents.get(i).finishTime);
+                map.put("detail",RouteData.singleEvents.get(i).detail);
+                List<Map> locationList = new ArrayList<>();
+                for(int j = 0; j < RouteData.singleEvents.get(i).locationInfo.size(); j++) {
+                    Map<String, String> locationInfo = new HashMap<>();
+                    locationInfo.put("longitude",RouteData.singleEvents.get(i).locationInfo.get(j).get("longitude"));
+                    locationInfo.put("latitude",RouteData.singleEvents.get(i).locationInfo.get(j).get("latitude"));
+                    locationInfo.put("address",RouteData.singleEvents.get(i).locationInfo.get(j).get("address"));
+                    locationList.add(locationInfo);
+                }
+                map.put("places",locationList);
+                eventList.add(map);
+            }
+            parameter.put("event",eventList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HashMap<String,Object> request = new HashMap<>();
+        request.put("content",parameter);
+        EztripHttpUtil.post(URLConstants.SUBMIT_ROUTE,request,asyncHttpResponseHandler);
         return success;
     }
 
