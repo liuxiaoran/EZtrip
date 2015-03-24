@@ -3,6 +3,8 @@ package com.eztrip.routemaker.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.map.MapActivity;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 
@@ -101,14 +104,22 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
         holder.map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 跳转到地图页面
-                Toast.makeText(context, "地图定位 " + RouteData.singleEvents.get(position).detail, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(context, MapActivity.class);
+                Bundle b = new Bundle();
+                if(RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.TRAFFIC)) {
+                    b.putString("type","route");
+                    b.putInt("index",position);
+                }else {
+                    b.putString("type","poing");
+                    b.putString("latitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("latitude"));
+                    b.putString("longitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("longitude"));
+                }
+                context.startActivity(intent);
             }
         });
         holder.change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 跳转到餐厅信息页面
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 View view = inflater.inflate(R.layout.routemaker_timesettings_timepicker, null);
                 builder.setView(view);

@@ -1,5 +1,14 @@
 package com.eztrip.model;
 
+import android.app.Activity;
+
+import com.baidu.mapapi.search.core.RouteLine;
+import com.baidu.mapapi.search.route.DrivingRouteLine;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.TransitRouteLine;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.eztrip.R;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,6 +57,8 @@ public class RouteData {
         public String detail;//the description of this event
         public List<HashMap<String, String>> locationInfo;//relative latitude and longitude information of this event
         public int timeLength;//unit : minute
+        public TransitRouteLine transitRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is public;
+        public DrivingRouteLine drivingRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is private;
         public SingleEvent() {
         }
 
@@ -66,6 +77,20 @@ public class RouteData {
             this.startTime = startTime;
             this.finishTime = finishTime;
             this.detail = detail;
+        }
+
+        public TransitRouteLine getTransitRouteLine(Activity activity) {
+            if(this.type.equals(ActivityType.TRAFFIC) && RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public)))
+                return this.transitRouteLine;
+            else
+                return null;
+        }
+
+        public DrivingRouteLine getDrivingRouteLine(Activity activity) {
+            if(this.type.equals(ActivityType.TRAFFIC) && RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private)))
+                return this.drivingRouteLine;
+            else
+                return null;
         }
 
     }
@@ -136,6 +161,24 @@ public class RouteData {
             this.leftRoadTime = 0;
             this.rightRoadTime = 0;
             this.combinedVisitTime = this.recommendTime;
+            this.scenerySpot = null;
+        }
+
+        public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime, String address, ScenerySpot scenerySpot) {
+            this.type = activityType;
+            this.period = period;
+            this.detail = detail;
+            this.recommendTime = recommendTime;
+            this.longitude = "0.0";
+            this.latitude = "0.0";
+            //spotTempPeriodItemCount[period]++;
+            this.address = address;
+            this.leftSpot = null;
+            this.rightSpot = null;
+            this.leftRoadTime = 0;
+            this.rightRoadTime = 0;
+            this.combinedVisitTime = this.recommendTime;
+            this.scenerySpot = scenerySpot;
         }
 
         public ActivityType type; //type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
@@ -150,6 +193,7 @@ public class RouteData {
          */
         public int combinedVisitTime, leftRoadTime, rightRoadTime;
         public SpotTemp leftSpot, rightSpot;
+        public ScenerySpot scenerySpot;//contains more details of the spot
     }
 
     /**

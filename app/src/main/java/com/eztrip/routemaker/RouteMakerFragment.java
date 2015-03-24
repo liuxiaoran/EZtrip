@@ -413,8 +413,16 @@ public class RouteMakerFragment extends Fragment {
                     public void onClick(View v) {
 //                        new GenerateTimeListAsyncTask().execute();
                         ProgressDialogController.show();
-                        RouteAutoGenerator.executeDietSettings(getActivity());
-                        RouteAutoGenerator.getTrafficTimes(getActivity(),new MyHandler(1 + RouteData.singleEvents.size() / 2));
+                        int count = 0;
+                        for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
+                            if(!RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.NONE))
+                                count++;
+                        }
+                        for(int i = 0; i < RouteData.dietTempInfo.length; i++) {
+                            if(!RouteData.dietTempInfo[i].detail.equals("无"))
+                                count++;
+                        }
+                        RouteAutoGenerator.getLatLngInfo(new MyHandler(count),getActivity());
                     }
                 });
                 initListView();
@@ -459,22 +467,6 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initListView() {
-//                RouteData.setSingleEventsInstance(3);
-//                RouteData.singleEvents.get(0).type = RouteData.ActivityType.SPOT;
-//                RouteData.singleEvents.get(0).startTime = new Clock(9, 0);
-//                RouteData.singleEvents.get(0).finishTime = new Clock(11, 0);
-//                RouteData.singleEvents.get(0).detail = "景点";
-//                RouteData.singleEvents.get(0).day = 0;
-//                RouteData.singleEvents.get(1).type = RouteData.ActivityType.DIET;
-//                RouteData.singleEvents.get(1).startTime = new Clock(11, 0);
-//                RouteData.singleEvents.get(1).finishTime = new Clock(12, 0);
-//                RouteData.singleEvents.get(1).detail = "就餐";
-//                RouteData.singleEvents.get(1).day = 1;
-//                RouteData.singleEvents.get(2).type = RouteData.ActivityType.ACCOMMODATION;
-//                RouteData.singleEvents.get(2).startTime = new Clock(17, 0);
-//                RouteData.singleEvents.get(2).finishTime = new Clock(19, 0);
-//                RouteData.singleEvents.get(2).detail = "住宿";
-//                RouteData.singleEvents.get(2).day = 1;
                 adapter = new TimeSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -682,6 +674,10 @@ public class RouteMakerFragment extends Fragment {
             this.count++;
         }
 
+        public int getCount() {
+            return this.count;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -711,6 +707,9 @@ public class RouteMakerFragment extends Fragment {
                         if(msg.getData().getBoolean("success")) {
                             fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, MainFragment.newInstance(getActivity())).commit();
                         }
+                    }else if(msg.getData().getString("source").equals("latlnginfo")) {
+                        RouteAutoGenerator.executeDietSettings(getActivity());
+                        RouteAutoGenerator.getTrafficTimes(getActivity(),new MyHandler(1 + RouteData.singleEvents.size() / 2));
                     }
                 }
             }
