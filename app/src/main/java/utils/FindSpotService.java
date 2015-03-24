@@ -144,6 +144,7 @@ public class FindSpotService {
                             String cid = areaObject.getString("id");
                             String fid = areaObject.getString("fid");
                             String firstName = gb2Alpha.String2Alpha(name).charAt(0) + "";
+                            Log.v(TAG, name + " " + cid + " " + fid + " " + level + " " + firstName);
                             City city = new City(name, cid, fid, level, firstName);
                             CityDao cityDao = new CityDao(context);
                             cityDao.addCity(city);

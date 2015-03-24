@@ -141,7 +141,7 @@ public class MainFragment extends Fragment {
                 RouteData.SingleEvent singleEvent10 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北京前门大街");
 
 
-            } else if (v.getTag() == 2) {
+            } else if ((int) v.getTag() == 2) {
 
                 //http://dujia.lvmama.com/group/361528
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "南溪山");
@@ -156,7 +156,7 @@ public class MainFragment extends Fragment {
                 RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "木龙湖.东盟园");
                 RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "榕、杉湖景区");
 
-            } else if (v.getTag() == 3) {
+            } else if ((int) v.getTag() == 3) {
 
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "蜈支洲岛");
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "亚龙湾热带天堂森林公园");

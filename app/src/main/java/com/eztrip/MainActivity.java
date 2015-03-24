@@ -80,13 +80,13 @@ public class MainActivity extends ActionBarActivity
                         .replace(R.id.container, currFragment)
                         .commit();
                 break;
-//            case 1:
-//                fragmentManager = getSupportFragmentManager();
-////                currFragment = ProductHallFragment.newInstance(getBaseContext());
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, currFragment)
-//                        .commit();
-//                break;
+            case 1:
+                fragmentManager = getSupportFragmentManager();
+                currFragment = MainFragment.newInstance(getBaseContext());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, currFragment)
+                        .commit();
+                break;
             case 2:
                 fragmentManager = getSupportFragmentManager();
                 currFragment = FindSpotMainFragment.newInstance(getBaseContext());
