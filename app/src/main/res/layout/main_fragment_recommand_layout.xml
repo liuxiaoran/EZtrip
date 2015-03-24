@@ -4,12 +4,14 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:layout_marginTop="10dp"
         android:id="@+id/main_fragment_recommand_iv"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:scaleType="centerCrop" />
 
     <TextView
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="北京"
