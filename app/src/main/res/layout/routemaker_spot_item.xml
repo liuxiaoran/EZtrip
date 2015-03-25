@@ -35,11 +35,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/item_down"
         android:src="@drawable/ic_down"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/item_change"
-        android:layout_toStartOf="@+id/item_change"
         android:layout_marginRight="@dimen/default_padding"
-        android:layout_marginEnd="@dimen/default_padding" />
+        android:layout_marginEnd="@dimen/default_padding"
+        android:layout_alignTop="@+id/item_up"
+        android:layout_alignParentRight="true"/>
 
     <ImageView
         android:layout_width="wrap_content"

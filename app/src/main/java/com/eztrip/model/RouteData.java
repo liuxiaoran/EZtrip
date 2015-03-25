@@ -9,6 +9,7 @@ import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.eztrip.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class RouteData {
         public int timeLength;//unit : minute
         public TransitRouteLine transitRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is public;
         public DrivingRouteLine drivingRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is private;
+        public Serializable moreInfo;//more information of this event
         public SingleEvent() {
         }
 
@@ -213,9 +215,9 @@ public class RouteData {
             dietTempInfo[i] = new DietTemp();
     }
 
-    public static class DietTemp {
+    public static class DietTemp implements Serializable {
         /**
-         * @see com.eztrip.model.RouteData.SpotTemp.period
+         * @see com.eztrip.model.RouteData.SpotTemp.period to understand the meaning of period
          */
         public int period;
         public String detail;//description of diet information
@@ -279,7 +281,7 @@ public class RouteData {
     /**
      * class for storing data of the hotel
      */
-    public static class Hotel {
+    public static class Hotel implements Serializable {
         public String name;//the name of the hotel
         public String latitude;//the latitude of the hotel
         public String longitude;//the longitude of the hotel
@@ -288,8 +290,9 @@ public class RouteData {
         public String address;//the address of the hotel
         public String satisfaction;// the degree of satisfaction to the hotel
         public String imgsrc;//// the image url of the hotel
+        public String url;//the url of the hotel
 
-        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc) {
+        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc, String url) {
             this.name = name;
             this.latitude = latitude;
             this.longitude = longitude;
@@ -297,6 +300,7 @@ public class RouteData {
             this.intro = intro;
             this.address = address;
             this.satisfaction = satisfaction;
+            this.url = url;
             this.imgsrc = imgsrc;
         }
 

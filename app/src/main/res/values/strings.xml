@@ -68,6 +68,11 @@
     <string name="action_clear_cache">清楚缓存</string>
     <string name="search_title">景点名称</string>
     <string name="search_hint">输入景点名称</string>
-
+    <string name="comment">评论详情</string>
     <string name="nothing">无</string>
+    <string name="replace_hotel">设置为当前旅店</string>
+    <string name="replace_restaurant">设置为当前饭店</string>
+    <string name="satisfaction">满意度</string>
+    <string name="contact">联系方式</string>
+    <string name="specialty_dishes">推荐菜品</string>
 </resources>

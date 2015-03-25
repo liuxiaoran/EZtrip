@@ -46,6 +46,8 @@ import com.eztrip.R;
 import com.eztrip.citylist.CityList;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
+import com.eztrip.model.ScenerySpot;
+import com.eztrip.model.TravelBag;
 import com.eztrip.routemaker.adapter.BasicSettingsSpotAdapter;
 import com.eztrip.routemaker.adapter.DietSettingsAdapter;
 import com.eztrip.routemaker.adapter.SpotSettingsAdapter;
@@ -70,7 +72,7 @@ public class RouteMakerFragment extends Fragment {
     private int currStep;
     private final String titleHead = "发起旅行-";
     private String[] titles = new String[]{"基本设置", "景点及住宿设置", "饮食设置", "时间安排微调", "最后一步"};
-    private final int REQUEST_CODE_SEARCH_CITY = 1;
+    public final int REQUEST_CODE_SEARCH_CITY = 1;
     private FragmentManager fragmentManager;
 
     private ArrayList<RouteData.SpotTemp> spotList;//it is not sorted by time
@@ -119,7 +121,6 @@ public class RouteMakerFragment extends Fragment {
                     dietTV;
             Button nextStep;
             private ListView spotListView;
-            private ArrayList<HashMap<String, String>> spots;
             private BasicSettingsSpotAdapter adapter;
             private boolean[] dietStatus;
             private EditText dayET;
@@ -164,8 +165,12 @@ public class RouteMakerFragment extends Fragment {
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ProgressDialogController.show();
-                       new GenerateSpotListAsyncTask().execute();
+                        if(TravelBag.getInstance().getScenerySpotList().size() == 0) {
+                            Toast.makeText(getActivity(),"请至少选择一个景点",Toast.LENGTH_SHORT).show();
+                        }else {
+                            ProgressDialogController.show();
+                            new GenerateSpotListAsyncTask().execute();
+                        }
                     }
                 });
                 diet.setOnClickListener(new View.OnClickListener() {
@@ -244,40 +249,18 @@ public class RouteMakerFragment extends Fragment {
                     initSpotList(cityName);
                 } else if (resultCode == 2)//添加新景点
                 {
-                    addOneSpot(data.getStringExtra("spot"), data.getStringExtra("address"));
+                    addOneSpot((ScenerySpot)data.getSerializableExtra("spot"));
                 }
             }
 
             private void initSpotList(String city) {
-                //get a set of spots of the city user collected from the server
-                //ArrayList<HashMap<String,String>> favoriteSpot = RouteMakerService.getSpotsCollection(city,getActivity());
-                ArrayList<HashMap<String, String>> favoriteSpot = new ArrayList<>();
-                spots = (ArrayList<HashMap<String, String>>) favoriteSpot.clone();
-                //test case:
-                HashMap<String, String> test1 = new HashMap<>();
-                test1.put("name", "雍和宫");
-                test1.put("address", "北京市东城区雍和宫大街12号");
-                HashMap<String, String> test2 = new HashMap<>();
-                test2.put("name", "天坛");
-                test2.put("address", "北京市崇文区天坛内东里7号");
-                HashMap<String, String> test3 = new HashMap<>();
-                test3.put("name", "恭王府");
-                test3.put("address", "北京市西城区柳荫街甲14号");
-                spots.add(test1);
-                spots.add(test2);
-                spots.add(test3);
-
-
-                adapter = new BasicSettingsSpotAdapter(getActivity(), spots, spotListView);
+                adapter = new BasicSettingsSpotAdapter(getActivity(), spotListView);
                 spotListView.setAdapter(adapter);
                 adaptListViewHeight(spotListView, adapter);
             }
 
-            private void addOneSpot(String spotName, String address) {
-                HashMap<String, String> test1 = new HashMap<>();
-                test1.put("name", spotName);
-                test1.put("address", address);
-                spots.add(test1);
+            private void addOneSpot(ScenerySpot scenerySpot) {
+                TravelBag.getInstance().addScenery(scenerySpot);
                 adapter.notifyDataSetChanged();
                 adaptListViewHeight(spotListView, adapter);
             }
@@ -300,13 +283,13 @@ public class RouteMakerFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    return RouteAutoGenerator.executeBasicSettings(cityName, spots, day, trafficInfo, dietInfo, getActivity());
+                    return RouteAutoGenerator.executeBasicSettings(cityName,TravelBag.getInstance().getScenerySpotList(), day, trafficInfo, dietInfo, getActivity());
                 }
 
                 @Override
                 protected void onPostExecute(Object result) {
                     super.onPostExecute(result);
-                    MyHandler handler = new MyHandler(spots.size() + 1);
+                    MyHandler handler = new MyHandler(TravelBag.getInstance().getScenerySpotList().size() * (TravelBag.getInstance().getScenerySpotList().size() - 1) / 2 + 1);
                     spotList = (ArrayList<RouteData.SpotTemp>)result;
                     RouteAutoGenerator.getSpotTimeAndHotel(handler,spotList,getActivity());
                 }
@@ -322,7 +305,7 @@ public class RouteMakerFragment extends Fragment {
             private StickyListHeadersListView stickyListHeadersListView;
             private SpotSettingsAdapter adapter;
             private ListView newSpotListView;
-            private ArrayList<HashMap<String, String>> newSpots;
+            private ArrayList<ScenerySpot> newSpots;
             private BasicSettingsSpotAdapter newSpotAdapter;
 
             @Override
@@ -693,8 +676,17 @@ public class RouteMakerFragment extends Fragment {
                         }
                         String result =  RouteAutoGenerator.generateSpotSettingsPlan(spotList, getActivity());
                         if(result.equals("success")) {
-                            nextStep();
+                            if(currStep == 0) {//处在BasicSettings环节
+                                nextStep();
+                                ProgressDialogController.dismiss();
+                            }else {//处在SpotSettings环节
+                                ProgressDialogController.dismiss();
+                                fragmentManager.popBackStack();
+                                fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, fragments.get(currStep)).commit();
+                            }
+                        }else {
                             ProgressDialogController.dismiss();
+                            Toast.makeText(getActivity(),"景点数量过多，不能生成合理的旅行计划，请减少景点数量或增加旅行天数",Toast.LENGTH_LONG).show();
                         }
                     }else if(msg.getData().getString("source").equals("spot")) {
                         nextStep();

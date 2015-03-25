@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.findspot.ShowHotel;
 import com.eztrip.findspot.ShowScenerySpot;
 import com.eztrip.map.MapActivity;
 import com.eztrip.model.RouteData;
@@ -146,11 +147,22 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到景点信息页面
-                Intent intent = new Intent(context, ShowScenerySpot.class);
+                Intent intent;
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("spot", TravelBag.getInstance().getScenerySpotList().get(position));
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                if(RouteData.spotTempInfo.get(position).type.equals(RouteData.ActivityType.SPOT)) {
+                    intent = new Intent(context, ShowScenerySpot.class);
+                    bundle.putSerializable("spot", RouteData.spotTempInfo.get(position).scenerySpot);
+                    bundle.putBoolean("hide",true);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else {
+                    intent = new Intent(context, ShowHotel.class);
+                    bundle.putSerializable("hotel",RouteData.hotelInfo);
+                    bundle.putString("source","see");
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+
             }
         });
         return convertView;

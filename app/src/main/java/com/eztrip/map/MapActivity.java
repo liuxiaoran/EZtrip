@@ -2,6 +2,7 @@ package com.eztrip.map;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class MapActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
         mMapView = (MapView) findViewById(R.id.bmapView);
         preNextLayout = (LinearLayout)findViewById(R.id.pre_next_layout);
         mBaiduMap = mMapView.getMap();
@@ -52,10 +54,11 @@ public class MapActivity extends Activity {
                             .fromResource(R.drawable.ic_marka)));
             mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude))));
             preNextLayout.setVisibility(View.GONE);
-        }else  if(type.equals("route")) {
+        }else if(type.equals("route")) {
             int index = b.getInt("index");
-            if(RouteData.singleEvents.get(index).type.equals(MapActivity.this.getResources().getString(R.string.routemaker_trafficsettings_public))) {
-                route = RouteData.singleEvents.get(index).getTransitRouteLine(MapActivity.this);
+            Log.e("index",Integer.toString(index));
+            if(RouteData.trafficInfo.equals(MapActivity.this.getResources().getString(R.string.routemaker_trafficsettings_public))) {
+                route = RouteData.singleEvents.get(index).transitRouteLine;
                 TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap) {
                     @Override
                     public BitmapDescriptor getStartMarker() {
