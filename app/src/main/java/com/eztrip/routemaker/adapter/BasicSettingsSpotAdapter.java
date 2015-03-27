@@ -28,6 +28,7 @@ public class BasicSettingsSpotAdapter extends BaseAdapter {
 
     /**
      * use data from TravelBag
+     *
      * @param context
      * @param listView
      */
@@ -39,6 +40,7 @@ public class BasicSettingsSpotAdapter extends BaseAdapter {
 
     /**
      * use data from parameters
+     *
      * @param context
      * @param scenerySpotArrayList
      * @param listView

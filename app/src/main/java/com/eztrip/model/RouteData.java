@@ -195,7 +195,7 @@ public class RouteData {
         public String longitude;//the longitude of the place
         public String address;//the address of the place
         /**
-         * @see utils.RouteAutoGenerator#combineTwoSpots(utils.SortedDistance[], java.util.ArrayList, int)
+         * @see utils.RouteAutoGenerator#combineTwoSpots(utils.SortedDistance[], java.util.ArrayList, int, double)
          */
         public int combinedVisitTime, leftRoadTime, rightRoadTime;
         public SpotTemp leftSpot, rightSpot;
@@ -246,6 +246,20 @@ public class RouteData {
         public DietTemp(String detail, int period) {
             this.detail = detail;
             this.period = period;
+        }
+
+        public DietTemp(DietTemp dietTemp){
+            this.period = dietTemp.period;
+            this.detail = dietTemp.detail;
+            this.latitude = dietTemp.latitude;
+            this.longitude = dietTemp.longitude;
+            this.address = dietTemp.address;
+            this.phone = dietTemp.phone;
+            this.imgsrc = dietTemp.imgsrc;
+            this.goodRemarks = dietTemp.goodRemarks;
+            this.commonRemarks = dietTemp.commonRemarks;
+            this.badRemarks = dietTemp.badRemarks;
+            this.recommendDishes = dietTemp.recommendDishes;
         }
 
         /**

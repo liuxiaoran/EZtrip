@@ -7,8 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.eztrip.findspot.RestaurantList;
 import com.eztrip.model.RouteData;
 import com.eztrip.routemaker.RouteMakerFragment;
 import com.loopj.android.http.AsyncHttpClient;
@@ -24,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +130,43 @@ public class RouteMakerService {
             }
         });
         return success[0] == 1;
+    }
+
+    public static void getNearbyRestaurants(final int period, String latitude, String longitude,final ArrayList<RouteData.DietTemp> dietList, final ProgressBar progressBar, final BaseAdapter adapter) {
+        Parameters parameters = new Parameters();
+        parameters.add("lng", longitude);
+        parameters.add("lat", latitude);
+        parameters.add("radius", 1000);
+        JuheData.executeWithAPI(APIConstants.DIET_INFO_ID, APIConstants.DIET_INFO_IP, JuheData.GET, parameters, new DataCallBack() {
+            @Override
+            public void resultLoaded(int err, String reason, String result) {
+
+                if (err == 0) {
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        JSONArray list = object.getJSONArray("result");
+                        for(int i = 0; i < list.length(); i++) {
+                            JSONObject restaurant = list.getJSONObject(i);
+                            dietList.add(new RouteData.DietTemp(period,
+                                    restaurant.getString("name"),
+                                    restaurant.getString("latitude"),
+                                    restaurant.getString("longitude"),
+                                    restaurant.getString("address"),
+                                    restaurant.getString("phone"),
+                                    restaurant.getString("photos"),
+                                    Integer.parseInt(restaurant.getString("very_good_remarks").equals("")?"0":restaurant.getString("very_good_remarks")) + Integer.parseInt(restaurant.getString("good_remarks").equals("")?"0":restaurant.getString("good_remarks")),
+                                    Integer.parseInt(restaurant.getString("common_remarks").equals("")?"0":restaurant.getString("common_remarks")),
+                                    Integer.parseInt(restaurant.getString("bad_remarks").equals("")?"0":restaurant.getString("bad_remarks")) + Integer.parseInt(restaurant.getString("very_bad_remarks").equals("")?"0":restaurant.getString("very_bad_remarks")),
+                                    new StringBuilder(restaurant.getString("recommended_dishes")).append(restaurant.getString("recommended_products").equals("") || restaurant.getString("recommended_dishes").equals("") ? "" : ",").append((restaurant.getString("recommended_products"))).toString()));
+                        }
+                        progressBar.setVisibility(View.GONE);
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     /**

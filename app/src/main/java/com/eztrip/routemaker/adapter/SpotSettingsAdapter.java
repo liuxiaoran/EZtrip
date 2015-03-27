@@ -139,8 +139,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.change.setVisibility(View.GONE);
             if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo.get(position).period] != 1) {
                 convertView.setVisibility(View.GONE);
-            }
-            else
+            } else
                 convertView.setVisibility(View.VISIBLE);
         }
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -149,16 +148,16 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 //TODO 跳转到景点信息页面
                 Intent intent;
                 Bundle bundle = new Bundle();
-                if(RouteData.spotTempInfo.get(position).type.equals(RouteData.ActivityType.SPOT)) {
+                if (RouteData.spotTempInfo.get(position).type.equals(RouteData.ActivityType.SPOT)) {
                     intent = new Intent(context, ShowScenerySpot.class);
                     bundle.putSerializable("spot", RouteData.spotTempInfo.get(position).scenerySpot);
-                    bundle.putBoolean("hide",true);
+                    bundle.putBoolean("hide", true);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
-                }else {
+                } else {
                     intent = new Intent(context, ShowHotel.class);
-                    bundle.putSerializable("hotel",RouteData.hotelInfo);
-                    bundle.putString("source","see");
+                    bundle.putSerializable("hotel", RouteData.hotelInfo);
+                    bundle.putString("source", "see");
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

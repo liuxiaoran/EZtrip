@@ -109,13 +109,13 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             public void onClick(View v) {
                 Intent intent = new Intent(context, MapActivity.class);
                 Bundle b = new Bundle();
-                if(RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.TRAFFIC)) {
-                    b.putString("type","route");
-                    b.putInt("index",position);
-                }else {
-                    b.putString("type","point");
-                    b.putString("latitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("latitude"));
-                    b.putString("longitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("longitude"));
+                if (RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.TRAFFIC)) {
+                    b.putString("type", "route");
+                    b.putInt("index", position);
+                } else {
+                    b.putString("type", "point");
+                    b.putString("latitude", RouteData.singleEvents.get(position).locationInfo.get(0).get("latitude"));
+                    b.putString("longitude", RouteData.singleEvents.get(position).locationInfo.get(0).get("longitude"));
                 }
                 intent.putExtras(b);
                 context.startActivity(intent);
@@ -174,21 +174,21 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
                     case SPOT:
                         intent = new Intent(context, ShowScenerySpot.class);
                         bundle.putSerializable("spot", RouteData.singleEvents.get(position).moreInfo);
-                        bundle.putBoolean("hide",true);
+                        bundle.putBoolean("hide", true);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                         break;
                     case ACCOMMODATION:
                         intent = new Intent(context, ShowHotel.class);
                         bundle.putSerializable("hotel", RouteData.singleEvents.get(position).moreInfo);
-                        bundle.putString("source","see");
+                        bundle.putString("source", "see");
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                         break;
                     case DIET:
                         intent = new Intent(context, ShowRestaurant.class);
                         bundle.putSerializable("rewstaurant", RouteData.singleEvents.get(position).moreInfo);
-                        bundle.putString("source","see");
+                        bundle.putString("source", "see");
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                         break;

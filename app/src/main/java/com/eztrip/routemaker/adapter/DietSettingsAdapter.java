@@ -1,6 +1,8 @@
 package com.eztrip.routemaker.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.findspot.RestaurantList;
+import com.eztrip.findspot.ShowRestaurant;
 import com.eztrip.model.RouteData;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -105,6 +109,15 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到餐厅信息页面
+                Intent intent = new Intent();
+                Bundle b = new Bundle();
+                b.putInt("period",position);
+                b.putString("latitude", RouteData.dietTempInfo[position].latitude);
+                b.putString("longitude",RouteData.dietTempInfo[position].longitude);
+                intent.setClass(context, RestaurantList.class);
+                intent.putExtras(b);
+                b.putString("source","change");
+                context.startActivity(intent);
                 Toast.makeText(context, "修改 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
             }
         });
@@ -112,7 +125,14 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到餐厅信息页面
-                Toast.makeText(context, "详细信息 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "详细信息 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                Bundle b = new Bundle();
+                b.putSerializable("restaurant",RouteData.dietTempInfo[position]);
+                b.putString("source","see");
+                intent.putExtras(b);
+                intent.setClass(context, ShowRestaurant.class);
+                context.startActivity(intent);
             }
         });
         return convertView;

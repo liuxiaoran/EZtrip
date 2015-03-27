@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eztrip.R;
 import com.eztrip.model.RouteData;
@@ -29,25 +31,28 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
     private int mScreenWidth;
     private Toolbar mToolbar;
     private RouteData.DietTemp restaurant;
-    public final int REPLACE_HOTEL = 1;
+    public static final int REPLACE_HOTEL = 2;
     private String source;
+    private int period;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.showhotel);
+        setContentView(R.layout.showrestaurant);
 
         initView();
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         mScreenWidth = metric.widthPixels; // 屏幕宽度（像素）
 
-        Intent intent = getIntent();
-        restaurant = (RouteData.DietTemp) intent.getSerializableExtra("restaurant");
-        source = intent.getStringExtra("source");
+        Bundle b = getIntent().getExtras();
+        restaurant = (RouteData.DietTemp) b.getSerializable("restaurant");
+        source = b.getString("source");
+        if(source.equals("change"))
+            period = b.getInt("period");
+        else
+            period = -1;
         fillViewsContent(restaurant);
-
-
     }
 
     public void restoreActionBar() {
@@ -55,7 +60,7 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("旅店信息");
+        actionBar.setTitle("饭店信息");
     }
 
 
@@ -85,12 +90,12 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
 
     private void initView() {
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.show_restaurant_toolbar);
         setSupportActionBar(mToolbar);
 
         sceneryIv = (ImageView) findViewById(R.id.showscenery_scenery_iv);
         titleTv = (TextView) findViewById(R.id.showscenery_title_tv);
-        commentTv = (TextView) findViewById(R.id.showscenery_comm_tv);
+        commentTv = (TextView) findViewById(R.id.show_restaurant_comm_tv);
         addressTv = (TextView) findViewById(R.id.showscenery_contact_tv);
         recommendTV = (TextView)findViewById(R.id.showscenery_specialty_tv);
         addBtn = (Button) findViewById(R.id.showscenery_add_btn);
@@ -105,6 +110,9 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
         Picasso.with(ShowRestaurant.this).load(restaurant.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.main_foreground)
                 .into(sceneryIv);
         titleTv.setText(restaurant.detail);
+        Log.e("good",Integer.toString(restaurant.goodRemarks));
+        Log.e("common",Integer.toString(restaurant.commonRemarks));
+        Log.e("bad",Integer.toString(restaurant.badRemarks));
         commentTv.setText("好评：" + restaurant.goodRemarks + "，中评：" + restaurant.commonRemarks + "，差评：" + restaurant.badRemarks);
         addressTv.setText("地址: " + restaurant.address + "\n电话：" + restaurant.phone);
         recommendTV.setText(restaurant.recommendDishes);
@@ -119,11 +127,12 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
     public void onClick(View view) {
         if (view.getId() == R.id.showscenery_add_btn) {
             //
+            RouteData.dietTempInfo[period] = new RouteData.DietTemp(restaurant);
+            Toast.makeText(ShowRestaurant.this,"当前饭店已改变",Toast.LENGTH_LONG).show();
             Intent intent = new Intent();
-            intent.putExtra("hotel",restaurant);
+            intent.putExtra("replace_restaurant", true);
             setResult(REPLACE_HOTEL,intent);
             finish();
-
         }
     }
 }

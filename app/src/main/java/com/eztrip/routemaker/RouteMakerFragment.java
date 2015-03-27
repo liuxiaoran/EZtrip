@@ -423,6 +423,12 @@ public class RouteMakerFragment extends Fragment {
                     return RouteAutoGenerator.executeDietSettings(getActivity());
                 }
             }
+
+            @Override
+            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                adapter.notifyDataSetChanged();
+            }
         };
         Fragment timeSettings = new Fragment() {
             private Button nextStep;
