@@ -1,6 +1,5 @@
 package com.eztrip.main;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -206,7 +205,7 @@ public class MainFragment extends Fragment {
                 routeList.add(singleEvent9);
 
             }
-            RecommandRouteDetailFragment fragment = new RecommandRouteDetailFragment();
+            RecommendRouteDetailFragment fragment = new RecommendRouteDetailFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable("recommand_route", routeList);
             fragment.setArguments(bundle);

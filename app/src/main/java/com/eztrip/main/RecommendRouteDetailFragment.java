@@ -24,7 +24,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by liuxiaoran on 15/3/26.
  */
-public class RecommandRouteDetailFragment extends Fragment {
+public class RecommendRouteDetailFragment extends Fragment {
 
     /**
      * 首页传递过来的路线的list
@@ -141,10 +141,11 @@ public class RecommandRouteDetailFragment extends Fragment {
 
     public boolean fragmentBackPress() {
 //        getFragmentManager().beginTransaction().hide(this).commit();
-        FragmentManager manager = getFragmentManager();
-        if (manager.getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStackImmediate();
-        }
+////        FragmentManager manager = getFragmentManager();
+////        if (manager.getBackStackEntryCount() > 0) {
+////            getFragmentManager().popBackStackImmediate();
+////        }
+        getFragmentManager().popBackStack();
         return true;
     }
 }

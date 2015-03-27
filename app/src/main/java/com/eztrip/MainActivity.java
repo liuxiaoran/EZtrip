@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.main.MainFragment;
-import com.eztrip.main.RecommandRouteDetailFragment;
+import com.eztrip.main.RecommendRouteDetailFragment;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.RouteMakerFragment;
 import com.eztrip.usercenter.UserCenterMainFragment;
@@ -34,7 +34,7 @@ public class MainActivity extends ActionBarActivity
     private long exitTime;
 
     // 这是我暂时定义的成员，用于fragment自己处理返回键
-    private RecommandRouteDetailFragment shownFragment;
+    private RecommendRouteDetailFragment shownFragment;
 
     private static final int ACTIVITY_PICKLOCAL = 2;
     private static final int ACTIVITY_PICKCAMERA = 1;
@@ -153,7 +153,7 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void setShownFragment(RecommandRouteDetailFragment fragment) {
+    public void setShownFragment(RecommendRouteDetailFragment fragment) {
         this.shownFragment = fragment;
     }
 

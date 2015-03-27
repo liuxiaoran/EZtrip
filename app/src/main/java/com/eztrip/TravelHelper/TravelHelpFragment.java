@@ -14,4 +14,5 @@ public class TravelHelpFragment extends Fragment {
         TravelHelpFragment.context = context;
         return new TravelHelpFragment();
     }
+
 }
