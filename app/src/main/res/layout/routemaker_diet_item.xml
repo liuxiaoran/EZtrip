@@ -36,20 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/item_delete"
-        android:layout_toLeftOf="@+id/item_map"
-        android:layout_toStartOf="@+id/item_map"
-        android:src="@drawable/ic_delete"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/default_padding"
-        android:layout_marginEnd="@dimen/default_padding" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/item_map"
-        android:src="@drawable/ic_map"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_delete"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/default_padding"
         android:layout_marginEnd="@dimen/default_padding" />

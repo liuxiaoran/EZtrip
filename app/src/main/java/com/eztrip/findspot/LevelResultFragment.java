@@ -120,6 +120,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             Picasso.with(getActivity()).load(scenerySpotArrayList.get(position).getImgurl()).placeholder(R.drawable.main_foreground)
                     .error(R.drawable.image_error).into(sceneryIv);
             lookBtn.setTag(scenerySpotArrayList.get(position));
+            addBtn.setTag(scenerySpotArrayList.get(position));
             addBtn.setOnClickListener(LevelResultFragment.this);
             lookBtn.setOnClickListener(LevelResultFragment.this);
             final int ppositon = position;
@@ -147,8 +148,8 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
         if (view.getId() == R.id.card_add_btn) {
             //  加入行囊
             TravelBag bag = TravelBag.getInstance();
-            bag.addScenery((ScenerySpot) view.getTag());
-            Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();
+            if(bag.addScenery((ScenerySpot) view.getTag()))
+                Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();
 
         } else if (view.getId() == R.id.card_look_btn) {
             Intent intent = new Intent(getActivity(), ShowScenerySpot.class);

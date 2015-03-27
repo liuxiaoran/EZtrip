@@ -183,7 +183,10 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         if (view.getId() == R.id.showscenery_add_btn) {
             //加入行囊
             TravelBag bag = TravelBag.getInstance();
-            bag.addScenery((ScenerySpot) view.getTag());
+            if(bag.addScenery((ScenerySpot) view.getTag()))
+                Toast.makeText(ShowScenerySpot.this,"加入行囊成功，在“发起旅行”中可以规划整个线路",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(ShowScenerySpot.this,"已经加入过行囊",Toast.LENGTH_LONG).show();
 
         } else if (view.getId() == R.id.showscenery_look_btn) {
             // lookBtn

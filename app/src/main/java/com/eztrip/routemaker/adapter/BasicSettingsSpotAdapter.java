@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.eztrip.R;
+import com.eztrip.model.ScenerySpot;
+import com.eztrip.model.TravelBag;
 import com.eztrip.routemaker.RouteMakerFragment;
 
 import java.util.ArrayList;
@@ -21,25 +23,42 @@ import java.util.HashMap;
  */
 public class BasicSettingsSpotAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<HashMap<String, String>> text;
+    private ArrayList<ScenerySpot> scenerySpotArrayList;
     private ListView listView;
 
-    public BasicSettingsSpotAdapter(Context context, ArrayList<HashMap<String, String>> text, ListView listView) {
+    /**
+     * use data from TravelBag
+     * @param context
+     * @param listView
+     */
+    public BasicSettingsSpotAdapter(Context context, ListView listView) {
         this.context = context;
-        this.text = text;
         this.listView = listView;
+        this.scenerySpotArrayList = TravelBag.getInstance().getScenerySpotList();
+    }
+
+    /**
+     * use data from parameters
+     * @param context
+     * @param scenerySpotArrayList
+     * @param listView
+     */
+    public BasicSettingsSpotAdapter(Context context, ArrayList<ScenerySpot> scenerySpotArrayList, ListView listView) {
+        this.context = context;
+        this.listView = listView;
+        this.scenerySpotArrayList = scenerySpotArrayList;
     }
 
     @Override
     public int getCount() {
 // TODO Auto-generated method stub
-        return text.size();
+        return scenerySpotArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
 // TODO Auto-generated method stub
-        return text.get(position);
+        return scenerySpotArrayList.get(position);
     }
 
     @Override
@@ -60,7 +79,7 @@ public class BasicSettingsSpotAdapter extends BaseAdapter {
         }
         final TextView textView = (TextView) view
                 .findViewById(R.id.routemaker_basicsettings_spotlist_name);
-        textView.setText(text.get(position).get("name"));
+        textView.setText(scenerySpotArrayList.get(position).title);
         final ImageView imageView = (ImageView) view
                 .findViewById(R.id.routemaker_basicsettings_spotlist_namesimple_item_delete);
         imageView.setTag(position);
@@ -68,7 +87,7 @@ public class BasicSettingsSpotAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                text.remove(index);
+                scenerySpotArrayList.remove(index);
                 notifyDataSetChanged();
                 RouteMakerFragment.adaptListViewHeight(listView, BasicSettingsSpotAdapter.this);
             }

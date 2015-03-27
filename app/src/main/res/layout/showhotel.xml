@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ECECEC"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/showscenery_scenery_iv"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+
+                android:padding="6dp"
+
+                />
+
+
+            <TextView
+                android:id="@+id/showscenery_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:textSize="25sp" />
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="1dp"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/showscenery_intro_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/satisfaction"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/showscenery_satisfaction_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="地址"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/showscenery_address_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="等级"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/showscenery_grade_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
+
+
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ECECEC"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/layout_detail"
+                        android:layout_weight="0.5">
+                        <info.hoang8f.widget.FButton
+                            android:id="@+id/showscenery_look_btn"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:text="详情"
+                            android:textColor="@color/white"
+                            fbutton:buttonColor="@color/customize"
+                            fbutton:cornerRadius="8dp"
+                            fbutton:shadowColor="@color/fbutton_color_asbestos"
+                            fbutton:shadowEnabled="false" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/layout_replace"
+                        android:layout_weight="0.5">
+                        <info.hoang8f.widget.FButton
+                            android:id="@+id/showscenery_add_btn"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/replace_hotel"
+                            android:textColor="@color/white"
+                            fbutton:buttonColor="@color/customize"
+                            fbutton:cornerRadius="8dp"
+                            fbutton:shadowColor="@color/fbutton_color_asbestos"
+                            fbutton:shadowEnabled="false" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

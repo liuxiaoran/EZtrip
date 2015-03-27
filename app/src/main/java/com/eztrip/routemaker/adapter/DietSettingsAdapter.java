@@ -75,7 +75,6 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
         holder.change = (ImageView) convertView.findViewById(R.id.item_change);
         holder.detail = (TextView) convertView.findViewById(R.id.item_content);
         holder.delete = (ImageView) convertView.findViewById(R.id.item_delete);
-        holder.map = (ImageView) convertView.findViewById(R.id.item_map);
 //        } else {
 //            holder = (ViewHolder) convertView.getTag();
 //        }
@@ -95,13 +94,6 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
                 break;
         }
         holder.detail.setText(timePeriod + RouteData.dietTempInfo[position].detail);
-        holder.map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO 跳转到地图页面
-                Toast.makeText(context, "地图定位 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
-            }
-        });
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +120,6 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
 
     class ViewHolder {
         ImageView change;
-        ImageView map;
         TextView detail;
         ImageView delete;
     }

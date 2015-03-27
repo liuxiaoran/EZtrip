@@ -1,6 +1,8 @@
 package com.eztrip.routemaker.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.findspot.ShowHotel;
+import com.eztrip.findspot.ShowScenerySpot;
+import com.eztrip.map.MapActivity;
 import com.eztrip.model.RouteData;
+import com.eztrip.model.ScenerySpot;
+import com.eztrip.model.TravelBag;
 
 import java.util.Collections;
 
@@ -84,7 +91,6 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
 //        if (convertView == null) {
         holder = new ViewHolder();
         convertView = inflater.inflate(R.layout.routemaker_spot_item, parent, false);
-        holder.map = (ImageView) convertView.findViewById(R.id.item_map);
         holder.change = (ImageView) convertView.findViewById(R.id.item_change);
         holder.detail = (TextView) convertView.findViewById(R.id.item_content);
         holder.up = (ImageView) convertView.findViewById(R.id.item_up);
@@ -94,13 +100,6 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
 //        } else {
 //            holder = (ViewHolder) convertView.getTag();
 //        }
-        holder.map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO 跳转到地图页面
-                Toast.makeText(context, "地图定位 " + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
-            }
-        });
         holder.detail.setText(RouteData.spotTempInfo.get(position).detail);
         if (RouteData.spotTempInfo.get(position).type == RouteData.ActivityType.SPOT) {
             holder.change.setVisibility(View.GONE);
@@ -138,7 +137,6 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.up.setVisibility(View.GONE);
             holder.down.setVisibility(View.GONE);
             holder.change.setVisibility(View.GONE);
-            holder.map.setVisibility(View.GONE);
             if (RouteData.spotTempPeriodItemCount[RouteData.spotTempInfo.get(position).period] != 1) {
                 convertView.setVisibility(View.GONE);
             }
@@ -149,7 +147,22 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
             @Override
             public void onClick(View v) {
                 //TODO 跳转到景点信息页面
-                Toast.makeText(context, "详细信息 " + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
+                Intent intent;
+                Bundle bundle = new Bundle();
+                if(RouteData.spotTempInfo.get(position).type.equals(RouteData.ActivityType.SPOT)) {
+                    intent = new Intent(context, ShowScenerySpot.class);
+                    bundle.putSerializable("spot", RouteData.spotTempInfo.get(position).scenerySpot);
+                    bundle.putBoolean("hide",true);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else {
+                    intent = new Intent(context, ShowHotel.class);
+                    bundle.putSerializable("hotel",RouteData.hotelInfo);
+                    bundle.putString("source","see");
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+
             }
         });
         return convertView;
@@ -182,7 +195,6 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
         ImageView up;
         ImageView down;
         ImageView change;
-        ImageView map;
         TextView detail;
     }
 

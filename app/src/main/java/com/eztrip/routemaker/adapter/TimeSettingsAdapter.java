@@ -3,6 +3,8 @@ package com.eztrip.routemaker.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.findspot.ShowHotel;
+import com.eztrip.findspot.ShowRestaurant;
+import com.eztrip.findspot.ShowScenerySpot;
+import com.eztrip.map.MapActivity;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 
@@ -72,7 +78,7 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.routemaker_time_item, parent, false);
@@ -101,14 +107,23 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
         holder.map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 跳转到地图页面
-                Toast.makeText(context, "地图定位 " + RouteData.singleEvents.get(position).detail, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(context, MapActivity.class);
+                Bundle b = new Bundle();
+                if(RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.TRAFFIC)) {
+                    b.putString("type","route");
+                    b.putInt("index",position);
+                }else {
+                    b.putString("type","point");
+                    b.putString("latitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("latitude"));
+                    b.putString("longitude",RouteData.singleEvents.get(position).locationInfo.get(0).get("longitude"));
+                }
+                intent.putExtras(b);
+                context.startActivity(intent);
             }
         });
         holder.change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 跳转到餐厅信息页面
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 View view = inflater.inflate(R.layout.routemaker_timesettings_timepicker, null);
                 builder.setView(view);
@@ -153,8 +168,36 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 跳转到景点信息页面
-                Toast.makeText(context, "详细信息 " + RouteData.singleEvents.get(position).detail, Toast.LENGTH_LONG).show();
+                Intent intent;
+                Bundle bundle = new Bundle();
+                switch (RouteData.singleEvents.get(position).type) {
+                    case SPOT:
+                        intent = new Intent(context, ShowScenerySpot.class);
+                        bundle.putSerializable("spot", RouteData.singleEvents.get(position).moreInfo);
+                        bundle.putBoolean("hide",true);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                        break;
+                    case ACCOMMODATION:
+                        intent = new Intent(context, ShowHotel.class);
+                        bundle.putSerializable("hotel", RouteData.singleEvents.get(position).moreInfo);
+                        bundle.putString("source","see");
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                        break;
+                    case DIET:
+                        intent = new Intent(context, ShowRestaurant.class);
+                        bundle.putSerializable("rewstaurant", RouteData.singleEvents.get(position).moreInfo);
+                        bundle.putString("source","see");
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                        break;
+                    case TRAFFIC:
+                        holder.map.performClick();
+                        break;
+                    default:
+                        break;
+                }
             }
         });
         return convertView;

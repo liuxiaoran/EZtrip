@@ -1,6 +1,16 @@
 package com.eztrip.model;
 
 import java.io.Serializable;
+import android.app.Activity;
+
+import com.baidu.mapapi.search.core.RouteLine;
+import com.baidu.mapapi.search.route.DrivingRouteLine;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.TransitRouteLine;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.eztrip.R;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,7 +29,6 @@ public class RouteData {
     public static String trafficInfo;//method of traffic during the trip()
     public static String warning;
     public static String dietInfo;//it shows whether breakfast, lunch, and dinner need planning
-
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
 
     public static ArrayList<HashMap<String, String>> basicSettingsSpot;
@@ -29,6 +38,7 @@ public class RouteData {
 
     /**
      * Initializing member variable singleEvents
+     *
      */
     public static void setSingleEventsInstance() {
         RouteData.singleEvents = new ArrayList<>();
@@ -49,6 +59,9 @@ public class RouteData {
         public String detail;//the description of this event
         public List<HashMap<String, String>> locationInfo;//relative latitude and longitude information of this event
         public int timeLength;//unit : minute
+        public TransitRouteLine transitRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is public;
+        public DrivingRouteLine drivingRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is private;
+        public Serializable moreInfo;//more information of this event
 
         public String title; //如果是景点的话，title为景点名称
 
@@ -89,8 +102,10 @@ public class RouteData {
     /**
      * Initializing member variables spotTempInfo, spotTempPeriodItemCount
      *
-     * @param itemCount numbers of items
-     * @param day       numbers of day
+     * @param itemCount
+     *          numbers of items
+     * @param day
+     *          numbers of day
      */
     public static void setSpotTempInfoInstance(int itemCount, int day) {
         spotTempInfo = new ArrayList<>(itemCount + 6 * day);
@@ -138,6 +153,24 @@ public class RouteData {
             this.leftRoadTime = 0;
             this.rightRoadTime = 0;
             this.combinedVisitTime = this.recommendTime;
+            this.scenerySpot = null;
+        }
+
+        public void setSpotTemp(ActivityType activityType, int period, String detail, int recommendTime, String address, ScenerySpot scenerySpot) {
+            this.type = activityType;
+            this.period = period;
+            this.detail = detail;
+            this.recommendTime = recommendTime;
+            this.longitude = "0.0";
+            this.latitude = "0.0";
+            //spotTempPeriodItemCount[period]++;
+            this.address = address;
+            this.leftSpot = null;
+            this.rightSpot = null;
+            this.leftRoadTime = 0;
+            this.rightRoadTime = 0;
+            this.combinedVisitTime = this.recommendTime;
+            this.scenerySpot = scenerySpot;
         }
 
         public ActivityType type; //type of this event (ActivityType.ACCOMMODATION or ActivityType.SPOT)
@@ -152,6 +185,7 @@ public class RouteData {
          */
         public int combinedVisitTime, leftRoadTime, rightRoadTime;
         public SpotTemp leftSpot, rightSpot;
+        public ScenerySpot scenerySpot;//contains more details of the spot
     }
 
     /**
@@ -171,9 +205,9 @@ public class RouteData {
             dietTempInfo[i] = new DietTemp();
     }
 
-    public static class DietTemp {
+    public static class DietTemp implements Serializable {
         /**
-         * @see com.eztrip.model.RouteData.SpotTemp.period
+         * @see com.eztrip.model.RouteData.SpotTemp.period to understand the meaning of period
          */
         public int period;
         public String detail;//description of diet information
@@ -234,11 +268,10 @@ public class RouteData {
      * the hotel of the trip
      */
     public static Hotel hotelInfo;
-
     /**
      * class for storing data of the hotel
      */
-    public static class Hotel {
+    public static class Hotel implements Serializable {
         public String name;//the name of the hotel
         public String latitude;//the latitude of the hotel
         public String longitude;//the longitude of the hotel
@@ -247,8 +280,9 @@ public class RouteData {
         public String address;//the address of the hotel
         public String satisfaction;// the degree of satisfaction to the hotel
         public String imgsrc;//// the image url of the hotel
+        public String url;//the url of the hotel
 
-        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc) {
+        public Hotel(String name, String latitude, String longitude, int grade, String intro, String address, String satisfaction, String imgsrc, String url) {
             this.name = name;
             this.latitude = latitude;
             this.longitude = longitude;
@@ -256,6 +290,7 @@ public class RouteData {
             this.intro = intro;
             this.address = address;
             this.satisfaction = satisfaction;
+            this.url = url;
             this.imgsrc = imgsrc;
         }
 
