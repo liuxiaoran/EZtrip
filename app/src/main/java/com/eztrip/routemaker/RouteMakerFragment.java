@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,24 +26,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.route.DrivingRouteResult;
-import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
-import com.baidu.mapapi.search.route.PlanNode;
-import com.baidu.mapapi.search.route.RoutePlanSearch;
-import com.baidu.mapapi.search.route.TransitRoutePlanOption;
-import com.baidu.mapapi.search.route.TransitRouteResult;
-import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.eztrip.MainActivity;
-import com.eztrip.MainFragment;
+import com.eztrip.main.MainFragment;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
-import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 import com.eztrip.routemaker.adapter.BasicSettingsSpotAdapter;
 import com.eztrip.routemaker.adapter.DietSettingsAdapter;
@@ -54,7 +43,6 @@ import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.logging.Handler;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import utils.RouteAutoGenerator;
@@ -165,7 +153,7 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ProgressDialogController.show();
-                       new GenerateSpotListAsyncTask().execute();
+                        new GenerateSpotListAsyncTask().execute();
                     }
                 });
                 diet.setOnClickListener(new View.OnClickListener() {
@@ -307,8 +295,8 @@ public class RouteMakerFragment extends Fragment {
                 protected void onPostExecute(Object result) {
                     super.onPostExecute(result);
                     MyHandler handler = new MyHandler(spots.size() + 1);
-                    spotList = (ArrayList<RouteData.SpotTemp>)result;
-                    RouteAutoGenerator.getSpotTimeAndHotel(handler,spotList,getActivity());
+                    spotList = (ArrayList<RouteData.SpotTemp>) result;
+                    RouteAutoGenerator.getSpotTimeAndHotel(handler, spotList, getActivity());
                 }
             }
         };
@@ -353,7 +341,7 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ProgressDialogController.show();
-                        RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler());
+                        RouteAutoGenerator.executeSpotSettings(getActivity(), new MyHandler());
 //                        new GenerateDietListAsyncTask().execute();
                     }
                 });
@@ -383,7 +371,7 @@ public class RouteMakerFragment extends Fragment {
 
             class GenerateDietListAsyncTask extends GeneratorTask {
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler(0));
+                    return RouteAutoGenerator.executeSpotSettings(getActivity(), new MyHandler(0));
                 }
 
                 @Override
@@ -414,7 +402,7 @@ public class RouteMakerFragment extends Fragment {
 //                        new GenerateTimeListAsyncTask().execute();
                         ProgressDialogController.show();
                         RouteAutoGenerator.executeDietSettings(getActivity());
-                        RouteAutoGenerator.getTrafficTimes(getActivity(),new MyHandler(1 + RouteData.singleEvents.size() / 2));
+                        RouteAutoGenerator.getTrafficTimes(getActivity(), new MyHandler(1 + RouteData.singleEvents.size() / 2));
                     }
                 });
                 initListView();
@@ -548,8 +536,8 @@ public class RouteMakerFragment extends Fragment {
                     public void onClick(View v) {
                         String startTime = date.getText().toString();
                         String name = nameET.getText().toString();
-                        if(hint.getVisibility() == View.VISIBLE)
-                            Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
+                        if (hint.getVisibility() == View.VISIBLE)
+                            Toast.makeText(getActivity(), hint.getText().toString(), Toast.LENGTH_LONG).show();
                         else
                             RouteAutoGenerator.executeFinishSettings(new MyHandler(1), getActivity(), startTime, name);
                     }
@@ -567,7 +555,7 @@ public class RouteMakerFragment extends Fragment {
             };
 
             private void updateDateDisplay() {
-                date.setText(startYear + "-" + (((startMonth + 1)<10)?("0" + Integer.toString(startMonth + 1)):Integer.toString(startMonth + 1)) + "-" + ((startDay<10)?("0" + Integer.toString(startDay)):Integer.toString(startDay)));
+                date.setText(startYear + "-" + (((startMonth + 1) < 10) ? ("0" + Integer.toString(startMonth + 1)) : Integer.toString(startMonth + 1)) + "-" + ((startDay < 10) ? ("0" + Integer.toString(startDay)) : Integer.toString(startDay)));
                 Calendar currentDay = Calendar.getInstance();
                 RouteData.startDay.set(startYear, startMonth, startDay);
                 if (!currentDay.before(RouteData.startDay))
@@ -664,9 +652,10 @@ public class RouteMakerFragment extends Fragment {
         listView.setDividerHeight(0);
     }
 
-    public class MyHandler extends android.os.Handler{
+    public class MyHandler extends android.os.Handler {
         private int count;
-        public MyHandler(int a){
+
+        public MyHandler(int a) {
             this.count = a;
         }
 
@@ -685,30 +674,30 @@ public class RouteMakerFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.e("Count",Integer.toString(count));
-            if(msg.getData().getBoolean("minus")){
+            Log.e("Count", Integer.toString(count));
+            if (msg.getData().getBoolean("minus")) {
                 count--;
-                if(count <= 0){
-                    Log.e("success","success");
-                    if(msg.getData().getString("source").equals("basic")){
-                        for(int i = 0; i < spotList.size(); i++){
-                            for(int j = 0; j < spotList.size(); j++)
+                if (count <= 0) {
+                    Log.e("success", "success");
+                    if (msg.getData().getString("source").equals("basic")) {
+                        for (int i = 0; i < spotList.size(); i++) {
+                            for (int j = 0; j < spotList.size(); j++)
                                 RouteAutoGenerator.kSearch[i][j].destroy();
                         }
-                        String result =  RouteAutoGenerator.generateSpotSettingsPlan(spotList, getActivity());
-                        if(result.equals("success")) {
+                        String result = RouteAutoGenerator.generateSpotSettingsPlan(spotList, getActivity());
+                        if (result.equals("success")) {
                             nextStep();
                             ProgressDialogController.dismiss();
                         }
-                    }else if(msg.getData().getString("source").equals("spot")) {
+                    } else if (msg.getData().getString("source").equals("spot")) {
                         nextStep();
                         ProgressDialogController.dismiss();
-                    }else if(msg.getData().getString("source").equals("diet")) {
+                    } else if (msg.getData().getString("source").equals("diet")) {
                         RouteAutoGenerator.arrangeTimeSettingsTime();
                         nextStep();
                         ProgressDialogController.dismiss();
-                    }else if(msg.getData().getString("source").equals("finish")) {
-                        if(msg.getData().getBoolean("success")) {
+                    } else if (msg.getData().getString("source").equals("finish")) {
+                        if (msg.getData().getBoolean("success")) {
                             fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, MainFragment.newInstance(getActivity())).commit();
                         }
                     }
@@ -744,15 +733,16 @@ public class RouteMakerFragment extends Fragment {
         }
     }
 
-    static class ProgressDialogController{
+    static class ProgressDialogController {
         public static ProgressDialog progressDialog;
+
         public static void init(Activity activity) {
             ProgressDialogController.progressDialog = new ProgressDialog(activity);
             ProgressDialogController.progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
             ProgressDialogController.progressDialog.setMessage("处理中，请稍等。");
         }
 
-        public static void show(){
+        public static void show() {
             ProgressDialogController.progressDialog.show();
         }
 

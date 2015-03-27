@@ -126,7 +126,7 @@ public class FindSpotService {
     /**
      * 获得城市列表,并将城市列表写入数据库
      */
-    public static void getCityListAndWriteToDB(final Context context) {
+    public static void getCityListAndWriteToDB(final Activity activity) {
 
         final GB2Alpha gb2Alpha = new GB2Alpha();
         Parameters parameters = new Parameters();
@@ -152,7 +152,7 @@ public class FindSpotService {
                             //有些复杂的字取得的一个字是0，将这些城市不加入数据库中
                             if (!firstName.equals("0")) {
                                 City city = new City(name, cid, fid, level, firstName);
-                                CityDao cityDao = new CityDao(context);
+                                CityDao cityDao = new CityDao(activity);
                                 cityDao.addCity(city);
                             }
 
@@ -161,9 +161,10 @@ public class FindSpotService {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Intent i = new Intent(context, MainActivity.class);
-                    context.startActivity(i);
-                    ((Activity) context).overridePendingTransition(R.anim.welcome_anim_begin, R.anim.welcome_anim_end);
+                    Intent i = new Intent(activity, MainActivity.class);
+                    activity.startActivity(i);
+                    activity.finish();
+                    activity.overridePendingTransition(R.anim.welcome_anim_begin, R.anim.welcome_anim_end);
 
                 }
             }

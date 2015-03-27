@@ -1,7 +1,6 @@
 package com.eztrip;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +19,8 @@ import android.widget.Toast;
 
 import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.findspot.FindSpotMainFragment;
+import com.eztrip.main.MainFragment;
+import com.eztrip.main.RecommandRouteDetailFragment;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.RouteMakerFragment;
 import com.eztrip.usercenter.UserCenterMainFragment;
@@ -31,6 +32,9 @@ public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private long exitTime;
+
+    // 这是我暂时定义的成员，用于fragment自己处理返回键
+    private RecommandRouteDetailFragment shownFragment;
 
     private static final int ACTIVITY_PICKLOCAL = 2;
     private static final int ACTIVITY_PICKCAMERA = 1;
@@ -149,6 +153,10 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    public void setShownFragment(RecommandRouteDetailFragment fragment) {
+        this.shownFragment = fragment;
+    }
+
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -241,14 +249,23 @@ public class MainActivity extends ActionBarActivity
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (currFragment instanceof RouteMakerFragment) {
                 ((RouteMakerFragment) currFragment).moveToLastStep();
+                return true;
             }
-            if (System.currentTimeMillis() - exitTime > 2000) {
+            if (shownFragment != null) {
+                Boolean ret = shownFragment.fragmentBackPress();
+                shownFragment = null;
+                return ret;
+            } else if (System.currentTimeMillis() - exitTime > 2000) {
                 Toast.makeText(this, "再点一次退出应用", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();
             }
+            return true;
+
         }
-        return true;
+
+        return super.onKeyDown(keyCode, event);
+
     }
 }

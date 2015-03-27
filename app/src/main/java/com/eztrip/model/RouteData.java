@@ -1,5 +1,6 @@
 package com.eztrip.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class RouteData {
     public static String trafficInfo;//method of traffic during the trip()
     public static String warning;
     public static String dietInfo;//it shows whether breakfast, lunch, and dinner need planning
+
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
 
     public static ArrayList<HashMap<String, String>> basicSettingsSpot;
@@ -27,7 +29,6 @@ public class RouteData {
 
     /**
      * Initializing member variable singleEvents
-     *
      */
     public static void setSingleEventsInstance() {
         RouteData.singleEvents = new ArrayList<>();
@@ -40,7 +41,7 @@ public class RouteData {
     /**
      * Class for expressing a event during a trip
      */
-    public static class SingleEvent {
+    public static class SingleEvent implements Serializable {
         public int day;//the number of the day that is relative to the startDay
         public ActivityType type;//Type of the event
         public Clock startTime;//the start day of this event ex：11:00
@@ -48,6 +49,9 @@ public class RouteData {
         public String detail;//the description of this event
         public List<HashMap<String, String>> locationInfo;//relative latitude and longitude information of this event
         public int timeLength;//unit : minute
+
+        public String title; //如果是景点的话，title为景点名称
+
         public SingleEvent() {
         }
 
@@ -85,10 +89,8 @@ public class RouteData {
     /**
      * Initializing member variables spotTempInfo, spotTempPeriodItemCount
      *
-     * @param itemCount
-     *          numbers of items
-     * @param day
-     *          numbers of day
+     * @param itemCount numbers of items
+     * @param day       numbers of day
      */
     public static void setSpotTempInfoInstance(int itemCount, int day) {
         spotTempInfo = new ArrayList<>(itemCount + 6 * day);
@@ -232,6 +234,7 @@ public class RouteData {
      * the hotel of the trip
      */
     public static Hotel hotelInfo;
+
     /**
      * class for storing data of the hotel
      */

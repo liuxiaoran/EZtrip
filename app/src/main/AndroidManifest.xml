@@ -123,7 +123,7 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/WelcomeStyle">
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -152,6 +152,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Toolbar" />
 
+        <!--   recommand routa detail -->
+        <activity
+            android:name=".main.RecommandRouteDetailFragment"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Toolbar">
+
+        </activity>
 
         <!-- findSpot section-->
         <activity

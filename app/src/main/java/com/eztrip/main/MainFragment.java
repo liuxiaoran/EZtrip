@@ -1,5 +1,6 @@
-package com.eztrip;
+package com.eztrip.main;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,13 @@ import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.eztrip.MyContext;
+import com.eztrip.R;
 import com.eztrip.citylist.CityList;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
+
+import java.util.ArrayList;
 
 import utils.BaiduLocationHelper.LocationHelper;
 
@@ -74,6 +79,7 @@ public class MainFragment extends Fragment {
             view1.setTag(i);
             view1.setOnClickListener(new CickListener());
             recommandLayout.addView(view1);
+
         }
 
 
@@ -120,14 +126,15 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            ArrayList<RouteData.SingleEvent> routeList = new ArrayList<>();
             if (v.getId() == R.id.start_place_tv) {
 
             } else if (v.getId() == R.id.destination_tv) {
                 Intent intent = new Intent(getActivity(), CityList.class);
                 startActivityForResult(intent, REQUEST_SELECT_CITY_CODE);
-            } else if (((int) v.getTag()) == 1) {
+            } else if (((int) v.getTag()) == 0) {
+
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天安门");
-                RouteData.SingleEvent transport1 = new RouteData.SingleEvent(1, RouteData.ActivityType.TRAFFIC, new Clock(11, 0), new Clock(11, 30), "天安门--毛主席纪念堂");
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "毛主席纪念堂");
                 RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "故宫");
                 RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北海公园");
@@ -140,10 +147,19 @@ public class MainFragment extends Fragment {
 
                 RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天坛");
                 RouteData.SingleEvent singleEvent10 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北京前门大街");
+                routeList.add(singleEvent1);
+                routeList.add(singleEvent2);
+                routeList.add(singleEvent3);
+                routeList.add(singleEvent4);
+                routeList.add(singleEvent5);
+                routeList.add(singleEvent6);
+                routeList.add(singleEvent7);
+                routeList.add(singleEvent8);
+                routeList.add(singleEvent9);
+                routeList.add(singleEvent10);
 
 
-            } else if ((int) v.getTag() == 2) {
-
+            } else if ((int) v.getTag() == 1) {
                 //http://dujia.lvmama.com/group/361528
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "南溪山");
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "漓江风光");
@@ -157,8 +173,17 @@ public class MainFragment extends Fragment {
                 RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "木龙湖.东盟园");
                 RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "榕、杉湖景区");
 
-            } else if ((int) v.getTag() == 3) {
+                routeList.add(singleEvent1);
+                routeList.add(singleEvent2);
+                routeList.add(singleEvent3);
+                routeList.add(singleEvent4);
+                routeList.add(singleEvent5);
+                routeList.add(singleEvent6);
+                routeList.add(singleEvent7);
+                routeList.add(singleEvent8);
+                routeList.add(singleEvent9);
 
+            } else if ((int) v.getTag() == 2) {
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "蜈支洲岛");
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "亚龙湾热带天堂森林公园");
                 RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(15, 30), "大东海国家旅游度假区");
@@ -167,12 +192,30 @@ public class MainFragment extends Fragment {
                 RouteData.SingleEvent singleEvent5 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 00), "三亚兰花大世界");
                 RouteData.SingleEvent singleEvent6 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(14, 45), "天涯海角");
 
-                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "椰田古寨");
-                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "奥特莱斯文化旅游区");
-                RouteData.SingleEvent singleEvent10 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "日月湾南海渔村");
-
+                RouteData.SingleEvent singleEvent7 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "椰田古寨");
+                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "奥特莱斯文化旅游区");
+                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "日月湾南海渔村");
+                routeList.add(singleEvent1);
+                routeList.add(singleEvent2);
+                routeList.add(singleEvent3);
+                routeList.add(singleEvent4);
+                routeList.add(singleEvent5);
+                routeList.add(singleEvent6);
+                routeList.add(singleEvent7);
+                routeList.add(singleEvent8);
+                routeList.add(singleEvent9);
 
             }
+            RecommandRouteDetailFragment fragment = new RecommandRouteDetailFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("recommand_route", routeList);
+            fragment.setArguments(bundle);
+
+            android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.hide(MainFragment.this);
+            transaction.add(R.id.container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
         }
     }

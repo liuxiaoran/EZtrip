@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.eztrip.MainActivity;
+import com.eztrip.MyContext;
 import com.eztrip.R;
 
 
@@ -100,25 +101,27 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        //TODO: 得到Username
-        String userName = "";
+        String userName = "未登录";
+        if (MyContext.newInstance(getActivity()).getCurrentUser() != null) {
+            userName = MyContext.newInstance(getActivity()).getCurrentUser().getName();
+        }
+
         DrawerListViewAdapter adapter = new DrawerListViewAdapter(
                 getActivity(),
                 new String[]{
+                        getString(R.string.title_section1),
                         userName,
-                        getString(R.string.title_section2),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
                         getString(R.string.title_section5),
 
                 },
                 new int[]{
-                        R.drawable.user_default_avatar,  //用户的头像
-                        R.drawable.ic_hot_car_show,
-                        R.drawable.ic_list_products,
-                        R.drawable.ic_furniture_models,
-                        R.drawable.ic_collection,
-                        R.drawable.ic_content_create
+                        R.drawable.ic_home,// 首页
+                        R.drawable.ic_user_center, //用户中心
+                        R.drawable.ic_explore,  //发现景点
+                        R.drawable.ic_attraction, //发起旅行
+                        R.drawable.ic_travel_assistant,  //旅行助手
                 }
         );
         mDrawerListView.setAdapter(adapter);

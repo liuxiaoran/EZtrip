@@ -1,11 +1,13 @@
 package com.eztrip.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Steve on 2015/3/15.
  * class for showing and calculating time(format : hh:mm)
  */
 
-public class Clock {
+public class Clock implements Serializable {
 
     public int hour;
     public int minute;
