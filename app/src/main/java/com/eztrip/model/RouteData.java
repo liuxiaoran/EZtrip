@@ -85,6 +85,20 @@ public class RouteData {
             this.detail = detail;
         }
 
+        public DrivingRouteLine getDrivingRouteLine(Activity activity) {
+            if (this.type.equals(ActivityType.TRAFFIC) && RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private)))
+                return this.drivingRouteLine;
+            else
+                return null;
+        }
+
+        public TransitRouteLine getTransitRouteLine(Activity activity) {
+            if (this.type.equals(ActivityType.TRAFFIC) && RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public)))
+                return this.transitRouteLine;
+            else
+                return null;
+        }
+
     }
 
     /**

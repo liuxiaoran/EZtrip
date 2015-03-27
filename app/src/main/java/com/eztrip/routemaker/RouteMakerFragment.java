@@ -41,7 +41,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.eztrip.MainActivity;
-import com.eztrip.MainFragment;
+import com.eztrip.main.MainFragment;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
 import com.eztrip.model.Clock;
