@@ -21,6 +21,7 @@ import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.main.MainFragment;
 import com.eztrip.main.RecommendRouteDetailFragment;
+import com.eztrip.map.MapActivity;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.RouteMakerFragment;
 import com.eztrip.usercenter.UserCenterMainFragment;
@@ -43,13 +44,14 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private Fragment currFragment;
+    public Fragment currFragment;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
     private Toolbar mToolbar;
     private File imgFile = null;
+    public FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager;
+
         switch (position) {
             case 0:
                 fragmentManager = getSupportFragmentManager();
@@ -103,7 +105,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = new RouteMakerFragment();
+                currFragment = RouteMakerFragment.newInstance(MainActivity.this);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, currFragment)
                         .commit();
@@ -122,8 +124,6 @@ public class MainActivity extends ActionBarActivity
 //                        .replace(R.id.container, currFragment)
 //                        .commit();
 //                break;
-
-
             default:
                 break;
         }

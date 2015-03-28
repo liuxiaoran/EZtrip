@@ -53,6 +53,7 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
         else
             period = -1;
         fillViewsContent(restaurant);
+        Log.e("position4",Integer.toString(period));
     }
 
     public void restoreActionBar() {
@@ -129,6 +130,7 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
             //
             RouteData.dietTempInfo[period] = new RouteData.DietTemp(restaurant);
             Toast.makeText(ShowRestaurant.this,"当前饭店已改变",Toast.LENGTH_LONG).show();
+            Log.e("period" + Integer.toString(period),RouteData.dietTempInfo[period].detail);
             Intent intent = new Intent();
             intent.putExtra("replace_restaurant", true);
             setResult(REPLACE_HOTEL,intent);

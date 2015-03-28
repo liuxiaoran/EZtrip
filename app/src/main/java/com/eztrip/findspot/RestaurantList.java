@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class RestaurantList extends ActionBarActivity{
         latitude = b.getString("latitude");
         longitude = b.getString("longitude");
         period = b.getInt("period");
+        Log.e("position2", Integer.toString(period));
         RouteMakerService.getNearbyRestaurants(period,latitude,longitude,dietList,progressBar,adapter);
     }
 
@@ -132,7 +134,8 @@ public class RestaurantList extends ActionBarActivity{
                     Bundle b = new Bundle();
                     b.putSerializable("restaurant",dietList.get(position));
                     b.putString("source","change");
-                    b.putInt("index",period);
+                    b.putInt("period",period);
+                    Log.e("position3",Integer.toString(period));
                     intent.putExtras(b);
                     startActivity(intent);
                 }

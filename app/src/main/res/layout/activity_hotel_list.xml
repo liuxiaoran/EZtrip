@@ -3,8 +3,45 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include
-        android:id="@+id/show_hotel_toolbar"
+        android:id="@+id/hotel_list_toolbar"
         layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/hotel_list_mainlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/hotel_list_divider_iv"
+                android:src="@drawable/findspot_tab_divider"
+                android:layout_width="2dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true" />
+
+            <Spinner
+                android:id="@+id/hotel_list_level_spn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toLeftOf="@id/hotel_list_divider_iv"
+                android:gravity="center">
+
+            </Spinner>
+
+            <Button
+                android:id="@+id/hotel_list_search_btn"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@id/hotel_list_divider_iv"
+                android:text="搜索"
+                android:onClick="searchHotel"/>
+
+        </RelativeLayout>
+    </LinearLayout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

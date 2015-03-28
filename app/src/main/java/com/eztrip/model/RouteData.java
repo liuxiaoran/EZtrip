@@ -30,9 +30,11 @@ public class RouteData {
     public static String warning;
     public static String dietInfo;//it shows whether breakfast, lunch, and dinner need planning
     public enum ActivityType {SPOT, DIET, TRAFFIC, ACCOMMODATION, OTHERS, NONE}//Types of a event
+    public static String cityID;//the id of the city in Juhe data
 
     public static ArrayList<HashMap<String, String>> basicSettingsSpot;
-    public static String spotSettingsHint;//hint that is shown when spotSettingsFragment is created
+    public static String spotSettingsHint = "";//hint that is shown when spotSettingsFragment is created
+    public static String timeSettingsHint = "";//hint that is shown when spotSettingsFragment is created
 
     public static HashMap[][] distance;//Used in RouteAutoGenerator to store distances between every two spots
 
@@ -62,6 +64,10 @@ public class RouteData {
         public TransitRouteLine transitRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is public;
         public DrivingRouteLine drivingRouteLine;//only be accessible when the type of this is TRAFFIC and the trafficInfo is private;
         public Serializable moreInfo;//more information of this event
+        /**
+         * @see com.eztrip.model.RouteData.SpotTemp.period to understand the meaning of period
+         */
+        public int period;
 
         public String title; //如果是景点的话，title为景点名称
 
@@ -112,6 +118,10 @@ public class RouteData {
      * It is defined for showing the list of spotTempInfo
      */
     public static int[] spotTempPeriodItemCount;
+    /**
+     * Temporarily store the total minute spent in traffic events in each period
+     */
+    public static int[] trafficTimeOccupied;
 
     /**
      * Initializing member variables spotTempInfo, spotTempPeriodItemCount
@@ -124,6 +134,7 @@ public class RouteData {
     public static void setSpotTempInfoInstance(int itemCount, int day) {
         spotTempInfo = new ArrayList<>(itemCount + 6 * day);
         spotTempPeriodItemCount = new int[3 * day];
+        trafficTimeOccupied = new int[3 * day];
     }
 
     public static void setSpotTempPeriodItemCount() {
@@ -160,7 +171,6 @@ public class RouteData {
             this.recommendTime = recommendTime;
             this.longitude = "0.0";
             this.latitude = "0.0";
-            //spotTempPeriodItemCount[period]++;
             this.address = address;
             this.leftSpot = null;
             this.rightSpot = null;
@@ -177,7 +187,6 @@ public class RouteData {
             this.recommendTime = recommendTime;
             this.longitude = "0.0";
             this.latitude = "0.0";
-            //spotTempPeriodItemCount[period]++;
             this.address = address;
             this.leftSpot = null;
             this.rightSpot = null;
@@ -320,6 +329,17 @@ public class RouteData {
             this.satisfaction = satisfaction;
             this.url = url;
             this.imgsrc = imgsrc;
+        }
+        public Hotel(Hotel hotel) {
+            this.name = hotel.name;
+            this.latitude = hotel.latitude;
+            this.longitude = hotel.longitude;
+            this.grade = hotel.grade;
+            this.intro = hotel.intro;
+            this.address = hotel.address;
+            this.satisfaction = hotel.satisfaction;
+            this.url = hotel.url;
+            this.imgsrc = hotel.imgsrc;
         }
 
         public Hotel() {
