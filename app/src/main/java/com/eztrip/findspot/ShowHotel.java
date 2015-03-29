@@ -66,7 +66,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
         Intent intent = getIntent();
         hotel = (RouteData.Hotel) intent.getSerializableExtra("hotel");
         source = intent.getStringExtra("source");
-            fillViewsContent(hotel);
+        fillViewsContent(hotel);
 
 
     }
@@ -117,7 +117,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
         introTv = (TextView) findViewById(R.id.showscenery_intro_tv);
         addBtn = (Button) findViewById(R.id.showscenery_add_btn);
         lookBtn = (Button) findViewById(R.id.showscenery_look_btn);
-        replaceHotelLayout = (RelativeLayout)findViewById(R.id.layout_replace);
+        replaceHotelLayout = (RelativeLayout) findViewById(R.id.layout_replace);
         addBtn.setOnClickListener(this);
         lookBtn.setOnClickListener(this);
 
@@ -126,7 +126,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
     private void fillViewsContent(RouteData.Hotel hotel) {
 
         //修改控件值
-        Picasso.with(ShowHotel.this).load(hotel.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.main_foreground)
+        Picasso.with(ShowHotel.this).load(hotel.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.hotel_placeholder)
                 .into(sceneryIv);
         titleTv.setText(hotel.name);
         satisfactionTv.setText("满意度：" + hotel.satisfaction);
@@ -135,7 +135,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
         introTv.setText("介绍: " + hotel.intro);
         addBtn.setTag(hotel);
         lookBtn.setTag(hotel.url);
-        if(!source.equals("change"))
+        if (!source.equals("change"))
             replaceHotelLayout.setVisibility(View.GONE);
 
     }
@@ -146,21 +146,21 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
         if (view.getId() == R.id.showscenery_add_btn) {
             //
             RouteData.hotelInfo = new RouteData.Hotel(hotel);
-            for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
-                if(RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
+            for (int i = 0; i < RouteData.spotTempInfo.size(); i++) {
+                if (RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
                     RouteData.spotTempInfo.get(i).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, i, hotel.name, 0, hotel.address);
                 }
             }
-            Toast.makeText(ShowHotel.this,"当前宾馆信息已改变",Toast.LENGTH_LONG).show();
+            Toast.makeText(ShowHotel.this, "当前宾馆信息已改变", Toast.LENGTH_LONG).show();
 
         } else if (view.getId() == R.id.showscenery_look_btn) {
             // lookBtn
             Intent intent = new Intent(this, SceneryWebView.class);
-            if(view.getTag().toString() != null) {
+            if (view.getTag().toString() != null) {
                 intent.putExtra("url", view.getTag().toString());
                 startActivity(intent);
             } else {
-                Toast.makeText(ShowHotel.this,"获取详细信息失败",Toast.LENGTH_LONG).show();
+                Toast.makeText(ShowHotel.this, "获取详细信息失败", Toast.LENGTH_LONG).show();
             }
         }
     }

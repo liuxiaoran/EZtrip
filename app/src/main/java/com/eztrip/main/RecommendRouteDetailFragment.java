@@ -125,7 +125,6 @@ public class RecommendRouteDetailFragment extends Fragment {
                 }
 
 
-
             } else {
                 switch (type) {
                     case TYPE_1:
@@ -165,8 +164,6 @@ public class RecommendRouteDetailFragment extends Fragment {
                 convertView.setTag(holder);
 
 
-
-
             } else {
                 holder = (HeaderViewHolder) convertView.getTag();
             }
@@ -201,6 +198,7 @@ public class RecommendRouteDetailFragment extends Fragment {
         }
 
     }
+
 
     private void setShowFragment() {
         ((MainActivity) getActivity()).setShownFragment(this);
