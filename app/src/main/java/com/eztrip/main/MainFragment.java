@@ -161,6 +161,7 @@ public class MainFragment extends Fragment {
             } else if ((int) v.getTag() == 1) {
                 //http://dujia.lvmama.com/group/361528
                 RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "南溪山");
+
                 RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "漓江风光");
                 RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(15, 30), "叠彩山");
 

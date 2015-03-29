@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +58,21 @@ public class RecommendRouteDetailFragment extends Fragment {
 
         private LayoutInflater inflater;
 
+        private static final int TYPE_1 = 1;
+        private static final int TYPE_2 = 2;
+
         public MyAdapter(Context context) {
             inflater = LayoutInflater.from(context);
+
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position % 2 == 0) {
+                return TYPE_1;
+            } else {
+                return TYPE_2;
+            }
 
         }
 
@@ -81,21 +93,58 @@ public class RecommendRouteDetailFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
 
+            int type = getItemViewType(position);
+            TrafficViewHolder trafficViewHolder = null;
+            ViewHolder holder = null;
+            Log.v(TAG, "" + position);
             if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.list_item_layout, parent, false);
-                holder.sceneryNameTv = (TextView) convertView.findViewById(R.id.main_listview_item_scenery_name_tv);
-                holder.descriptionTv = (TextView) convertView.findViewById(R.id.main_listview_item_scenery_introduction_tv);
-                convertView.setTag(holder);
+
+                // 按当前所需的样式，确定new的布局
+                switch (type) {
+                    case TYPE_1:
+                        holder = new ViewHolder();
+                        convertView = inflater.inflate(R.layout.list_item_layout, parent, false);
+                        holder.sceneryNameTv = (TextView) convertView.findViewById(R.id.main_listview_item_scenery_name_tv);
+                        holder.descriptionTv = (TextView) convertView.findViewById(R.id.main_listview_item_scenery_introduction_tv);
+                        convertView.setTag(holder);
+                        break;
+                    case TYPE_2:
+                        trafficViewHolder = new TrafficViewHolder();
+                        convertView = inflater.inflate(R.layout.list_traffic_item_layout, parent, false);
+                        trafficViewHolder.distanceTv = (TextView) convertView.findViewById(R.id.main_fragment_recommend_distance_tv);
+                        trafficViewHolder.navigationTv = (TextView) convertView.findViewById(R.id.main_fragment_recommend_navigation_tv);
+                        convertView.setTag(trafficViewHolder);
+                        break;
+
+                }
+
+
+
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                switch (type) {
+                    case TYPE_1:
+                        holder = (ViewHolder) convertView.getTag();
+                        break;
+                    case TYPE_2:
+                        trafficViewHolder = (TrafficViewHolder) convertView.getTag();
+                        break;
+                }
+
             }
 
-            RouteData.SingleEvent event = (RouteData.SingleEvent) routeList.get(position);
-            holder.sceneryNameTv.setText(event.title);
-            holder.descriptionTv.setText(event.detail);
+            // 设置资源
+            switch (type) {
+                case TYPE_1:
+                    RouteData.SingleEvent event = (RouteData.SingleEvent) routeList.get(position);
+                    holder.sceneryNameTv.setText(event.title);
+                    holder.descriptionTv.setText(event.detail);
+                    break;
+                case TYPE_2:
+                    trafficViewHolder.distanceTv.setText("1");
+                    trafficViewHolder.navigationTv.setText("2");
+                    break;
+            }
 
 
             return convertView;
@@ -106,9 +155,13 @@ public class RecommendRouteDetailFragment extends Fragment {
             HeaderViewHolder holder;
             if (convertView == null) {
                 holder = new HeaderViewHolder();
-                convertView = inflater.inflate(R.layout.main_recomamnd_route_detail_header, parent, false);
+                convertView = inflater.inflate(R.layout.main_recomemnd_route_detail_header, parent, false);
                 holder.dayTv = (TextView) convertView.findViewById(R.id.main_recommand_route_detail_tv);
                 convertView.setTag(holder);
+
+
+
+
             } else {
                 holder = (HeaderViewHolder) convertView.getTag();
             }
@@ -124,6 +177,10 @@ public class RecommendRouteDetailFragment extends Fragment {
             return routeList.get(position).day;
         }
 
+
+        /**
+         * holder 中的成员是布局中的控件引用
+         */
         class HeaderViewHolder {
             TextView dayTv;
         }
@@ -131,6 +188,11 @@ public class RecommendRouteDetailFragment extends Fragment {
         class ViewHolder {
             TextView sceneryNameTv;
             TextView descriptionTv;
+        }
+
+        class TrafficViewHolder {
+            TextView distanceTv;
+            TextView navigationTv;
         }
 
     }

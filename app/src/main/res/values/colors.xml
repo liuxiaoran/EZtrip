@@ -20,7 +20,7 @@
     <color name="yellow">#fff8ac32</color>
     <color name="green">#ff42a461</color>
     <color name="gray">#ffc1c1c1</color>
-
+    <color name="light_gray">#B9B9B9</color>
 
     <!-- general text colors -->
     <!--<color name="text">#212121</color>-->
