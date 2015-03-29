@@ -76,7 +76,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("旅店信息");
+        actionBar.setTitle("宾馆信息");
     }
 
 
@@ -145,10 +145,13 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
     public void onClick(View view) {
         if (view.getId() == R.id.showscenery_add_btn) {
             //
-            Intent intent = new Intent();
-            intent.putExtra("hotel",hotel);
-            setResult(REPLACE_HOTEL,intent);
-            finish();
+            RouteData.hotelInfo = new RouteData.Hotel(hotel);
+            for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
+                if(RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
+                    RouteData.spotTempInfo.get(i).setSpotTemp(RouteData.ActivityType.ACCOMMODATION, i, hotel.name, 0, hotel.address);
+                }
+            }
+            Toast.makeText(ShowHotel.this,"当前宾馆信息已改变",Toast.LENGTH_LONG).show();
 
         } else if (view.getId() == R.id.showscenery_look_btn) {
             // lookBtn

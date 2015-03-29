@@ -103,7 +103,10 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.type.setImageResource(R.drawable.ic_spot_others);
         }
         holder.detail.setText(RouteData.singleEvents.get(position).detail);
-        holder.time.setText(RouteData.singleEvents.get(position).startTime + "-" + RouteData.singleEvents.get(position).finishTime);
+        if(!RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.ACCOMMODATION))
+            holder.time.setText(RouteData.singleEvents.get(position).startTime + "-" + RouteData.singleEvents.get(position).finishTime);
+        else
+            holder.time.setText("");
         holder.map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

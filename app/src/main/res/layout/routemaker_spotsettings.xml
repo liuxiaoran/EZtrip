@@ -102,7 +102,8 @@
                 <ListView
                     android:id="@+id/routemaker_spotsettings_newspotlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="0dp">
 
                 </ListView>
 
@@ -114,7 +115,7 @@
                 android:background="@color/black" />
 
             <RelativeLayout
-                android:id="@+id/routemaker_basicsettings_city_change"
+                android:id="@+id/routemaker_spotsettings_spot_add"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_listitem_height">
 

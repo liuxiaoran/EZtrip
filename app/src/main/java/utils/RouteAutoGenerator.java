@@ -1,6 +1,7 @@
 package utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -54,7 +55,7 @@ public class RouteAutoGenerator {
     public static RoutePlanSearch[][] kSearch;
     public static GeoCoder[] gSearch;
 
-    public static ArrayList<RouteData.SpotTemp> executeBasicSettings(String cityName,ArrayList<ScenerySpot> spots, int totalDay, String trafficInfo, String dietInfo, final Activity activity) {
+    public static ArrayList<RouteData.SpotTemp> executeBasicSettings(String cityName, ArrayList<ScenerySpot> spots, int totalDay, String trafficInfo, String dietInfo, final Context context) {
         RouteData.city = cityName;
         RouteData.trafficInfo = trafficInfo;
         RouteData.dietInfo = dietInfo;
@@ -67,8 +68,8 @@ public class RouteAutoGenerator {
         for (int i = 0; i < spots.size(); i++) {
             RouteData.SpotTemp spot = new RouteData.SpotTemp();
             //TODO: 下面被注释掉的的是正式的做法
- //           spot.setSpotTemp(RouteData.ActivityType.SPOT, -1,TravelBag.getInstance().getScenerySpotList().get(i).title, RouteMakerService.getVisitTime(TravelBag.getInstance().getScenerySpotList().get(i).title, activity), TravelBag.getInstance().getScenerySpotList().get(i).address,TravelBag.getInstance().getScenerySpotList().get(i));
-            spot.setSpotTemp(RouteData.ActivityType.SPOT, -1, spots.get(i).getTitle(), 120, spots.get(i).getAddress(),spots.get(i));
+            //           spot.setSpotTemp(RouteData.ActivityType.SPOT, -1,TravelBag.getInstance().getScenerySpotList().get(i).title, RouteMakerService.getVisitTime(TravelBag.getInstance().getScenerySpotList().get(i).title, activity), TravelBag.getInstance().getScenerySpotList().get(i).address,TravelBag.getInstance().getScenerySpotList().get(i));
+            spot.setSpotTemp(RouteData.ActivityType.SPOT, -1, spots.get(i).getTitle(), 120, spots.get(i).getAddress(), spots.get(i));
             spotList.add(spot);
             totalVisitTime += spot.recommendTime;
         }
@@ -106,7 +107,7 @@ public class RouteAutoGenerator {
         return spotList;
     }
 
-    public static void getSpotTimeAndHotel(final RouteMakerFragment.MyHandler handler, ArrayList<RouteData.SpotTemp> spotList, final Activity activity) {
+    public static void getSpotTimeAndHotel(final RouteMakerFragment.MyHandler handler, ArrayList<RouteData.SpotTemp> spotList, final Context context) {
         RouteData.distance = new HashMap[spotList.size()][];
         kSearch = new RoutePlanSearch[spotList.size()][];
         for (int i = 0; i < spotList.size(); i++) {
@@ -136,7 +137,7 @@ public class RouteAutoGenerator {
                         if (result.error == SearchResult.ERRORNO.NO_ERROR) {
                             RouteData.distance[i1][j1].put("bus route", result.getRouteLines().get(0).getAllStep());
                             RouteData.distance[i1][j1].put("bus time", result.getRouteLines().get(0).getDuration() / 60);
-                            if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public))) {
+                            if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_public))) {
                                 Message m = new Message();
                                 Bundle b = new Bundle();
                                 b.putBoolean("minus", true);
@@ -151,7 +152,7 @@ public class RouteAutoGenerator {
                         if (result.error == SearchResult.ERRORNO.NO_ERROR) {
                             RouteData.distance[i1][j1].put("drive route", result.getRouteLines().get(0).getAllStep());
                             RouteData.distance[i1][j1].put("drive time", result.getRouteLines().get(0).getDuration() / 60);
-                            if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+                            if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_private))) {
                                 Message m = new Message();
                                 Bundle b = new Bundle();
                                 b.putBoolean("minus", true);
@@ -165,7 +166,7 @@ public class RouteAutoGenerator {
                 kSearch[i1][j1].setOnGetRoutePlanResultListener(listener);
                 PlanNode stNode = PlanNode.withCityNameAndPlaceName(RouteData.city, spotList.get(i).detail);
                 PlanNode enNode = PlanNode.withCityNameAndPlaceName(RouteData.city, spotList.get(j).detail);
-                if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+                if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_private))) {
                     kSearch[i1][j1].drivingSearch((new DrivingRoutePlanOption())
                             .from(stNode)
                             .to(enNode));
@@ -180,11 +181,11 @@ public class RouteAutoGenerator {
         RouteMakerService.getHotel(handler);
     }
 
-    public static String generateSpotSettingsPlan(ArrayList<RouteData.SpotTemp> spotList, Activity activity) {
-        Log.e("length",Integer.toString(spotList.size()));
+    public static String generateSpotSettingsPlan(ArrayList<RouteData.SpotTemp> spotList, Context context) {
+        Log.e("length", Integer.toString(spotList.size()));
         for (int i = 0; i < spotList.size() - 1; i++) {
             for (int j = i + 1; j < spotList.size(); j++) {
-                if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public))) {
+                if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_public))) {
                     RouteData.distance[i][j].put("route", RouteData.distance[i][j].get("bus route"));
                     RouteData.distance[i][j].put("time", RouteData.distance[i][j].get("bus time"));
                 } else {
@@ -217,13 +218,13 @@ public class RouteAutoGenerator {
         for (int i = 0; i < sortedDistances.length; i++) {
             if (combinedSpotNum <= RouteData.dayLength)
                 break;
-            if (combineTwoSpots(sortedDistances, spotList, i,1))
+            if (combineTwoSpots(sortedDistances, spotList, i, 1))
                 combinedSpotNum--;
         }
         int spotIndex = -1;
-        if(combinedSpotNum > RouteData.dayLength) {
+        if (combinedSpotNum > RouteData.dayLength) {
             RouteData.warning = "TooBusy";
-            for(int i = 0; i < spotList.size(); i++) {
+            for (int i = 0; i < spotList.size(); i++) {
                 spotList.get(i).leftSpot = null;
                 spotList.get(i).rightSpot = null;
                 spotList.get(i).combinedVisitTime = spotList.get(i).recommendTime;
@@ -232,15 +233,15 @@ public class RouteAutoGenerator {
             for (int i = 0; i < sortedDistances.length; i++) {
                 if (combinedSpotNum <= RouteData.dayLength)
                     break;
-                if (combineTwoSpots(sortedDistances, spotList, i,(double)combinedSpotNum /(double)RouteData.dayLength ))
+                if (combineTwoSpots(sortedDistances, spotList, i, (double) combinedSpotNum / (double) RouteData.dayLength))
                     combinedSpotNum--;
             }
-            if(combinedSpotNum > RouteData.dayLength)
+            if (combinedSpotNum > RouteData.dayLength)
                 return "failure";
         }
         ArrayList<Integer> visitedSpotIndex = new ArrayList<>();
-        for(int i = 0; i < spotList.size(); i++) {
-            Log.e("ex",spotList.get(i).detail);
+        for (int i = 0; i < spotList.size(); i++) {
+            Log.e("ex", spotList.get(i).detail);
         }
         for (int i = 0; i < RouteData.dayLength; i++) {
             RouteData.SpotTemp[] nothing = new RouteData.SpotTemp[3];
@@ -307,16 +308,15 @@ public class RouteAutoGenerator {
         while (nextSpot != null);
     }
 
-    public static ArrayList<RouteData.SpotTemp> regenerateSpotSettings(Activity activity, ArrayList<ScenerySpot> newSpots) {
-        ArrayList<ScenerySpot> spots = (ArrayList<ScenerySpot>) RouteData.basicSettingsSpot.clone();
-        spots.addAll(newSpots);
-        return executeBasicSettings(RouteData.city, spots, RouteData.dayLength, RouteData.trafficInfo, RouteData.dietInfo, activity);
+    public static ArrayList<RouteData.SpotTemp> regenerateSpotSettings(Context context) {
+        ArrayList<ScenerySpot> spots = TravelBag.getInstance().getScenerySpotList();
+        return executeBasicSettings(RouteData.city, spots, RouteData.dayLength, RouteData.trafficInfo, RouteData.dietInfo, context);
     }
 
-    public static String executeSpotSettings(Activity activity, RouteMakerFragment.MyHandler handler) {
-        boolean breakfast = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_breakfast));
-        boolean lunch = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_lunch));
-        boolean dinner = RouteData.dietInfo.contains(activity.getResources().getString(R.string.routemaker_dietsettings_dinner));
+    public static String executeSpotSettings(Context context, RouteMakerFragment.MyHandler handler) {
+        boolean breakfast = RouteData.dietInfo.contains(context.getResources().getString(R.string.routemaker_dietsettings_breakfast));
+        boolean lunch = RouteData.dietInfo.contains(context.getResources().getString(R.string.routemaker_dietsettings_lunch));
+        boolean dinner = RouteData.dietInfo.contains(context.getResources().getString(R.string.routemaker_dietsettings_dinner));
         RouteData.setDietTempInfoInstance(RouteData.dayLength * 3);
         int timesToEat = 0;
         if (breakfast)
@@ -330,29 +330,31 @@ public class RouteAutoGenerator {
         //try to give one advice for each diet, according to the position of its adjusting activities
         for (int i = 0; i < RouteData.dayLength; i++) {
             if (breakfast) {
-                while (RouteData.spotTempInfo.get(index).period <= 3 * i || !RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)){
+                while (RouteData.spotTempInfo.get(index).period <= 3 * i || !RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)) {
                     index++;
                 }
                 RouteMakerService.getOneNearbyRestaurant(3 * i, RouteData.spotTempInfo.get(index).latitude, RouteData.spotTempInfo.get(index).longitude, handler);
 
             } else {
-                RouteData.dietTempInfo[3 * i] = new RouteData.DietTemp("无",3*i);
+                RouteData.dietTempInfo[3 * i] = new RouteData.DietTemp("无", 3 * i);
             }
-            Log.e("details",RouteData.spotTempInfo.get(index).period + " " + RouteData.spotTempInfo.get(index).detail);
+            Log.e("details", RouteData.spotTempInfo.get(index).period + " " + RouteData.spotTempInfo.get(index).detail);
             if (lunch) {
                 int previousIndex = index;
                 while (RouteData.spotTempInfo.get(index).period <= 3 * i + 1) {
                     if (RouteData.spotTempInfo.get(index).period == 3 * i + 1 && RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT)) {
                         break;
                     }
-                    if(RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT))
-                    previousIndex = index;
-                    Log.e("previousIndex",Integer.toString(previousIndex));
+                    if (RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.SPOT))
+                        previousIndex = index;
+                    Log.e("previousIndex", Integer.toString(previousIndex));
                     index++;
                 }
+                Log.e("latitude", RouteData.spotTempInfo.get(previousIndex).latitude);
+                Log.e(RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude);
                 RouteMakerService.getOneNearbyRestaurant(3 * i + 1, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
             } else {
-                RouteData.dietTempInfo[3 * i + 1] = new RouteData.DietTemp("无",3*i+1);
+                RouteData.dietTempInfo[3 * i + 1] = new RouteData.DietTemp("无", 3 * i + 1);
             }
             if (dinner) {
                 int previousIndex = index;
@@ -363,7 +365,7 @@ public class RouteAutoGenerator {
                 }
                 RouteMakerService.getOneNearbyRestaurant(3 * i + 2, RouteData.spotTempInfo.get(previousIndex).latitude, RouteData.spotTempInfo.get(previousIndex).longitude, handler);
             } else {
-                RouteData.dietTempInfo[3 * i + 2] = new RouteData.DietTemp("无",3*i+2);
+                RouteData.dietTempInfo[3 * i + 2] = new RouteData.DietTemp("无", 3 * i + 2);
             }
         }
         Message m = new Message();
@@ -375,80 +377,83 @@ public class RouteAutoGenerator {
         return success;
     }
 
-    public static String executeDietSettings(final Activity activity) {
+    public static String executeDietSettings() {
         Clock startTime = new Clock(8, 0);
         final Clock[] currTime = new Clock[1];
-        currTime[0] = new Clock(8, 0);
-        int index = 0;
-        int period = -1;
+        currTime[0] = startTime;
+        int spotIndex = 0;
+        int dietIndex = 0;
         RouteData.setSingleEventsInstance();
-        ArrayList<RouteData.SpotTemp> spotTempArrayList = (ArrayList<RouteData.SpotTemp>)RouteData.spotTempInfo.clone();
+        ArrayList<RouteData.SpotTemp> spotTempArrayList = (ArrayList<RouteData.SpotTemp>) RouteData.spotTempInfo.clone();
         int size = spotTempArrayList.size();
-        for(int i = 0; i < size; i++) {
-            if(spotTempArrayList.get(i).type.equals(RouteData.ActivityType.NONE) || spotTempArrayList.get(i).detail.equals("无")) {
+        for (int i = 0; i < size; i++) {
+            if (spotTempArrayList.get(i).type.equals(RouteData.ActivityType.NONE) || spotTempArrayList.get(i).detail.equals("无")) {
                 spotTempArrayList.remove(i);
                 size--;
                 i--;
             }
         }
-        String lastLatitude = RouteData.hotelInfo.latitude, lastLongitude = RouteData.hotelInfo.longitude, lastPlace = RouteData.hotelInfo.name, lastAddress = RouteData.hotelInfo.address;
-        while (index < spotTempArrayList.size()) {
+        for (int i = 0; i < spotTempArrayList.size(); i++) {
+            if(spotTempArrayList.get(i).type.equals(RouteData.ActivityType.SPOT))
+                RouteData.spotTempPeriodItemCount[spotTempArrayList.get(i).period]++;
+        }
+        while (spotIndex < spotTempArrayList.size()) {
             final RouteData.SingleEvent trafficEvent = new RouteData.SingleEvent(), otherEvent = new RouteData.SingleEvent();
-            otherEvent.locationInfo = new ArrayList<>() ;
-            String finishLatitude , finishLongitude, finishPlace, finishAddress ;
-                if (spotTempArrayList.get(index).period > period && !RouteData.dietTempInfo[spotTempArrayList.get(index).period].detail.equals("无")) {
-                    finishLatitude = RouteData.dietTempInfo[spotTempArrayList.get(index).period].latitude;
-                    finishLongitude = RouteData.dietTempInfo[spotTempArrayList.get(index).period].longitude;
-                    finishPlace = RouteData.dietTempInfo[spotTempArrayList.get(index).period].detail;
-                    otherEvent.type = RouteData.ActivityType.DIET;
-                    otherEvent.day = RouteData.dietTempInfo[spotTempArrayList.get(index).period].period / 3;
-                    otherEvent.moreInfo = RouteData.dietTempInfo[spotTempArrayList.get(index).period];
-                    finishAddress = RouteData.dietTempInfo[spotTempArrayList.get(index).period].address;
-                    otherEvent.timeLength =  60;
-                    Log.e("event",RouteData.dietTempInfo[period + 1].detail + (period + 1));
-                    if (index < spotTempArrayList.size() && spotTempArrayList.get(index).period > period)
-                        period = spotTempArrayList.get(index).period;
-                } else {
-                    finishLatitude =spotTempArrayList.get(index).latitude;
-                    finishLongitude = spotTempArrayList.get(index).longitude;
-                    finishPlace = spotTempArrayList.get(index).detail;
-                    otherEvent.type = spotTempArrayList.get(index).type;
-                    otherEvent.day = spotTempArrayList.get(index).period / 3;
-                    finishAddress = spotTempArrayList.get(index).address;
-                    otherEvent.timeLength = spotTempArrayList.get(index).recommendTime;
-                    if(spotTempArrayList.get(index).type.equals(RouteData.ActivityType.SPOT))
-                        otherEvent.moreInfo = spotTempArrayList.get(index).scenerySpot;
-                    else
-                        otherEvent.moreInfo = RouteData.hotelInfo;
-                    Log.e("event",spotTempArrayList.get(index).detail + (index));
-                    index++;
+            otherEvent.locationInfo = new ArrayList<>();
+            String finishLatitude, finishLongitude, finishPlace, finishAddress;
+            if (spotTempArrayList.get(spotIndex).period >= dietIndex && !RouteData.dietTempInfo[spotTempArrayList.get(spotIndex).period].detail.equals("无")) {
+                finishLatitude = RouteData.dietTempInfo[dietIndex].latitude;
+                finishLongitude = RouteData.dietTempInfo[dietIndex].longitude;
+                finishPlace = RouteData.dietTempInfo[dietIndex].detail;
+                otherEvent.type = RouteData.ActivityType.DIET;
+                otherEvent.day = RouteData.dietTempInfo[dietIndex].period / 3;
+                otherEvent.moreInfo = RouteData.dietTempInfo[dietIndex];
+                otherEvent.period = dietIndex;
+                finishAddress = RouteData.dietTempInfo[dietIndex].address;
+                otherEvent.timeLength = 60;
+                do {
+                    dietIndex++;
+                } while (RouteData.dietTempInfo[dietIndex].detail.equals("无"));
+            } else {
+                finishLatitude = spotTempArrayList.get(spotIndex).latitude;
+                finishLongitude = spotTempArrayList.get(spotIndex).longitude;
+                finishPlace = spotTempArrayList.get(spotIndex).detail;
+                otherEvent.type = spotTempArrayList.get(spotIndex).type;
+                otherEvent.day = spotTempArrayList.get(spotIndex).period / 3;
+                otherEvent.period = spotTempArrayList.get(spotIndex).period;
+                finishAddress = spotTempArrayList.get(spotIndex).address;
+                otherEvent.timeLength = spotTempArrayList.get(spotIndex).recommendTime;
+                if (spotTempArrayList.get(spotIndex).type.equals(RouteData.ActivityType.SPOT))
+                    otherEvent.moreInfo = spotTempArrayList.get(spotIndex).scenerySpot;
+                else
+                    otherEvent.moreInfo = RouteData.hotelInfo;
+                Log.e("event", spotTempArrayList.get(spotIndex).detail + (spotTempArrayList.get(spotIndex).period));
+                spotIndex++;
             }
 
             otherEvent.detail = finishPlace;
             HashMap<String, String> placeInfo = new HashMap<>();
             placeInfo.put("latitude", finishLatitude);
             placeInfo.put("longitude", finishLongitude);
-            placeInfo.put("address",finishAddress);
+            placeInfo.put("address", finishAddress);
             otherEvent.locationInfo.add(placeInfo);
 
-            //TODO:根据起终点信息和RouteData.trafficInfo确定线路 将其封装在trafficEvent里
             trafficEvent.type = RouteData.ActivityType.TRAFFIC;
             trafficEvent.detail = "traffic";
             RouteData.singleEvents.add(trafficEvent);
-            //TODO:设置otherEvent的startTime，finishTime
             RouteData.singleEvents.add(otherEvent);
         }
-        for(int i = 0; i < RouteData.singleEvents.size(); i++) {
-            Log.e("singleevents",RouteData.singleEvents.get(i).detail);
+        for (int i = 0; i < RouteData.singleEvents.size(); i++) {
+            Log.e("singleevents", RouteData.singleEvents.get(i).detail);
         }
         return success;
     }
 
-    public static void getLatLngInfo(final RouteMakerFragment.MyHandler handler, final Activity activity) {
+    public static void getLatLngInfo(final RouteMakerFragment.MyHandler handler, final Context context) {
         gSearch = new GeoCoder[handler.getCount()];
         int geoIndex = -1;
-        for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
-            if(!RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.NONE)) {
+        for (int i = 0; i < RouteData.spotTempInfo.size(); i++) {
+            if (!RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.NONE)) {
                 geoIndex++;
                 final int index = i;
                 gSearch[geoIndex] = GeoCoder.newInstance();
@@ -456,20 +461,21 @@ public class RouteAutoGenerator {
                     @Override
                     public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
                         if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                            Toast.makeText(activity, "错误：未定位到地点。", Toast.LENGTH_LONG)
+                            Toast.makeText(context, "错误：未定位到地点。", Toast.LENGTH_LONG)
                                     .show();
-                        }else {
+                        } else {
                             RouteData.spotTempInfo.get(index).latitude = Double.toString(geoCodeResult.getLocation().latitude);
                             RouteData.spotTempInfo.get(index).longitude = Double.toString(geoCodeResult.getLocation().longitude);
-                            if(RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
+                            Log.e(Double.toString(geoCodeResult.getLocation().latitude), Double.toString(geoCodeResult.getLocation().longitude));
+                            if (RouteData.spotTempInfo.get(index).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
                                 RouteData.hotelInfo.longitude = Double.toString(geoCodeResult.getLocation().longitude);
                                 RouteData.hotelInfo.latitude = Double.toString(geoCodeResult.getLocation().latitude);
                             }
                         }
                         Message m = new Message();
                         Bundle b = new Bundle();
-                        b.putBoolean("minus",true);
-                        b.putString("source","latlnginfo");
+                        b.putBoolean("minus", true);
+                        b.putString("source", "latlnginfo");
                         m.setData(b);
                         handler.handleMessage(m);
                     }
@@ -482,71 +488,43 @@ public class RouteAutoGenerator {
                 gSearch[geoIndex].geocode(new GeoCodeOption().city(RouteData.city).address(RouteData.spotTempInfo.get(i).address));
             }
         }
-        for(int i = 0; i < RouteData.dietTempInfo.length; i++) {
-            if(!RouteData.dietTempInfo[i].detail.equals("无")) {
-                geoIndex++;
-                final int index = i;
-                gSearch[geoIndex] = GeoCoder.newInstance();
-                gSearch[geoIndex].setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-                    @Override
-                    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-                        if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                            Toast.makeText(activity, "错误：未定位到地点。", Toast.LENGTH_LONG)
-                                    .show();
-                        }else {
-                            RouteData.dietTempInfo[index].latitude = Double.toString(geoCodeResult.getLocation().latitude);
-                            RouteData.dietTempInfo[index].longitude = Double.toString(geoCodeResult.getLocation().longitude);
-                        }
-                        Message m = new Message();
-                        Bundle b = new Bundle();
-                        b.putBoolean("minus",true);
-                        b.putString("source","latlnginfo");
-                        m.setData(b);
-                        handler.handleMessage(m);
-                    }
-
-                    @Override
-                    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-
-                    }
-                });
-                gSearch[geoIndex].geocode(new GeoCodeOption().city(RouteData.city).address(RouteData.dietTempInfo[index].address));
-            }
-        }
     }
 
-    public static void getTrafficTimes(Activity activity, RouteMakerFragment.MyHandler handler) {
-        Log.e("length",Integer.toString(RouteData.singleEvents.size()));
+    public static void getTrafficTimes(Context context, RouteMakerFragment.MyHandler handler) {
+        Log.e("length", Integer.toString(RouteData.singleEvents.size()));
         int index = 0;
         String startLatitude, startLongitude, finishLatitude, finishLongitude;
-        while(index != -1) {
-            while (index < RouteData.singleEvents.size() && !RouteData.singleEvents.get(index).type.equals(RouteData.ActivityType.TRAFFIC)){
+        while (index != -1) {
+            while (index < RouteData.singleEvents.size() && !RouteData.singleEvents.get(index).type.equals(RouteData.ActivityType.TRAFFIC)) {
                 index++;
             }
-            if(index == RouteData.singleEvents.size())
+            if (index == RouteData.singleEvents.size())
                 break;
             String startDetail;
-            if(index == 0) {
+            int relatedPeriod;//the period the traffic event should be in
+            if (index == 0) {
                 startLatitude = RouteData.hotelInfo.latitude;
                 startLongitude = RouteData.hotelInfo.longitude;
                 startDetail = RouteData.hotelInfo.name;
+                relatedPeriod = 0;
+            } else {
+                startLatitude = RouteData.singleEvents.get(index - 1).locationInfo.get(0).get("latitude");
+                startLongitude = RouteData.singleEvents.get(index - 1).locationInfo.get(0).get("longitude");
+                startDetail = RouteData.singleEvents.get(index - 1).detail;
+                relatedPeriod = (RouteData.singleEvents.get(index - 1).period == RouteData.singleEvents.get(index + 1).period ? RouteData.singleEvents.get(index - 1).period : (RouteData.singleEvents.get(index - 1).type.equals(RouteData.ActivityType.ACCOMMODATION) ? RouteData.singleEvents.get(index + 1).period : RouteData.singleEvents.get(index - 1).period));
             }
-            else {
-                startLatitude = RouteData.singleEvents.get(index-1).locationInfo.get(0).get("latitude");
-                startLongitude = RouteData.singleEvents.get(index-1).locationInfo.get(0).get("longitude");
-                startDetail = RouteData.singleEvents.get(index-1).detail;
-            }
-            finishLatitude = RouteData.singleEvents.get(index+1).locationInfo.get(0).get("latitude");
-            finishLongitude = RouteData.singleEvents.get(index+1).locationInfo.get(0).get("longitude");
+            finishLatitude = RouteData.singleEvents.get(index + 1).locationInfo.get(0).get("latitude");
+            finishLongitude = RouteData.singleEvents.get(index + 1).locationInfo.get(0).get("longitude");
             RouteData.singleEvents.get(index).detail = startDetail + "-" + RouteData.singleEvents.get(index + 1).detail;
             RouteData.singleEvents.get(index).locationInfo = new ArrayList<>();
             HashMap<String, String> startPlaceInfo = new HashMap<>();
-            startPlaceInfo.put("address",startDetail);
+            startPlaceInfo.put("address", startDetail);
             RouteData.singleEvents.get(index).locationInfo.add(startPlaceInfo);
             HashMap<String, String> finishPlaceInfo = new HashMap<>();
-            finishPlaceInfo.put("address",RouteData.singleEvents.get(index + 1).detail);
+            finishPlaceInfo.put("address", RouteData.singleEvents.get(index + 1).detail);
             RouteData.singleEvents.get(index).locationInfo.add(finishPlaceInfo);
-            index = getSingleTrafficTime(activity,handler,index,startLatitude, startLongitude, finishLatitude, finishLongitude);
+            RouteData.singleEvents.get(index).period = relatedPeriod;
+            index = getSingleTrafficTime(context, handler, index, startLatitude, startLongitude, finishLatitude, finishLongitude, relatedPeriod);
         }
         Message m = new Message();
         Bundle b = new Bundle();
@@ -556,8 +534,8 @@ public class RouteAutoGenerator {
         handler.handleMessage(m);
     }
 
-    public static int getSingleTrafficTime(final Activity activity, final RouteMakerFragment.MyHandler handler, int index, String startLatitude, String startLongitude, String finishLatitude, String finishLongitude) {
-        Log.e("index",Integer.toString(index));
+    public static int getSingleTrafficTime(final Context context, final RouteMakerFragment.MyHandler handler, int index, String startLatitude, String startLongitude, String finishLatitude, String finishLongitude, final int relatedPeriod) {
+        Log.e("index", Integer.toString(index));
         final int trafficIndex = index;
         final RoutePlanSearch mSearch = RoutePlanSearch.newInstance();
         OnGetRoutePlanResultListener listener = new OnGetRoutePlanResultListener() {
@@ -572,9 +550,10 @@ public class RouteAutoGenerator {
                     //起终点或途经点地址有岐义，通过以下接口获取建议查询信息
                     //result.getSuggestAddrInfo()
                 }
-                if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_public))) {
+                if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_public))) {
 //                    RouteData.singleEvents.get(trafficIndex).detail = result.getRouteLines().get(0).getAllStep().toString();
                     int duration = result.getRouteLines().get(0).getDuration() / 60;
+                    RouteData.trafficTimeOccupied[relatedPeriod] += duration;
                     RouteData.singleEvents.get(trafficIndex).timeLength = duration;
                     RouteData.singleEvents.get(trafficIndex).transitRouteLine = result.getRouteLines().get(0);
                     Message m = new Message();
@@ -589,9 +568,10 @@ public class RouteAutoGenerator {
 
             public void onGetDrivingRouteResult(DrivingRouteResult result) {
                 if (result.error == SearchResult.ERRORNO.NO_ERROR) {
-                    if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+                    if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_private))) {
 //                        RouteData.singleEvents.get(trafficIndex).detail = result.getRouteLines().get(0).getAllStep().toString();
                         int duration = result.getRouteLines().get(0).getDuration() / 60;
+                        RouteData.trafficTimeOccupied[relatedPeriod] += duration;
                         RouteData.singleEvents.get(trafficIndex).timeLength = duration;
                         RouteData.singleEvents.get(trafficIndex).drivingRouteLine = result.getRouteLines().get(0);
                         Message m = new Message();
@@ -606,9 +586,9 @@ public class RouteAutoGenerator {
             }
         };
         mSearch.setOnGetRoutePlanResultListener(listener);
-        PlanNode stNode = PlanNode.withLocation(new LatLng(Double.parseDouble(startLatitude),Double.parseDouble(startLongitude)));
+        PlanNode stNode = PlanNode.withLocation(new LatLng(Double.parseDouble(startLatitude), Double.parseDouble(startLongitude)));
         PlanNode enNode = PlanNode.withLocation(new LatLng(Double.parseDouble(finishLatitude), Double.parseDouble(finishLongitude)));
-        if (RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private))) {
+        if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_private))) {
             mSearch.drivingSearch((new DrivingRoutePlanOption())
                     .from(stNode)
                     .to(enNode));
@@ -623,47 +603,73 @@ public class RouteAutoGenerator {
     }
 
     public static void arrangeTimeSettingsTime() {
-        final Clock startTime = new Clock(8,0);
+        setVisitTime();
+        final Clock startTime = new Clock(8, 0);
         Clock currTime = startTime;
         int index = 0, currDay = 0;
-        while(index < RouteData.singleEvents.size()) {
-            Log.e(currTime.toString(),Integer.toString(RouteData.singleEvents.get(index).timeLength));
-            if(RouteData.singleEvents.get(index).day > currDay)
+        while (index < RouteData.singleEvents.size()) {
+            Log.e(currTime.toString(), Integer.toString(RouteData.singleEvents.get(index).timeLength));
+            if (RouteData.singleEvents.get(index).day > currDay)
                 currTime = startTime;
             RouteData.singleEvents.get(index).startTime = new Clock(currTime);
             RouteData.singleEvents.get(index).finishTime = new Clock(currTime.add(RouteData.singleEvents.get(index).timeLength));
             currTime = new Clock(RouteData.singleEvents.get(index).finishTime);
             index++;
         }
-        for(int i = 0; i < RouteData.singleEvents.size(); i++) {
-            Log.e("time",RouteData.singleEvents.get(i).startTime.toString());
+        for (int i = 0; i < RouteData.singleEvents.size(); i++) {
+            Log.e("time", RouteData.singleEvents.get(i).startTime.toString());
         }
     }
 
+    private static void setVisitTime() {
+        int singleEventsIndex = 0;
+        for(int i = 0; i < RouteData.spotTempPeriodItemCount.length; i++) {
+            int averageVisitTime = (getMaxPeriodTime(i) - RouteData.trafficTimeOccupied[i]) /  RouteData.spotTempPeriodItemCount[i];
+            while ( RouteData.spotTempPeriodItemCount[i] > 0) {
+                while (RouteData.singleEvents.get(singleEventsIndex).period == i && RouteData.singleEvents.get(singleEventsIndex).type.equals(RouteData.ActivityType.SPOT))
+                    singleEventsIndex++;
+                RouteData.spotTempPeriodItemCount[i]--;
+                RouteData.singleEvents.get(singleEventsIndex).timeLength = averageVisitTime;
+            }
+        }
+    }
 
-    public static String executeFinishSettings(final RouteMakerFragment.MyHandler handler, final Activity activity, String startTime, String name) {
+    private static int getMaxPeriodTime(int period) {
+        final int morningTime = 240, afternoonTime = 360, eveningTime = 240;
+        switch (period % 3) {
+            case 0:
+                return morningTime;
+            case 1:
+                return afternoonTime;
+            case 2:
+                return eveningTime;
+        }
+        return 0;
+    }
+
+    public static String executeFinishSettings(final RouteMakerFragment.MyHandler handler, final Context context, String startTime, String name) {
         EztripHttpUtil eztripHttpUtil = new EztripHttpUtil();
         AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Toast.makeText(activity,"线路生成成功，您可以在“行程规划”中查看生成的线路",Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "线路生成成功，您可以在“行程规划”中查看生成的线路", Toast.LENGTH_LONG).show();
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putBoolean("minus", true);
-                b.putString("source","finish");
-                b.putBoolean("success",true);
+                b.putString("source", "finish");
+                b.putBoolean("success", true);
                 m.setData(b);
                 handler.handleMessage(m);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(activity,"连接服务器失败",Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_LONG).show();
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putBoolean("minus", true);
-                b.putString("source","finish");
-                b.putBoolean("success",false);
+                b.putString("source", "finish");
+                b.putBoolean("success", false);
                 m.setData(b);
                 handler.handleMessage(m);
             }
@@ -671,41 +677,41 @@ public class RouteAutoGenerator {
         JSONObject parameter = new JSONObject();
         try {
             //TODO: id来源
-            parameter.put("id",1);
-            parameter.put("name",name);
-            parameter.put("city",RouteData.city);
-            parameter.put("start_date",startTime);
-            parameter.put("day_length",RouteData.dayLength);
+            parameter.put("id", 1);
+            parameter.put("name", name);
+            parameter.put("city", RouteData.city);
+            parameter.put("start_date", startTime);
+            parameter.put("day_length", RouteData.dayLength);
             List<Map> eventList = new ArrayList<>();
-            for(int i = 0; i < RouteData.singleEvents.size(); i++) {
-                Map<String,Object> map = new HashMap<>();
-                map.put("day",RouteData.singleEvents.get(i).day);
-                map.put("type",RouteData.singleEvents.get(i).type.toString().toLowerCase());
-                map.put("start_time",RouteData.singleEvents.get(i).startTime);
-                map.put("finish_time",RouteData.singleEvents.get(i).finishTime);
-                map.put("detail",RouteData.singleEvents.get(i).detail);
+            for (int i = 0; i < RouteData.singleEvents.size(); i++) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("day", RouteData.singleEvents.get(i).day);
+                map.put("type", RouteData.singleEvents.get(i).type.toString().toLowerCase());
+                map.put("start_time", RouteData.singleEvents.get(i).startTime);
+                map.put("finish_time", RouteData.singleEvents.get(i).finishTime);
+                map.put("detail", RouteData.singleEvents.get(i).detail);
                 List<Map> locationList = new ArrayList<>();
-                for(int j = 0; j < RouteData.singleEvents.get(i).locationInfo.size(); j++) {
+                for (int j = 0; j < RouteData.singleEvents.get(i).locationInfo.size(); j++) {
                     Map<String, String> locationInfo = new HashMap<>();
-                    locationInfo.put("longitude",RouteData.singleEvents.get(i).locationInfo.get(j).get("longitude"));
-                    locationInfo.put("latitude",RouteData.singleEvents.get(i).locationInfo.get(j).get("latitude"));
-                    locationInfo.put("address",RouteData.singleEvents.get(i).locationInfo.get(j).get("address"));
+                    locationInfo.put("longitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("longitude"));
+                    locationInfo.put("latitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("latitude"));
+                    locationInfo.put("address", RouteData.singleEvents.get(i).locationInfo.get(j).get("address"));
                     locationList.add(locationInfo);
                 }
-                map.put("places",locationList);
+                map.put("places", locationList);
                 eventList.add(map);
             }
-            parameter.put("event",eventList);
+            parameter.put("event", eventList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HashMap<String,Object> request = new HashMap<>();
-        request.put("content",parameter);
-        EztripHttpUtil.post(URLConstants.SUBMIT_ROUTE,request,asyncHttpResponseHandler);
+        HashMap<String, String> request = new HashMap<>();
+        request.put("content", parameter.toString());
+        EztripHttpUtil.post(URLConstants.SUBMIT_ROUTE, request, asyncHttpResponseHandler);
         return success;
     }
 
-    public static boolean combineTwoSpots(SortedDistance[] sortedDistances, ArrayList<RouteData.SpotTemp> spotList, int index,double times) {
+    public static boolean combineTwoSpots(SortedDistance[] sortedDistances, ArrayList<RouteData.SpotTemp> spotList, int index, double times) {
         final double maxVisitTime = times * 480;
         int i = sortedDistances[index].i, j = sortedDistances[index].j;
         int combinedVisitTime = spotList.get(i).combinedVisitTime + spotList.get(j).combinedVisitTime + sortedDistances[index].distance;
@@ -713,14 +719,14 @@ public class RouteAutoGenerator {
         if (combinedVisitTime <= maxVisitTime) {
             if (spotList.get(i).rightSpot != null || spotList.get(j).rightSpot != null)
                 return false;
-            if(spotList.get(i).leftSpot != null && spotList.get(j).leftSpot != null) {
+            if (spotList.get(i).leftSpot != null && spotList.get(j).leftSpot != null) {
                 int nearestIndex = spotList.indexOf(spotList.get(i).leftSpot);
                 int lastIndex = i;
                 while (nearestIndex != -1) {
                     int temp = spotList.indexOf(spotList.get(nearestIndex).leftSpot);
-                    if(temp == lastIndex)
+                    if (temp == lastIndex)
                         temp = spotList.indexOf(spotList.get(nearestIndex).rightSpot);
-                    if(temp == j)
+                    if (temp == j)
                         return false;
                     lastIndex = nearestIndex;
                     nearestIndex = temp;

@@ -3,6 +3,7 @@ package com.eztrip.routemaker;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Instrumentation;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,24 +32,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.route.DrivingRouteResult;
-import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
-import com.baidu.mapapi.search.route.PlanNode;
-import com.baidu.mapapi.search.route.RoutePlanSearch;
-import com.baidu.mapapi.search.route.TransitRoutePlanOption;
-import com.baidu.mapapi.search.route.TransitRouteResult;
-import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.eztrip.MainActivity;
+import com.eztrip.findspot.FindSpotMainFragment;
+import com.eztrip.findspot.LevelResultFragment;
 import com.eztrip.main.MainFragment;
 import com.eztrip.R;
 import com.eztrip.citylist.CityList;
-import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 import com.eztrip.model.ScenerySpot;
 import com.eztrip.model.TravelBag;
@@ -55,8 +52,6 @@ import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.logging.Handler;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import utils.RouteAutoGenerator;
@@ -74,8 +69,15 @@ public class RouteMakerFragment extends Fragment {
     private String[] titles = new String[]{"基本设置", "景点及住宿设置", "饮食设置", "时间安排微调", "最后一步"};
     public final int REQUEST_CODE_SEARCH_CITY = 1;
     private FragmentManager fragmentManager;
+    private boolean selectSpots = false;
+    private static Activity activity;
 
     private ArrayList<RouteData.SpotTemp> spotList;//it is not sorted by time
+    
+    public static RouteMakerFragment newInstance(Activity activity) {
+        RouteMakerFragment.activity = activity;
+        return new RouteMakerFragment();
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +95,7 @@ public class RouteMakerFragment extends Fragment {
     }
 
     private void setTitle() {
-        ((MainActivity) getActivity()).setActionbarTitle(titleHead + titles[currStep]);
+        ((MainActivity)getActivity()).setActionbarTitle(titleHead + titles[currStep]);
     }
 
     private void initView() {
@@ -151,7 +153,7 @@ public class RouteMakerFragment extends Fragment {
                 selectCity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), CityList.class);
+                        Intent intent = new Intent(activity, CityList.class);
                         startActivityForResult(intent, REQUEST_CODE_SEARCH_CITY);
                     }
                 });
@@ -159,14 +161,20 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         //TODO 跳转至选择景点页面
-                        Toast.makeText(getActivity(), city.getText(), Toast.LENGTH_SHORT).show();
+                        selectSpots = true;
+                        FindSpotMainFragment levelResultFragment = FindSpotMainFragment.newInstance(activity);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.routemaker_fragment_content,levelResultFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
                     }
                 });
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(TravelBag.getInstance().getScenerySpotList().size() == 0) {
-                            Toast.makeText(getActivity(),"请至少选择一个景点",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity,"请至少选择一个景点",Toast.LENGTH_SHORT).show();
                         }else {
                             ProgressDialogController.show();
                             new GenerateSpotListAsyncTask().execute();
@@ -176,8 +184,8 @@ public class RouteMakerFragment extends Fragment {
                 diet.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_dietsettings_time))
-                                .setMultiChoiceItems(new String[]{getActivity().getResources().getString(R.string.routemaker_dietsettings_breakfast), getActivity().getResources().getString(R.string.routemaker_dietsettings_lunch), getActivity().getResources().getString(R.string.routemaker_dietsettings_dinner)}, dietStatus,
+                        new AlertDialog.Builder(activity).setTitle(activity.getResources().getString(R.string.routemaker_dietsettings_time))
+                                .setMultiChoiceItems(new String[]{activity.getResources().getString(R.string.routemaker_dietsettings_breakfast), activity.getResources().getString(R.string.routemaker_dietsettings_lunch), activity.getResources().getString(R.string.routemaker_dietsettings_dinner)}, dietStatus,
                                         new DialogInterface.OnMultiChoiceClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -189,13 +197,13 @@ public class RouteMakerFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         StringBuilder text = new StringBuilder();
                                         if (dietStatus[0])
-                                            text = text.append(getActivity().getResources().getString(R.string.routemaker_dietsettings_breakfast));
+                                            text = text.append(activity.getResources().getString(R.string.routemaker_dietsettings_breakfast));
                                         if (dietStatus[1])
-                                            text = text.append((text.toString().equals("") ? "" : "，") + getActivity().getResources().getString(R.string.routemaker_dietsettings_lunch));
+                                            text = text.append((text.toString().equals("") ? "" : "，") + activity.getResources().getString(R.string.routemaker_dietsettings_lunch));
                                         if (dietStatus[2])
-                                            text = text.append((text.toString().equals("") ? "" : "，") + getActivity().getResources().getString(R.string.routemaker_dietsettings_dinner));
+                                            text = text.append((text.toString().equals("") ? "" : "，") + activity.getResources().getString(R.string.routemaker_dietsettings_dinner));
                                         if (text.toString().equals(""))
-                                            text = text.append(getActivity().getResources().getString(R.string.nothing));
+                                            text = text.append(activity.getResources().getString(R.string.nothing));
                                         dietTV.setText(text.toString());
                                         dialog.dismiss();
                                     }
@@ -205,12 +213,12 @@ public class RouteMakerFragment extends Fragment {
                 traffic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_basicsettings_traffic_hint))
-                                .setSingleChoiceItems(new String[]{getActivity().getResources().getString(R.string.routemaker_trafficsettings_public), getActivity().getResources().getString(R.string.routemaker_trafficsettings_private)}, 0,
+                        new AlertDialog.Builder(activity).setTitle(activity.getResources().getString(R.string.routemaker_basicsettings_traffic_hint))
+                                .setSingleChoiceItems(new String[]{activity.getResources().getString(R.string.routemaker_trafficsettings_public), activity.getResources().getString(R.string.routemaker_trafficsettings_private)}, 0,
                                         new DialogInterface.OnClickListener() {
 
                                             public void onClick(DialogInterface dialog, int which) {
-                                                trafficTV.setText(which == 0 ? getActivity().getResources().getString(R.string.routemaker_trafficsettings_public) : getActivity().getResources().getString(R.string.routemaker_trafficsettings_private));
+                                                trafficTV.setText(which == 0 ? activity.getResources().getString(R.string.routemaker_trafficsettings_public) : activity.getResources().getString(R.string.routemaker_trafficsettings_private));
                                                 dialog.dismiss();
                                             }
                                         }).setNegativeButton("取消", null)
@@ -220,15 +228,15 @@ public class RouteMakerFragment extends Fragment {
                 dayLength.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dayET = new EditText(getActivity());
+                        dayET = new EditText(activity);
                         dayET.setKeyListener(new DigitsKeyListener(false, true));
-                        new AlertDialog.Builder(getActivity()).setTitle(getActivity().getResources().getString(R.string.routemaker_basicsettings_favoritespot_day) + "（1-10天）")
+                        new AlertDialog.Builder(activity).setTitle(activity.getResources().getString(R.string.routemaker_basicsettings_favoritespot_day) + "（1-10天）")
                                 .setView(dayET)
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (dayET.getText().toString().equals("") || Integer.parseInt(dayET.getText().toString()) < 1 || Integer.parseInt(dayET.getText().toString()) > 10)
-                                            Toast.makeText(getActivity(), "请设置旅行天数在1-10之间", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(activity, "请设置旅行天数在1-10之间", Toast.LENGTH_LONG).show();
                                         else
                                             dayTV.setText(dayET.getText().toString());
                                     }
@@ -247,21 +255,15 @@ public class RouteMakerFragment extends Fragment {
                     city.setText(cityName);
                     city2.setText(cityName);
                     initSpotList(cityName);
-                } else if (resultCode == 2)//添加新景点
-                {
-                    addOneSpot((ScenerySpot)data.getSerializableExtra("spot"));
                 }
-            }
-
-            private void initSpotList(String city) {
-                adapter = new BasicSettingsSpotAdapter(getActivity(), spotListView);
+                adapter = new BasicSettingsSpotAdapter(activity, spotListView);
                 spotListView.setAdapter(adapter);
                 adaptListViewHeight(spotListView, adapter);
             }
 
-            private void addOneSpot(ScenerySpot scenerySpot) {
-                TravelBag.getInstance().addScenery(scenerySpot);
-                adapter.notifyDataSetChanged();
+            private void initSpotList(String city) {
+                adapter = new BasicSettingsSpotAdapter(activity, spotListView);
+                spotListView.setAdapter(adapter);
                 adaptListViewHeight(spotListView, adapter);
             }
 
@@ -283,15 +285,16 @@ public class RouteMakerFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    return RouteAutoGenerator.executeBasicSettings(cityName,TravelBag.getInstance().getScenerySpotList(), day, trafficInfo, dietInfo, getActivity());
+                    return RouteAutoGenerator.executeBasicSettings(cityName,TravelBag.getInstance().getScenerySpotList(), day, trafficInfo, dietInfo, activity);
                 }
 
                 @Override
                 protected void onPostExecute(Object result) {
                     super.onPostExecute(result);
                     MyHandler handler = new MyHandler(TravelBag.getInstance().getScenerySpotList().size() * (TravelBag.getInstance().getScenerySpotList().size() - 1) / 2 + 1);
+                    Log.e("size",Integer.toString(TravelBag.getInstance().getScenerySpotList().size()));
                     spotList = (ArrayList<RouteData.SpotTemp>)result;
-                    RouteAutoGenerator.getSpotTimeAndHotel(handler,spotList,getActivity());
+                    RouteAutoGenerator.getSpotTimeAndHotel(handler,spotList,activity);
                 }
             }
         };
@@ -305,8 +308,8 @@ public class RouteMakerFragment extends Fragment {
             private StickyListHeadersListView stickyListHeadersListView;
             private SpotSettingsAdapter adapter;
             private ListView newSpotListView;
-            private ArrayList<ScenerySpot> newSpots;
             private BasicSettingsSpotAdapter newSpotAdapter;
+            private RelativeLayout addSpotsLayout;
 
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -323,11 +326,22 @@ public class RouteMakerFragment extends Fragment {
                 nextStep = (Button) view.findViewById(R.id.routemaker_spotsettings_next_step);
                 stickyListHeadersListView = (StickyListHeadersListView) view.findViewById(R.id.routemaker_spotsettings_spotlist);
                 newSpotListView = (ListView) view.findViewById(R.id.routemaker_spotsettings_newspotlist);
+                addSpotsLayout = (RelativeLayout)view.findViewById(R.id.routemaker_spotsettings_spot_add);
+                addSpotsLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FindSpotMainFragment levelResultFragment = FindSpotMainFragment.newInstance(activity);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.routemaker_fragment_content,levelResultFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                });
                 regenerate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //TODO: 重新生成计划
-                        RouteAutoGenerator.regenerateSpotSettings(getActivity(), newSpots);
+                        RouteAutoGenerator.regenerateSpotSettings(activity);
                         initListView();
 
                     }
@@ -336,7 +350,13 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ProgressDialogController.show();
-                        RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler());
+                        int count = 0;
+                        for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
+                            if(!RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.NONE))
+                                count++;
+                        }
+                        RouteAutoGenerator.getLatLngInfo(new MyHandler(count),activity);
+
 //                        new GenerateDietListAsyncTask().execute();
                     }
                 });
@@ -345,28 +365,38 @@ public class RouteMakerFragment extends Fragment {
 
             private void initListView() {
                 //假数据
-                adapter = new SpotSettingsAdapter(getActivity());
+                adapter = new SpotSettingsAdapter(activity);
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-                newSpots = new ArrayList<>();
-                newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), newSpots, newSpotListView);
+                newSpotAdapter = new BasicSettingsSpotAdapter(activity, TravelBag.getInstance().getScenerySpotList(), newSpotListView);
                 newSpotListView.setAdapter(newSpotAdapter);
                 newSpotAdapter.notifyDataSetChanged();
-                float totalHeaderHeight = RouteData.dayLength * 3 * getActivity().getResources().getDimension(R.dimen.day_header_height);
-                float totalItemHeight = (adapter.getCount() - RouteData.dayLength * 3) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
-                ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
-                params.height = (int) (totalHeaderHeight + totalItemHeight);
-                stickyListHeadersListView.setLayoutParams(params);
+
             }
 
             @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                //TODO 更新旅店信息
+            public void onResume() {
+                super.onResume();
+                adapter = new SpotSettingsAdapter(activity);
+                stickyListHeadersListView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                newSpotAdapter = new BasicSettingsSpotAdapter(activity, TravelBag.getInstance().getScenerySpotList(), newSpotListView);
+                newSpotListView.setAdapter(newSpotAdapter);
+                newSpotAdapter.notifyDataSetChanged();
+                float totalHeaderHeight = RouteData.dayLength * 3 * activity.getResources().getDimension(R.dimen.day_header_height);
+                float totalItemHeight = (adapter.getCount() - RouteData.dayLength * 3) * activity.getResources().getDimension(R.dimen.spot_item_height);
+                ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
+                params.height = (int) (totalHeaderHeight + totalItemHeight);
+                stickyListHeadersListView.setLayoutParams(params);
+                float newSpotsHeight = TravelBag.getInstance().getScenerySpotList().size() * activity.getResources().getDimension(R.dimen.item_height_default);
+                ViewGroup.LayoutParams params2 = newSpotListView.getLayoutParams();
+                params2.height = (int)newSpotsHeight;
+                newSpotListView.setLayoutParams(params2);
             }
 
             class GenerateDietListAsyncTask extends GeneratorTask {
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeSpotSettings(getActivity(),new MyHandler(0));
+                    return RouteAutoGenerator.executeSpotSettings(activity,new MyHandler(0));
                 }
 
                 @Override
@@ -396,23 +426,15 @@ public class RouteMakerFragment extends Fragment {
                     public void onClick(View v) {
 //                        new GenerateTimeListAsyncTask().execute();
                         ProgressDialogController.show();
-                        int count = 0;
-                        for(int i = 0; i < RouteData.spotTempInfo.size(); i++) {
-                            if(!RouteData.spotTempInfo.get(i).type.equals(RouteData.ActivityType.NONE))
-                                count++;
-                        }
-                        for(int i = 0; i < RouteData.dietTempInfo.length; i++) {
-                            if(!RouteData.dietTempInfo[i].detail.equals("无"))
-                                count++;
-                        }
-                        RouteAutoGenerator.getLatLngInfo(new MyHandler(count),getActivity());
+                        RouteAutoGenerator.executeDietSettings();
+                        RouteAutoGenerator.getTrafficTimes(activity,new MyHandler(1 + RouteData.singleEvents.size() / 2));
                     }
                 });
                 initListView();
             }
 
             private void initListView() {
-                adapter = new DietSettingsAdapter(getActivity());
+                adapter = new DietSettingsAdapter(activity);
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -420,14 +442,14 @@ public class RouteMakerFragment extends Fragment {
             class GenerateTimeListAsyncTask extends GeneratorTask {
                 @Override
                 protected String doInBackground(Void... params) {
-                    return RouteAutoGenerator.executeDietSettings(getActivity());
+                    return RouteAutoGenerator.executeDietSettings();
                 }
             }
 
             @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                adapter.notifyDataSetChanged();
+            public void onResume() {
+                super.onResume();
+                initListView();
             }
         };
         Fragment timeSettings = new Fragment() {
@@ -456,7 +478,7 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initListView() {
-                adapter = new TimeSettingsAdapter(getActivity());
+                adapter = new TimeSettingsAdapter(activity);
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -504,16 +526,16 @@ public class RouteMakerFragment extends Fragment {
                 changeDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog = new DatePickerDialog(getActivity(), mDateSetListener, startYear, startMonth, startDay);
+                        dialog = new DatePickerDialog(activity, mDateSetListener, startYear, startMonth, startDay);
                         dialog.show();
                     }
                 });
                 changeName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        nameET = new EditText(getActivity());
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(getActivity().getResources().getString(R.string.routemaker_finishsettings_name))
+                        nameET = new EditText(activity);
+                        new AlertDialog.Builder(activity)
+                                .setTitle(activity.getResources().getString(R.string.routemaker_finishsettings_name))
                                 .setView(nameET)
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
@@ -528,11 +550,13 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String startTime = date.getText().toString();
-                        String name = nameET.getText().toString();
+                        String names = name.getText().toString();
                         if(hint.getVisibility() == View.VISIBLE)
-                            Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
-                        else
-                            RouteAutoGenerator.executeFinishSettings(new MyHandler(1), getActivity(), startTime, name);
+                            Toast.makeText(activity,hint.getText().toString(),Toast.LENGTH_LONG).show();
+                        else {
+                            ProgressDialogController.show();
+                            RouteAutoGenerator.executeFinishSettings(new MyHandler(1), activity, startTime, names);
+                        }
                     }
                 });
             }
@@ -595,7 +619,7 @@ public class RouteMakerFragment extends Fragment {
     public void moveToLastStep() {
         int nextStep = getFragment(-1, currStep);
         if (nextStep >= 0) {
-            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, fragments.get(nextStep)).commit();
+            fragmentManager.popBackStack();
             setTitle();
         }
     }
@@ -605,11 +629,15 @@ public class RouteMakerFragment extends Fragment {
             currStep = 5 + direction * 3;
             return currStep;
         } else {
-            if (currentStep == 0 && direction == -1) {
-                Toast.makeText(getActivity(), "已经是第一步", Toast.LENGTH_SHORT).show();
+            if(selectSpots) {
+                selectSpots = false;
+                fragmentManager.popBackStack();
+                return -1;
+            }else if (currentStep == 0 && direction == -1) {
+                Toast.makeText(activity, "已经是第一步", Toast.LENGTH_SHORT).show();
                 return -1;
             } else if (currentStep == 4 && direction == 1) {
-                Toast.makeText(getActivity(), "完成", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "路线设计完成", Toast.LENGTH_SHORT).show();
                 return -1;
             } else {
                 currStep = direction + currentStep;
@@ -621,7 +649,10 @@ public class RouteMakerFragment extends Fragment {
     public void nextStep() {
         currStep = getFragment(1, currStep);
         if (currStep != -1) {
-            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, fragments.get(currStep)).commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.routemaker_fragment_content, fragments.get(currStep));
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
             setTitle();
         }
     }
@@ -638,7 +669,7 @@ public class RouteMakerFragment extends Fragment {
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
-//        int itemHeight = getActivity().getResources().getDimension(R.dimen.)
+//        int itemHeight = activity.getResources().getDimension(R.dimen.)
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + listView.getDividerHeight() * (adapter.getCount() - 1);
         listView.setLayoutParams(params);
@@ -680,7 +711,7 @@ public class RouteMakerFragment extends Fragment {
                             for(int j = 0; j < spotList.size(); j++)
                                 RouteAutoGenerator.kSearch[i][j].destroy();
                         }
-                        String result =  RouteAutoGenerator.generateSpotSettingsPlan(spotList, getActivity());
+                        String result =  RouteAutoGenerator.generateSpotSettingsPlan(spotList, activity);
                         if(result.equals("success")) {
                             if(currStep == 0) {//处在BasicSettings环节
                                 nextStep();
@@ -692,7 +723,7 @@ public class RouteMakerFragment extends Fragment {
                             }
                         }else {
                             ProgressDialogController.dismiss();
-                            Toast.makeText(getActivity(),"景点数量过多，不能生成合理的旅行计划，请减少景点数量或增加旅行天数",Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity,"景点数量过多，不能生成合理的旅行计划，请减少景点数量或增加旅行天数",Toast.LENGTH_LONG).show();
                         }
                     }else if(msg.getData().getString("source").equals("spot")) {
                         nextStep();
@@ -703,11 +734,15 @@ public class RouteMakerFragment extends Fragment {
                         ProgressDialogController.dismiss();
                     }else if(msg.getData().getString("source").equals("finish")) {
                         if(msg.getData().getBoolean("success")) {
-                            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, MainFragment.newInstance(getActivity())).commit();
+                            ProgressDialogController.dismiss();
+                            fragmentManager.beginTransaction().replace(R.id.routemaker_fragment_content, MainFragment.newInstance(activity)).commit();
+                            ((MainActivity)getActivity()).setActionbarTitle("首页");
+                        }else {
+                            Toast.makeText(activity,"线路上传服务器失败",Toast.LENGTH_LONG).show();
                         }
                     }else if(msg.getData().getString("source").equals("latlnginfo")) {
-                        RouteAutoGenerator.executeDietSettings(getActivity());
-                        RouteAutoGenerator.getTrafficTimes(getActivity(),new MyHandler(1 + RouteData.singleEvents.size() / 2));
+                        RouteAutoGenerator.executeSpotSettings(activity,new MyHandler());
+                        ProgressDialogController.dismiss();
                     }
                 }
             }
@@ -727,7 +762,7 @@ public class RouteMakerFragment extends Fragment {
 //            if (result.equals(RouteAutoGenerator.success))
 //                nextStep();
 //            else
-//                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, result, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -747,6 +782,7 @@ public class RouteMakerFragment extends Fragment {
             ProgressDialogController.progressDialog = new ProgressDialog(activity);
             ProgressDialogController.progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
             ProgressDialogController.progressDialog.setMessage("处理中，请稍等。");
+            ProgressDialogController.progressDialog.setCancelable(false);
         }
 
         public static void show(){

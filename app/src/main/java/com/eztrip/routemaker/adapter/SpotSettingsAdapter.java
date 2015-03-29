@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eztrip.R;
+import com.eztrip.findspot.HotelList;
 import com.eztrip.findspot.ShowHotel;
 import com.eztrip.findspot.ShowScenerySpot;
 import com.eztrip.map.MapActivity;
@@ -130,7 +131,8 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
                 @Override
                 public void onClick(View v) {
                     //TODO 跳转到宾馆信息页面
-                    Toast.makeText(context, "修改" + RouteData.spotTempInfo.get(position).detail, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(context, HotelList.class);
+                    context.startActivity(intent);
                 }
             });
         } else {

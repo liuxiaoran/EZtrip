@@ -218,6 +218,43 @@ public class RouteMakerService {
         });
     }
 
+    public static void getHotels(final ProgressBar progressBar, final BaseAdapter adapter, final ArrayList<RouteData.Hotel> hotels, String level) {
+        Parameters hotelParameters = new Parameters();
+        hotelParameters.add("cityId", RouteData.cityID);
+        hotelParameters.add("pname", APIConstants.PACKAGE_NAME);
+        hotelParameters.add("v", 1);
+        hotelParameters.add("grade",level);
+        JuheData.executeWithAPI(APIConstants.ID, APIConstants.HOTEL_LIST_IP, JuheData.GET, hotelParameters, new DataCallBack() {
+            @Override
+            public void resultLoaded(int err2, String reason2, String result2) {
+                Log.e("err2",Integer.toString(err2));
+                if (err2 == 0) {
+                    try {
+                        JSONObject object1 = new JSONObject(result2);
+                        JSONArray hotelList = object1.getJSONObject("result").getJSONArray("hotelList");
+                        for(int i = 0; i < hotelList.length(); i++) {
+                            JSONObject hotel = (JSONObject) hotelList.get(i);
+                            RouteData.Hotel hotel1 = new RouteData.Hotel();
+                            hotel1.name = hotel.getString("title");
+                            hotel1.imgsrc = hotel.getString("imgurl");
+                            hotel1.satisfaction = hotel.getString("manyidu");
+                            hotel1.address = hotel.getString("address");
+                            hotel1.grade = hotel.getInt("grade");
+                            hotel1.intro = hotel.getString("intro");
+                            hotel1.url = hotel.getString("url");
+                            hotels.add(hotel1);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("error","hotellist");
+                    }
+                }
+            }
+        });
+    }
+
     public static void getHotel(final Handler handler) {
         Parameters parameters = new Parameters();
         parameters.add("pname", APIConstants.PACKAGE_NAME);
@@ -246,6 +283,7 @@ public class RouteMakerService {
                         for (int i = 0; i < list.length(); i++) {
                             if ((((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {
                                 cityID = ((JSONObject) list.get(i)).getString("id");
+                                RouteData.cityID = cityID;
                             }
                         }
                         if (cityID.equals("")) {
@@ -278,6 +316,7 @@ public class RouteMakerService {
                                             RouteData.hotelInfo.address = hotel.getString("address");
                                             RouteData.hotelInfo.grade = hotel.getInt("grade");
                                             RouteData.hotelInfo.intro = hotel.getString("intro");
+                                            RouteData.hotelInfo.url = hotel.getString("url");
                                             Message m = new Message();
                                             Bundle b = new Bundle();
                                             b.putBoolean("minus", true);

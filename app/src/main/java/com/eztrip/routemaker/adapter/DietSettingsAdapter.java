@@ -3,6 +3,7 @@ package com.eztrip.routemaker.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,7 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
                 Intent intent = new Intent();
                 Bundle b = new Bundle();
                 b.putInt("period",position);
+                Log.e("position1",Integer.toString(position));
                 b.putString("latitude", RouteData.dietTempInfo[position].latitude);
                 b.putString("longitude",RouteData.dietTempInfo[position].longitude);
                 intent.setClass(context, RestaurantList.class);
