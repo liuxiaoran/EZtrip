@@ -91,6 +91,15 @@ public class RouteData {
             this.detail = detail;
         }
 
+        public SingleEvent(int day, ActivityType activityType, Clock startTime, Clock finishTime, String title, String detail) {
+            this.day = day;
+            this.type = activityType;
+            this.startTime = startTime;
+            this.finishTime = finishTime;
+            this.title = title;
+            this.detail = detail;
+        }
+
         public DrivingRouteLine getDrivingRouteLine(Activity activity) {
             if (this.type.equals(ActivityType.TRAFFIC) && RouteData.trafficInfo.equals(activity.getResources().getString(R.string.routemaker_trafficsettings_private)))
                 return this.drivingRouteLine;

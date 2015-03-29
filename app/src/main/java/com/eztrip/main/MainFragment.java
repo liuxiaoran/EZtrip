@@ -133,20 +133,20 @@ public class MainFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_SELECT_CITY_CODE);
             } else if (((int) v.getTag()) == 0) {
 
-                RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天安门");
-                RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "毛主席纪念堂");
-                RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "故宫");
-                RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北海公园");
+                RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天安门", "北京市的中心、故宫的南端，与天安门广场隔长安街相望。是明清两代北京皇城的正门");
+                RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "毛主席纪念堂", "位于天安门广场， 人民英雄纪念碑南面，坐落在原中华门旧址。");
+                RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "故宫", "位于北京中轴线的中心，是明、清两代的皇宫，占地面积约为72万平方米，建筑面积约为15万平方米，是世界上现存规模最大、保存最为完整的木质结构的宫殿型建筑");
+                RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北海公园", "位于北京市中心区，城内景山西侧，在故宫的西北面，与中海、南海合称三海。");
 
-                RouteData.SingleEvent singleEvent5 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "王府井");
-                RouteData.SingleEvent singleEvent6 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "颐和园");
-                RouteData.SingleEvent singleEvent7 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "时光的记忆");
-                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "老北京庙会自由活动");
+                RouteData.SingleEvent singleEvent5 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "王府井", "南起东长安街，北至中国美术馆，全长约1600米，是北京最有名的商业街");
+                RouteData.SingleEvent singleEvent6 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "颐和园", "北京市古代皇家园林，前身为清漪园，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与圆明园毗邻");
+                RouteData.SingleEvent singleEvent7 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "老北京庙会自由活动", "是汉族民间宗教及岁时风俗，一般在春节，元宵节等节日举行");
 
 
-                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天坛");
-                RouteData.SingleEvent singleEvent10 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北京前门大街");
+                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "天坛", "位于故宫东南方，占地273公顷，约为故宫的4倍。");
+                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(11, 0), "北京前门大街", "位于京城中轴线，北起前门月亮湾，南至天桥路口，与天桥南大街相连");
                 routeList.add(singleEvent1);
+
                 routeList.add(singleEvent2);
                 routeList.add(singleEvent3);
                 routeList.add(singleEvent4);
@@ -155,23 +155,22 @@ public class MainFragment extends Fragment {
                 routeList.add(singleEvent7);
                 routeList.add(singleEvent8);
                 routeList.add(singleEvent9);
-                routeList.add(singleEvent10);
 
 
             } else if ((int) v.getTag() == 1) {
                 //http://dujia.lvmama.com/group/361528
-                RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "南溪山");
+                RouteData.SingleEvent singleEvent1 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(9, 0), new Clock(10, 30), "南溪山", "两峰对峙，高突险峻，犹如两扇白色屏风，有“南溪玉屏”之称。人行壁下，常常可以听到风吹崖壁发出的声音，堪称桂林山水一绝");
 
-                RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "漓江风光");
-                RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(15, 30), "叠彩山");
+                RouteData.SingleEvent singleEvent2 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(13, 0), new Clock(13, 30), "漓江风光", "沿途游客零距离亲近漓江，聆听漓江荡漾之声，观赏桂林漓江两岸如诗如画的风景");
+                RouteData.SingleEvent singleEvent3 = new RouteData.SingleEvent(1, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(15, 30), "叠彩山", "饱览“千山环野立，一水抱城流”的桂林市的全景风貌");
 
-                RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(2, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "阳朔");
-                RouteData.SingleEvent singleEvent5 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 00), "阳朔大印人文景观园");
-                RouteData.SingleEvent singleEvent6 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(14, 45), "月亮山");
-                RouteData.SingleEvent singleEvent7 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(14, 45), new Clock(15, 30), "阳朔西街");
+                RouteData.SingleEvent singleEvent4 = new RouteData.SingleEvent(2, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "阳朔", "游览坐落于十里画廊黄金地段的国家AAAA级景区");
+                RouteData.SingleEvent singleEvent5 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 00), "阳朔大印人文景观园", "拥有三大看点：看千年渔民文化<鱼鹰捕鱼>，看神仙<八仙贺寿秀>和看<七项世界吉尼期纪录>");
+                RouteData.SingleEvent singleEvent6 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(14, 0), new Clock(14, 45), "月亮山", "人称“小漓江”，不是漓江胜似漓江");
+                RouteData.SingleEvent singleEvent7 = new RouteData.SingleEvent(2, RouteData.ActivityType.SPOT, new Clock(14, 45), new Clock(15, 30), "阳朔西街", "以尽情享受小镇幽静的环境和独具情韵的休闲时光，体验浪漫的异国风情");
 
-                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "木龙湖.东盟园");
-                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "榕、杉湖景区");
+                RouteData.SingleEvent singleEvent8 = new RouteData.SingleEvent(3, RouteData.ActivityType.TRAFFIC, new Clock(9, 0), new Clock(10, 30), "木龙湖.东盟园", "是以东盟10国美食、风情、文化为背景的主题公园，领略美丽的东南亚风情演艺，欣赏秀丽的木龙湖风光");
+                RouteData.SingleEvent singleEvent9 = new RouteData.SingleEvent(3, RouteData.ActivityType.SPOT, new Clock(10, 30), new Clock(11, 15), "榕、杉湖景区", "东方威尼斯环城水系桂林最大的中心公园");
 
                 routeList.add(singleEvent1);
                 routeList.add(singleEvent2);

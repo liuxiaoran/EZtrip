@@ -44,9 +44,9 @@ public class RecommendRouteDetailFragment extends Fragment {
 
         Bundle bundle = getArguments();
         routeList = (ArrayList<RouteData.SingleEvent>) bundle.getSerializable("recommand_route");
-        Log.v(TAG, routeList.size() + "");
         StickyListHeadersListView stickyList = (StickyListHeadersListView) view.findViewById(R.id.main_recommand_route_detail_lv);
         MyAdapter adapter = new MyAdapter(getActivity());
+        stickyList.setDivider(null);
         stickyList.setAdapter(adapter);
         return view;
     }
@@ -58,12 +58,18 @@ public class RecommendRouteDetailFragment extends Fragment {
 
         private LayoutInflater inflater;
 
-        private static final int TYPE_1 = 1;
-        private static final int TYPE_2 = 2;
+        private static final int TYPE_1 = 0;
+        private static final int TYPE_2 = 1;
 
         public MyAdapter(Context context) {
             inflater = LayoutInflater.from(context);
 
+        }
+
+        @Override
+        public int getViewTypeCount() {
+
+            return 2;
         }
 
         @Override
@@ -97,7 +103,6 @@ public class RecommendRouteDetailFragment extends Fragment {
             int type = getItemViewType(position);
             TrafficViewHolder trafficViewHolder = null;
             ViewHolder holder = null;
-            Log.v(TAG, "" + position);
             if (convertView == null) {
 
                 // 按当前所需的样式，确定new的布局
