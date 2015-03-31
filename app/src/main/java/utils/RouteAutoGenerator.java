@@ -158,7 +158,7 @@ public class RouteAutoGenerator {
                                 b.putBoolean("minus", true);
                                 b.putString("source", "basic");
                                 m.setData(b);
-                                m.sendToTarget();
+                                handler.handleMessage(m);
                             }
                         }
                     }

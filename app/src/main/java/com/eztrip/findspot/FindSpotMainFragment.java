@@ -128,7 +128,7 @@ public class FindSpotMainFragment extends Fragment {
         spotsList = new ArrayList();
 
         // 防止fragment重叠
-        getFragmentManager().popBackStack();
+        //getFragmentManager().popBackStack();
         //将自定义view显示在actionbar中
 //        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 //

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -17,13 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.main.MainFragment;
 import com.eztrip.main.RecommendRouteDetailFragment;
-import com.eztrip.map.MapActivity;
 import com.eztrip.navigator.NavigationDrawerFragment;
 import com.eztrip.routemaker.RouteMakerFragment;
+import com.eztrip.TravelHelper.TravelHelpFragment;
 import com.eztrip.usercenter.UserCenterMainFragment;
 
 import java.io.File;
@@ -52,6 +52,7 @@ public class MainActivity extends ActionBarActivity
     private Toolbar mToolbar;
     private File imgFile = null;
     public FragmentManager fragmentManager;
+    public FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,39 +84,69 @@ public class MainActivity extends ActionBarActivity
         switch (position) {
             case 0:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = MainFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
-
+                fragmentTransaction = fragmentManager.beginTransaction();
+                 if(currFragment == null) {
+                    currFragment = MainFragment.newInstance(getBaseContext());
+                    fragmentTransaction.replace(R.id.container, currFragment,"MainFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }else if(fragmentManager.findFragmentByTag("MainFragment").isVisible()){
+                    break;
+                }else {
+                    fragmentManager.popBackStack();
+                }
                 break;
             case 1:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = UserCenterMainFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                if(fragmentManager.findFragmentByTag("UserCenterMainFragment") == null) {
+                    if(!(fragmentManager.findFragmentByTag("MainFragment").isVisible()))
+                        fragmentManager.popBackStack();
+                    fragmentManager = getSupportFragmentManager();
+                    currFragment = UserCenterMainFragment.newInstance(getBaseContext());
+                    fragmentTransaction .replace(R.id.container, currFragment,"UserCenterMainFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
                 break;
             case 2:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = FindSpotMainFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                if(fragmentManager.findFragmentByTag("FindSpotFragment")==null) {
+                    if(!(fragmentManager.findFragmentByTag("MainFragment").isVisible()))
+                        fragmentManager.popBackStack();
+                    fragmentManager = getSupportFragmentManager();
+                    currFragment = FindSpotMainFragment.newInstance(getBaseContext());
+                    fragmentTransaction.replace(R.id.container, currFragment,"FindSpotFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
                 break;
             case 3:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = RouteMakerFragment.newInstance(MainActivity.this);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                if(fragmentManager.findFragmentByTag("RouteMakerFragment")==null) {
+                    if (!(fragmentManager.findFragmentByTag("MainFragment").isVisible()))
+                        fragmentManager.popBackStack();
+                    fragmentManager = getSupportFragmentManager();
+                    currFragment = RouteMakerFragment.newInstance(MainActivity.this);
+                    fragmentTransaction.replace(R.id.container, currFragment,"RouteMakerFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
                 break;
             case 4:
                 fragmentManager = getSupportFragmentManager();
-                currFragment = TravelHelpFragment.newInstance(getBaseContext());
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, currFragment)
-                        .commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                if(fragmentManager.findFragmentByTag("TravelHelpFragment")==null) {
+                    if (!(fragmentManager.findFragmentByTag("MainFragment").isVisible()))
+                        fragmentManager.popBackStack();
+                    fragmentManager = getSupportFragmentManager();
+                    currFragment = TravelHelpFragment.newInstance(getBaseContext());
+                    fragmentTransaction.replace(R.id.container, currFragment,"TravelHelpFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
                 break;
 //            case 5:
 //                fragmentManager = getSupportFragmentManager();
@@ -155,6 +186,10 @@ public class MainActivity extends ActionBarActivity
 
     public void setShownFragment(RecommendRouteDetailFragment fragment) {
         this.shownFragment = fragment;
+    }
+
+    public FragmentManager getCurrentFragmentManager() {
+        return fragmentManager;
     }
 
     public void restoreActionBar() {
@@ -247,19 +282,24 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (currFragment instanceof RouteMakerFragment) {
+            if (fragmentManager.findFragmentByTag("RouteMakerFragment")!=null) {
                 ((RouteMakerFragment) currFragment).moveToLastStep();
                 return true;
-            }
-            if (shownFragment != null) {
+            }else if (shownFragment != null) {
                 Boolean ret = shownFragment.fragmentBackPress();
                 shownFragment = null;
                 return ret;
-            } else if (System.currentTimeMillis() - exitTime > 2000) {
+            }
+            else if(!(fragmentManager.findFragmentByTag("MainFragment").isVisible())) {
+                fragmentManager.popBackStack();
+                mTitle  = getString(R.string.title_section1);
+                restoreActionBar();
+            }
+            else if (System.currentTimeMillis() - exitTime > 2000) {
                 Toast.makeText(this, "再点一次退出应用", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
-                finish();
+                MainActivity.this.finish();
             }
             return true;
 
