@@ -48,6 +48,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
     private Button addBtn, lookBtn, collectBtn;
     private int mScreenWidth;
     private Toolbar mToolbar;
+    private boolean hide = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
             handleIntent(intent.getStringExtra("query"));
         } else {
             ScenerySpot scenerySpot = (ScenerySpot) intent.getSerializableExtra("spot");
+            hide =intent.getBooleanExtra("hide",false);
             fillViewsContent(scenerySpot);
         }
 
@@ -131,7 +133,9 @@ public class ShowScenerySpot extends ActionBarActivity implements View.OnClickLi
         addBtn.setOnClickListener(this);
         lookBtn.setOnClickListener(this);
         collectBtn.setOnClickListener(this);
-
+        if(hide) {
+            addBtn.setVisibility(View.GONE);
+        }
     }
 
     private void fillViewsContent(ScenerySpot targetSpot) {

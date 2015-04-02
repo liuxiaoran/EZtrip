@@ -29,11 +29,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -300,16 +302,16 @@ public class RouteMakerFragment extends Fragment {
         };
         final Fragment spotSettings = new Fragment() {
             private LinearLayout hintLayout;
-            private TextView hint;
+            private TextView warning;
             private View view;
-            private Button regenerate
-                    ,
-                    nextStep;
+//            private Button regenerate;
+            private Button nextStep;
             private StickyListHeadersListView stickyListHeadersListView;
             private SpotSettingsAdapter adapter;
-            private ListView newSpotListView;
-            private BasicSettingsSpotAdapter newSpotAdapter;
-            private RelativeLayout addSpotsLayout;
+            //will be updated later
+//            private ListView newSpotListView;
+//            private BasicSettingsSpotAdapter newSpotAdapter;
+//            private RelativeLayout addSpotsLayout;
 
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -319,33 +321,42 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initView() {
-                hint = (TextView) view.findViewById(R.id.routemaker_spotsettings_hint);
+                warning = (TextView) view.findViewById(R.id.routemaker_spotsettings_warning);
+                if(!RouteData.spotSettingsHint.equals("")) {
+                    if(RouteData.spotSettingsHint.equals("TooBusy")) {
+                        warning.setText("您的计划可能过于繁忙，请尝试增加旅行天数或减少游览景点。");
+                    }else if(RouteData.spotSettingsHint.equals("NotBusy")) {
+                        warning.setText("您的日程安排比较清闲，推荐您减少旅行天数或增加游览景点。");
+                    }
+                }else {
+                    warning.setVisibility(View.GONE);
+                }
                 hintLayout = (LinearLayout) view.findViewById(R.id.routemaker_spotsettings_change_hint);
                 hintLayout.setVisibility(View.GONE);
-                regenerate = (Button) view.findViewById(R.id.routemaker_spotsettings_regeneration);
+//                regenerate = (Button) view.findViewById(R.id.routemaker_spotsettings_regeneration);
                 nextStep = (Button) view.findViewById(R.id.routemaker_spotsettings_next_step);
                 stickyListHeadersListView = (StickyListHeadersListView) view.findViewById(R.id.routemaker_spotsettings_spotlist);
-                newSpotListView = (ListView) view.findViewById(R.id.routemaker_spotsettings_newspotlist);
-                addSpotsLayout = (RelativeLayout)view.findViewById(R.id.routemaker_spotsettings_spot_add);
-                addSpotsLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FindSpotMainFragment levelResultFragment = FindSpotMainFragment.newInstance(context);
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.routemaker_fragment_content,levelResultFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }
-                });
-                regenerate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO: 重新生成计划
-                        RouteAutoGenerator.regenerateSpotSettings(getActivity());
-                        initListView();
-
-                    }
-                });
+//                newSpotListView = (ListView) view.findViewById(R.id.routemaker_spotsettings_newspotlist);
+//                addSpotsLayout = (RelativeLayout)view.findViewById(R.id.routemaker_spotsettings_spot_add);
+//                addSpotsLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        FindSpotMainFragment levelResultFragment = FindSpotMainFragment.newInstance(context);
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        fragmentTransaction.replace(R.id.routemaker_fragment_content,levelResultFragment);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+//                    }
+//                });
+//                regenerate.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //TODO: 重新生成计划
+//                        RouteAutoGenerator.regenerateSpotSettings(getActivity());
+//                        initListView();
+//
+//                    }
+//                });
                 nextStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -368,9 +379,9 @@ public class RouteMakerFragment extends Fragment {
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-                newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), TravelBag.getInstance().getScenerySpotList(), newSpotListView);
-                newSpotListView.setAdapter(newSpotAdapter);
-                newSpotAdapter.notifyDataSetChanged();
+//                newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), TravelBag.getInstance().getScenerySpotList(), newSpotListView);
+//                newSpotListView.setAdapter(newSpotAdapter);
+//                newSpotAdapter.notifyDataSetChanged();
 
             }
 
@@ -380,18 +391,18 @@ public class RouteMakerFragment extends Fragment {
                 adapter = new SpotSettingsAdapter(getActivity());
                 stickyListHeadersListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-                newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), TravelBag.getInstance().getScenerySpotList(), newSpotListView);
-                newSpotListView.setAdapter(newSpotAdapter);
-                newSpotAdapter.notifyDataSetChanged();
-                float totalHeaderHeight = RouteData.dayLength * 3 * getActivity().getResources().getDimension(R.dimen.day_header_height);
-                float totalItemHeight = (adapter.getCount() - RouteData.dayLength * 3) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
-                ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
-                params.height = (int) (totalHeaderHeight + totalItemHeight);
-                stickyListHeadersListView.setLayoutParams(params);
-                float newSpotsHeight = TravelBag.getInstance().getScenerySpotList().size() * getActivity().getResources().getDimension(R.dimen.item_height_default);
-                ViewGroup.LayoutParams params2 = newSpotListView.getLayoutParams();
-                params2.height = (int)newSpotsHeight;
-                newSpotListView.setLayoutParams(params2);
+//                newSpotAdapter = new BasicSettingsSpotAdapter(getActivity(), TravelBag.getInstance().getScenerySpotList(), newSpotListView);
+//                newSpotListView.setAdapter(newSpotAdapter);
+//                newSpotAdapter.notifyDataSetChanged();
+//                float totalHeaderHeight = RouteData.dayLength * 3 * getActivity().getResources().getDimension(R.dimen.day_header_height);
+//                float totalItemHeight = (adapter.getCount() - RouteData.dayLength * 3) * getActivity().getResources().getDimension(R.dimen.spot_item_height);
+//                ViewGroup.LayoutParams params = stickyListHeadersListView.getLayoutParams();
+//                params.height = (int) (totalHeaderHeight + totalItemHeight);
+//                stickyListHeadersListView.setLayoutParams(params);
+//                float newSpotsHeight = TravelBag.getInstance().getScenerySpotList().size() * getActivity().getResources().getDimension(R.dimen.item_height_default);
+//                ViewGroup.LayoutParams params2 = newSpotListView.getLayoutParams();
+//                params2.height = (int)newSpotsHeight;
+//                newSpotListView.setLayoutParams(params2);
             }
 
             class GenerateDietListAsyncTask extends GeneratorTask {
@@ -501,6 +512,7 @@ public class RouteMakerFragment extends Fragment {
                     startDay;
             private DatePickerDialog dialog;
             private EditText nameET;
+            private Switch aSwitch;
 
             @Override
             public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -516,6 +528,7 @@ public class RouteMakerFragment extends Fragment {
                 name = (TextView) view.findViewById(R.id.routemaker_finishisettings_name);
                 date = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date);
                 hint = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date_hint);
+                aSwitch = (Switch)view.findViewById(R.id.switch1);
                 hint.setVisibility(View.GONE);
                 RouteData.startDay = Calendar.getInstance();
                 RouteData.startDay.add(Calendar.DAY_OF_YEAR, 1);
@@ -523,6 +536,20 @@ public class RouteMakerFragment extends Fragment {
                 startMonth = RouteData.startDay.get(Calendar.MONTH);
                 startDay = RouteData.startDay.get(Calendar.DAY_OF_MONTH);
                 updateDateDisplay();
+                aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            Calendar currentDay = Calendar.getInstance();
+                            if (!currentDay.before(RouteData.startDay))
+                                hint.setVisibility(View.VISIBLE);
+                            else
+                                hint.setVisibility(View.GONE);
+                        }else {
+                            hint.setVisibility(View.GONE);
+                        }
+                    }
+                });
                 changeDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -554,6 +581,12 @@ public class RouteMakerFragment extends Fragment {
                         if(hint.getVisibility() == View.VISIBLE)
                             Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
                         else {
+                            RouteData.name = names;
+                            if(aSwitch.isChecked()) {
+                                RouteData.startDay.set(startYear,startMonth,startDay);
+                            }else {
+                                RouteData.startDay = null;
+                            }
                             ProgressDialogController.show();
                             RouteAutoGenerator.executeFinishSettings(new MyHandler(1), getActivity(), startTime, names);
                         }

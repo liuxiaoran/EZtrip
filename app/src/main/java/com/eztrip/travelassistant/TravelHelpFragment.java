@@ -16,11 +16,15 @@ import android.widget.TextView;
 
 import com.eztrip.R;
 import com.eztrip.model.RouteData;
+import com.eztrip.routemaker.adapter.TimeSettingsAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by liuxiaoran on 15/3/24.
@@ -32,6 +36,8 @@ public class TravelHelpFragment extends Fragment {
     private ViewPager viewPager;
     private TextView pagerTab1, pagerTab2;
     private View pagerTabDivider1, pagerTabDivider2;
+    private StickyListHeadersListView listView;
+    private TimeSettingsAdapter stickyListHeadersAdapter;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -66,6 +72,7 @@ public class TravelHelpFragment extends Fragment {
 
         initTextView(view);
         initViewPager(view, inflater);
+        initList(view);
 
 
         return view;
@@ -80,7 +87,7 @@ public class TravelHelpFragment extends Fragment {
 //        RouteData.singleEvents
 
 //        createView1();
-        View view2 = inflater.inflate(R.layout.realtime_remind_layout, null);
+        View view2 = inflater.inflate(R.layout.travelhelper_total_plan, null);
         views.add(view1);
         views.add(view2);
         viewPager.setAdapter(new MyViewPagerAdapter(views));
@@ -156,6 +163,12 @@ public class TravelHelpFragment extends Fragment {
 
         pagerTab1.setOnClickListener(new MyOnClickListener(0));
         pagerTab2.setOnClickListener(new MyOnClickListener(1));
+    }
+
+    private void initList(View view) {
+        listView = (StickyListHeadersListView)view.findViewById(R.id.travelhelper_list);
+        stickyListHeadersAdapter = new TimeSettingsAdapter(getActivity(),TimeSettingsAdapter.FROM_TRAVEL_HELP);
+        listView.setAdapter(stickyListHeadersAdapter);
     }
 
     class MyViewPagerAdapter extends PagerAdapter {

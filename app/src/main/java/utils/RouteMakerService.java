@@ -183,6 +183,8 @@ public class RouteMakerService {
         parameters.add("lng", longitude);
         parameters.add("lat", latitude);
         parameters.add("radius", 1000);
+        Log.e("lng",longitude);
+        Log.e("lat",latitude);
         JuheData.executeWithAPI(APIConstants.DIET_INFO_ID, APIConstants.DIET_INFO_IP, JuheData.GET, parameters, new DataCallBack() {
             @Override
             public void resultLoaded(int err, String reason, String result) {
@@ -248,7 +250,6 @@ public class RouteMakerService {
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("error","hotellist");
                     }
                 }
             }
@@ -268,17 +269,6 @@ public class RouteMakerService {
                         final JSONObject object = new JSONObject(result);
                         String cityID = new String();
                         Log.e("reason",object.getString("reason"));
-                        if(object.getString("reason").equals("key请求次数超限！")) {
-                            RouteData.hotelInfo = new RouteData.Hotel();
-                            RouteData.hotelInfo.name = "东直门智选假日酒店";
-                            Message m = new Message();
-                            Bundle b = new Bundle();
-                            b.putBoolean("minus", true);
-                            b.putString("source", "basic");
-                            m.setData(b);
-                            handler.handleMessage(m);
-                            return ;
-                        }
                         JSONArray list = object.getJSONObject("result").getJSONArray("areaList");
                         for (int i = 0; i < list.length(); i++) {
                             if ((((JSONObject) list.get(i)).getJSONArray("name").get(0)).toString().contains(RouteData.city)) {

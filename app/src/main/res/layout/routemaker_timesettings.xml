@@ -1,63 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_grey"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/timesettings_hint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_horizontal_small"
+        android:layout_marginRight="@dimen/margin_horizontal_small"
+        android:layout_marginTop="@dimen/margin_vertical_small"
+        android:background="@drawable/layout_border"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/default_listitem_height">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/routemaker_spotsettings_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/default_padding"
                 android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginTop="@dimen/default_margin_vertical"
-                android:layout_marginBottom="@dimen/default_margin_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/routemaker_timesettings_hint"
-                    android:textSize="@dimen/body_text_size" />
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginRight="@dimen/default_margin_horizontal"
-                android:layout_marginBottom="@dimen/default_margin_vertical">
-
-                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                    android:id="@+id/routemaker_timesettings_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp" />
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                style="@style/match_parent_rounded_rectangle_button"
-                android:text="@string/next_step"
-                android:id="@+id/routemaker_timesettings_next_step" />
-        </LinearLayout>
-
+                android:layout_marginStart="@dimen/default_margin_horizontal"
+                android:layout_marginTop="@dimen/default_padding"
+                android:gravity="center_vertical"
+                android:text="@string/routemaker_timesettings_hint"
+                android:textColor="@color/red"
+                android:textSize="@dimen/body_text_size" />
+        </RelativeLayout>
     </LinearLayout>
 
-</ScrollView>
+    <LinearLayout
+        android:id="@+id/divider0"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_blank_height"
+        android:layout_below="@id/timesettings_hint_layout"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:id="@+id/spotlist_layout"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/divider1"
+        android:layout_below="@id/divider0"
+        android:layout_marginLeft="@dimen/margin_horizontal_small"
+        android:layout_marginRight="@dimen/margin_horizontal_small"
+        android:background="@drawable/layout_border"
+        android:orientation="vertical"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_blank_height"
+            android:layout_marginLeft="@dimen/margin_horizontal_small"
+            android:layout_marginRight="@dimen/margin_horizontal_small"
+
+            android:orientation="vertical" />
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/routemaker_timesettings_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_blank_height"
+        android:layout_above="@id/operations"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:id="@+id/operations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_line"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/routemaker_timesettings_next_step"
+            style="@style/match_parent_rounded_rectangle_button"
+            android:text="@string/next_step" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_vertical_small"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" />
+
+</RelativeLayout>

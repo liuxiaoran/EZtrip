@@ -22,6 +22,7 @@ import java.util.List;
  * Single instance mode
  */
 public class RouteData {
+    public static String name;//the name of the route
     public static String city;//Destination of the trip
     public static ArrayList<SingleEvent> singleEvents;//An array which storing one single event of the trip
     public static int dayLength;//The length of the trip

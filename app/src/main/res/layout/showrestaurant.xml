@@ -27,6 +27,7 @@
                     android:id="@+id/showscenery_scenery_iv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="fitXY"
                     />
                 </LinearLayout>
 
