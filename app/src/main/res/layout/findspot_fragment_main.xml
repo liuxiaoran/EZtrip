@@ -48,12 +48,15 @@
 
             </Spinner>
 
-            <Button
-                android:id="@+id/findspot_recommand_btn"
-                android:layout_width="60dp"
+            <TextView
+                android:id="@+id/findspot_choose_city_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_toRightOf="@id/findspot_divider_iv"
-                android:text="推荐" />
+                android:text="选择城市"
+                android:layout_toRightOf="@id/findspot_level_spn"
+                android:gravity="center">
+
+            </TextView>
 
         </RelativeLayout>
 

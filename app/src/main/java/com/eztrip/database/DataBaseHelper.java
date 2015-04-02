@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by liuxiaoran on 15/3/23.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final String TABLE_NAME = "sqlite-eztrip.db";
+    private static final String TABLE_NAME = "sqlite_eztrip.db";
 
     private Map<String, Dao> daos = new HashMap<String, Dao>();
 

@@ -108,7 +108,7 @@ public class ShowRestaurant extends ActionBarActivity implements View.OnClickLis
     private void fillViewsContent(RouteData.DietTemp restaurant) {
 
         //修改控件值
-        Picasso.with(ShowRestaurant.this).load(restaurant.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.restaurant_placeholder)
+        Picasso.with(ShowRestaurant.this).load(restaurant.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground)
                 .into(sceneryIv);
         titleTv.setText(restaurant.detail);
         Log.e("good", Integer.toString(restaurant.goodRemarks));

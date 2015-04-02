@@ -154,6 +154,7 @@ public class FindSpotService {
                                 City city = new City(name, cid, fid, level, firstName);
                                 CityDao cityDao = new CityDao(activity);
                                 cityDao.addCity(city);
+                                Log.v(TAG, "city:" + city.getName() + "  " + city.getCid());
                             }
 
 

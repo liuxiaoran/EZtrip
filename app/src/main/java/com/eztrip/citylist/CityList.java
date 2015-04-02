@@ -84,11 +84,13 @@ public class CityList extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         mCityLit = (ListView) findViewById(R.id.city_list);
         letterListView = (MyLetterListView) findViewById(R.id.cityLetterListView);
-        DBManager dbManager = new DBManager(this);
-        dbManager.openDateBase();
-        dbManager.closeDatabase();
-        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/"
-                + DBManager.DB_NAME, null);
+//        DBManager dbManager = new DBManager(this);
+//        dbManager.openDateBase();
+//        dbManager.closeDatabase();
+//        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/"
+//                + DBManager.DB_NAME, null);
+        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/" + DBManager.DB_NAME, null);
+
         mCityNames = getCityNames();
         // database.close();
         letterListView
@@ -137,14 +139,14 @@ public class CityList extends ActionBarActivity {
     private ArrayList<CityModel> getCityNames() {
         ArrayList<CityModel> names = new ArrayList<CityModel>();
         Cursor cursor = database.rawQuery(
-                "SELECT * FROM T_city ORDER BY CityName", null);
+                "SELECT * FROM t_city ORDER BY cityname", null);
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             CityModel cityModel = new CityModel();
             cityModel.setCityName(cursor.getString(cursor
-                    .getColumnIndex("AllNameSort")));
+                    .getColumnIndex("allnamesort")));
             cityModel.setNameSort(cursor.getString(cursor
-                    .getColumnIndex("CityName")));
+                    .getColumnIndex("cityname")));
             names.add(cityModel);
         }
         cursor.close();

@@ -7,12 +7,12 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by liuxiaoran on 15/3/23.
  * 城市
  */
-@DatabaseTable(tableName = "db_city")
+@DatabaseTable(tableName = "t_city")
 public class City {
     //表的主键
     @DatabaseField(generatedId = true)
     private int id;
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = "cityname")
     private String name;
     @DatabaseField(columnName = "cid")
     private String cid;
@@ -20,7 +20,7 @@ public class City {
     private String fid;
     @DatabaseField(columnName = "level")
     private int level;
-    @DatabaseField(columnName = "namesort")
+    @DatabaseField(columnName = "allnamesort")
     private String nameSort;
 
     public City() {

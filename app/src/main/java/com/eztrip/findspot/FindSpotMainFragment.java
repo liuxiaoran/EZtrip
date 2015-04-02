@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -45,9 +41,13 @@ public class FindSpotMainFragment extends Fragment {
 
     public LinearLayout mainLayout;
 
-    public TextView actionBarDestination;
+    public TextView chooseCityTv;
 
-    //在actionbar上显示，选择城市
+    // 选择的城市的等级
+    public int level;
+
+    public static final int REQUEST_SELECT_CITY_CODE = 1;
+
     public static FindSpotMainFragment newInstance(Context context) {
         FindSpotMainFragment.context = context;
         return new FindSpotMainFragment();
@@ -159,7 +159,8 @@ public class FindSpotMainFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         String city = data.getStringExtra("city");
-        actionBarDestination.setText(city);
+        chooseCityTv.setText(city);
+        changeLevelResultFragment(level);
 
     }
 
@@ -168,8 +169,17 @@ public class FindSpotMainFragment extends Fragment {
 
         String[] levelData = {"5A级", "4A级", "3A级", "A级", "A级"};
 
+
         View view = inflater.inflate(R.layout.findspot_fragment_main, null);
 
+        chooseCityTv = (TextView) view.findViewById(R.id.findspot_choose_city_tv);
+        chooseCityTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CityList.class);
+                startActivityForResult(intent, REQUEST_SELECT_CITY_CODE);
+            }
+        });
 
         Spinner spinner = (Spinner) view.findViewById(R.id.findspot_level_spn);
         searchlayout = (LinearLayout) view.findViewById(R.id.findspot_searchlayout);
@@ -182,6 +192,7 @@ public class FindSpotMainFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                level = position;
                 changeLevelResultFragment(position);
             }
 
@@ -199,10 +210,15 @@ public class FindSpotMainFragment extends Fragment {
         params.width = (width - 20) / 2;
         spinner.setLayoutParams(params);
 
-        Button recommandBtn = (Button) view.findViewById(R.id.findspot_recommand_btn);
-        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) recommandBtn.getLayoutParams();
-        params2.width = (width - 20) / 2;
-        recommandBtn.setLayoutParams(params2);
+//        Button recommandBtn = (Button) view.findViewById(R.id.findspot_recommand_btn);
+//        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) recommandBtn.getLayoutParams();
+//        params2.width = (width - 20) / 2;
+//        recommandBtn.setLayoutParams(params2);
+
+        // 设置选择城市TextView 宽度
+        RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) chooseCityTv.getLayoutParams();
+        params1.width = (width - 20) / 2;
+        chooseCityTv.setLayoutParams(params1);
 
         return view;
     }

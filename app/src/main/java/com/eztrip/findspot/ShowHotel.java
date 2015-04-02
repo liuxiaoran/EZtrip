@@ -126,7 +126,7 @@ public class ShowHotel extends ActionBarActivity implements View.OnClickListener
     private void fillViewsContent(RouteData.Hotel hotel) {
 
         //修改控件值
-        Picasso.with(ShowHotel.this).load(hotel.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground).placeholder(R.drawable.hotel_placeholder)
+        Picasso.with(ShowHotel.this).load(hotel.imgsrc).resize(mScreenWidth - 6, 200).error(R.drawable.main_foreground)
                 .into(sceneryIv);
         titleTv.setText(hotel.name);
         satisfactionTv.setText("满意度：" + hotel.satisfaction);
