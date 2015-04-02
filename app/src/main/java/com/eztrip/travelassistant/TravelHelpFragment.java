@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class TravelHelpFragment extends Fragment {
     private TextView statusTv;
 
     private TextView currentStatusTv, nextStatusTv;
+
+    private static final String TAG = "travelhelperfragment";
 
     //标示已经进行到了第几步
     private int step = 0;
@@ -105,7 +108,6 @@ public class TravelHelpFragment extends Fragment {
 
         initPagerTabTextView(view);
         initViewPager(view, inflater);
-        initList(view);
 
 
         return view;
@@ -115,14 +117,15 @@ public class TravelHelpFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.vPager);
         ArrayList<View> views = new ArrayList<View>();
 
-        View view1 = inflater.inflate(R.layout.realtime_remind_layout, null);
-
-
-
+        View pager1 = inflater.inflate(R.layout.realtime_remind_layout, null);
         createView1(view);
-        View view2 = inflater.inflate(R.layout.travelhelper_total_plan, null);
-        views.add(view1);
-        views.add(view2);
+
+        View pager2 = inflater.inflate(R.layout.travelhelper_total_plan, null);
+        initList(pager2);
+
+
+        views.add(pager1);
+        views.add(pager2);
         viewPager.setAdapter(new MyViewPagerAdapter(views));
         viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
@@ -138,17 +141,21 @@ public class TravelHelpFragment extends Fragment {
         Date currentDate = new Date(System.currentTimeMillis());
         Calendar startCalendar = RouteData.startDay;
 
-        //an int < 0 if this Date is less than the specified Date, 0 if they are equal, and an int > 0 if this Date is greater.
-        int compare = currentDate.compareTo(startCalendar.getTime());
-        if (compare < 0) {
-
-            statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
-        } else if (compare > 0) {
-            statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+        if (RouteData.startDay == null) {
+            Log.v(TAG, "startDay is null");
         } else {
-            year = startCalendar.get(Calendar.YEAR);
-            TimeThread timeThread = new TimeThread();
-            timeThread.start();
+            //an int < 0 if this Date is less than the specified Date, 0 if they are equal, and an int > 0 if this Date is greater.
+            int compare = currentDate.compareTo(startCalendar.getTime());
+            if (compare < 0) {
+
+                statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+            } else if (compare > 0) {
+                statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+            } else {
+                year = startCalendar.get(Calendar.YEAR);
+                TimeThread timeThread = new TimeThread();
+                timeThread.start();
+            }
         }
 
 

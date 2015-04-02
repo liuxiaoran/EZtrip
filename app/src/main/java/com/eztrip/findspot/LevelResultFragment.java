@@ -149,7 +149,7 @@ public class LevelResultFragment extends Fragment implements View.OnClickListene
             //  加入行囊
             TravelBag bag = TravelBag.getInstance();
             if(bag.addScenery((ScenerySpot) view.getTag()))
-                Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "加入成功", Toast.LENGTH_SHORT).show();
 
         } else if (view.getId() == R.id.card_look_btn) {
             Intent intent = new Intent(getActivity(), ShowScenerySpot.class);

@@ -114,7 +114,7 @@ public class CityList extends ActionBarActivity {
             sqlString = "SELECT * FROM T_city WHERE AllNameSort LIKE " + "\""
                     + con + "%" + "\"" + " ORDER BY CityName";
         } else {
-            sqlString = "SELECT * FROM T_city WHERE NameSort LIKE " + "\""
+            sqlString = "SELECT * FROM T_city WHERE AllNameSort LIKE " + "\""
                     + con + "%" + "\"" + " ORDER BY CityName";
         }
         Cursor cursor = database.rawQuery(sqlString, null);
@@ -144,9 +144,9 @@ public class CityList extends ActionBarActivity {
             cursor.moveToPosition(i);
             CityModel cityModel = new CityModel();
             cityModel.setCityName(cursor.getString(cursor
-                    .getColumnIndex("allnamesort")));
+                    .getColumnIndex("AllNameSort")));
             cityModel.setNameSort(cursor.getString(cursor
-                    .getColumnIndex("cityname")));
+                    .getColumnIndex("CityName")));
             names.add(cityModel);
         }
         cursor.close();

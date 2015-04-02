@@ -29,9 +29,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="100dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:layout_marginRight="10dp">
 
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="当前应在的状态"
@@ -41,7 +42,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="绿源"
                 android:id="@+id/travel_assistant_current_status" />
         </LinearLayout>
 
@@ -59,9 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="10dp">
 
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="下一步的状态"
@@ -71,7 +72,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="绿源"
                 android:id="@+id/travel_assistant_next_status" />
         </LinearLayout>
 
