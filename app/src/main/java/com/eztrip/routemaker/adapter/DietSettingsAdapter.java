@@ -120,7 +120,6 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
                 intent.putExtras(b);
                 b.putString("source","change");
                 context.startActivity(intent);
-                Toast.makeText(context, "修改 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
             }
         });
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -128,13 +127,15 @@ public class DietSettingsAdapter extends BaseAdapter implements StickyListHeader
             public void onClick(View v) {
                 //TODO 跳转到餐厅信息页面
 //                Toast.makeText(context, "详细信息 " + RouteData.dietTempInfo[position].detail, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent();
-                Bundle b = new Bundle();
-                b.putSerializable("restaurant",RouteData.dietTempInfo[position]);
-                b.putString("source","see");
-                intent.putExtras(b);
-                intent.setClass(context, ShowRestaurant.class);
-                context.startActivity(intent);
+                if(!RouteData.dietTempInfo[position].detail.equals("无")) {
+                    Intent intent = new Intent();
+                    Bundle b = new Bundle();
+                    b.putSerializable("restaurant",RouteData.dietTempInfo[position]);
+                    b.putString("source","see");
+                    intent.putExtras(b);
+                    intent.setClass(context, ShowRestaurant.class);
+                    context.startActivity(intent);
+                }
             }
         });
         return convertView;

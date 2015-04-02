@@ -22,6 +22,8 @@ import com.eztrip.map.MapActivity;
 import com.eztrip.model.Clock;
 import com.eztrip.model.RouteData;
 
+import java.util.Calendar;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -32,11 +34,21 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
 
     private Context context;
     private LayoutInflater inflater;
+    private String source;
+    public static final String FROM_TRAVEL_HELP = "FROM_TRAVEL_HELP";
 
     public TimeSettingsAdapter(Context context) {
         this.context = context;
         this.inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.source = "";
+    }
+
+    public TimeSettingsAdapter(Context context, String source) {
+        this.context = context;
+        this.inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.source = source;
     }
 
     @Override
@@ -51,7 +63,13 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder = (HeaderViewHolder) view.getTag();
         String headerText = new String();
         int day = RouteData.singleEvents.get(i).day;
-        headerText += "第" + Integer.toString(day + 1) + "天";
+        if(source.equals(FROM_TRAVEL_HELP) && RouteData.startDay != null) {
+            Calendar today = RouteData.startDay;
+            today.roll(Calendar.DAY_OF_YEAR,day);
+            headerText += today.get(Calendar.YEAR) + "-" + (today.get(Calendar.MONTH) + 1) + "-" + today.get(Calendar.DAY_OF_MONTH);
+        }else {
+            headerText += "第" + Integer.toString(day + 1) + "天";
+        }
         holder.date.setText(headerText);
         return view;
     }
@@ -86,7 +104,8 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.change = (ImageView) convertView.findViewById(R.id.item_change);
             holder.detail = (TextView) convertView.findViewById(R.id.item_content);
             holder.type = (ImageView) convertView.findViewById(R.id.item_type);
-            holder.time = (TextView) convertView.findViewById(R.id.item_time);
+            holder.startTime = (TextView) convertView.findViewById(R.id.item_start_time);
+            holder.finishTime = (TextView) convertView.findViewById(R.id.item_finish_time);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -94,7 +113,7 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
         if (RouteData.singleEvents.get(position).type == RouteData.ActivityType.ACCOMMODATION) {
             holder.type.setImageResource(R.drawable.ic_accomodation);
         } else if (RouteData.singleEvents.get(position).type == RouteData.ActivityType.SPOT) {
-            holder.type.setImageResource(R.drawable.ic_spot);
+            holder.type.setImageResource(R.drawable.ic_scenery_sign);
         } else if (RouteData.singleEvents.get(position).type == RouteData.ActivityType.DIET) {
             holder.type.setImageResource(R.drawable.ic_dining);
         } else if (RouteData.singleEvents.get(position).type == RouteData.ActivityType.TRAFFIC) {
@@ -103,10 +122,15 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
             holder.type.setImageResource(R.drawable.ic_spot_others);
         }
         holder.detail.setText(RouteData.singleEvents.get(position).detail);
-        if(!RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.ACCOMMODATION))
-            holder.time.setText(RouteData.singleEvents.get(position).startTime + "-" + RouteData.singleEvents.get(position).finishTime);
-        else
-            holder.time.setText("");
+        if(!RouteData.singleEvents.get(position).type.equals(RouteData.ActivityType.ACCOMMODATION)) {
+            holder.startTime.setText(RouteData.singleEvents.get(position).startTime.toString());
+            holder.finishTime.setText(RouteData.singleEvents.get(position).finishTime.toString());
+        }
+        else {
+            holder.startTime.setText("");
+            holder.finishTime.setText("");
+        }
+
         holder.map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,50 +148,54 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
                 context.startActivity(intent);
             }
         });
-        holder.change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                View view = inflater.inflate(R.layout.routemaker_timesettings_timepicker, null);
-                builder.setView(view);
-                builder.setTitle(RouteData.singleEvents.get(position).detail);
-                final TimePicker startTime = (TimePicker) view.findViewById(R.id.timepicker_starttime);
-                final TimePicker finishTime = (TimePicker) view.findViewById(R.id.timepicker_finishtime);
-                int startHour = RouteData.singleEvents.get(position).startTime.hour;
-                final int startMinute = RouteData.singleEvents.get(position).startTime.minute;
-                int finishHour = RouteData.singleEvents.get(position).finishTime.hour;
-                int finishMinute = RouteData.singleEvents.get(position).finishTime.minute;
-                startTime.setCurrentHour(startHour);
-                startTime.setCurrentMinute(startMinute);
-                finishTime.setCurrentHour(finishHour);
-                finishTime.setCurrentMinute(finishMinute);
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int newStartHour = startTime.getCurrentHour();
-                        int newStartMinute = startTime.getCurrentMinute();
-                        int newFinishHour = finishTime.getCurrentHour();
-                        int newFinishMinute = finishTime.getCurrentMinute();
-                        int startMinuteCount = newStartHour * 60 + newStartMinute;
-                        int finishMinuteCount = newFinishHour * 60 + newFinishMinute;
-                        if (startMinuteCount >= finishMinuteCount)
-                            Toast.makeText(context, "请将开始时间设置在结束时间之前", Toast.LENGTH_LONG).show();
-                        else {
-                            RouteData.singleEvents.get(position).startTime = new Clock(newStartHour, newStartMinute);
-                            RouteData.singleEvents.get(position).finishTime = new Clock(newFinishHour, newFinishMinute);
-                            TimeSettingsAdapter.this.notifyDataSetChanged();
+        if(source.equals(FROM_TRAVEL_HELP)) {
+            holder.change.setVisibility(View.GONE);
+        }else {
+            holder.change.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View view = inflater.inflate(R.layout.routemaker_timesettings_timepicker, null);
+                    builder.setView(view);
+                    builder.setTitle(RouteData.singleEvents.get(position).detail);
+                    final TimePicker startTime = (TimePicker) view.findViewById(R.id.timepicker_starttime);
+                    final TimePicker finishTime = (TimePicker) view.findViewById(R.id.timepicker_finishtime);
+                    int startHour = RouteData.singleEvents.get(position).startTime.hour;
+                    final int startMinute = RouteData.singleEvents.get(position).startTime.minute;
+                    int finishHour = RouteData.singleEvents.get(position).finishTime.hour;
+                    int finishMinute = RouteData.singleEvents.get(position).finishTime.minute;
+                    startTime.setCurrentHour(startHour);
+                    startTime.setCurrentMinute(startMinute);
+                    finishTime.setCurrentHour(finishHour);
+                    finishTime.setCurrentMinute(finishMinute);
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int newStartHour = startTime.getCurrentHour();
+                            int newStartMinute = startTime.getCurrentMinute();
+                            int newFinishHour = finishTime.getCurrentHour();
+                            int newFinishMinute = finishTime.getCurrentMinute();
+                            int startMinuteCount = newStartHour * 60 + newStartMinute;
+                            int finishMinuteCount = newFinishHour * 60 + newFinishMinute;
+                            if (startMinuteCount >= finishMinuteCount)
+                                Toast.makeText(context, "请将开始时间设置在结束时间之前", Toast.LENGTH_LONG).show();
+                            else {
+                                RouteData.singleEvents.get(position).startTime = new Clock(newStartHour, newStartMinute);
+                                RouteData.singleEvents.get(position).finishTime = new Clock(newFinishHour, newFinishMinute);
+                                TimeSettingsAdapter.this.notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        }
+                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-            }
-        });
+                    });
+                    builder.create().show();
+                }
+            });
+        }
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +240,7 @@ public class TimeSettingsAdapter extends BaseAdapter implements StickyListHeader
         ImageView map;
         TextView detail;
         ImageView type;
-        TextView time;
+        TextView startTime,finishTime;
     }
 
     class HeaderViewHolder {

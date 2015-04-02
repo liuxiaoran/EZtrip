@@ -56,6 +56,6 @@
     <dimen name="default_blank_height">5dp</dimen>
     <dimen name="max_listview_height">150dp</dimen>
 
-    <dimen name="day_header_height">30dp</dimen>
-    <dimen name="spot_item_height">75dp</dimen>
+    <dimen name="day_header_height">20dp</dimen>
+    <dimen name="spot_item_height">65dp</dimen>
 </resources>

@@ -104,7 +104,7 @@ public class SpotSettingsAdapter extends BaseAdapter implements StickyListHeader
         holder.detail.setText(RouteData.spotTempInfo.get(position).detail);
         if (RouteData.spotTempInfo.get(position).type == RouteData.ActivityType.SPOT) {
             holder.change.setVisibility(View.GONE);
-            holder.type.setImageResource(R.drawable.ic_spot);
+            holder.type.setImageResource(R.drawable.ic_scenery_sign);
             holder.up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
