@@ -103,7 +103,7 @@ public class TravelHelpFragment extends Fragment {
         pagerTabDivider1 = (View) view.findViewById(R.id.pager_tab1_divider);
         pagerTabDivider2 = (View) view.findViewById(R.id.pager_tab2_divider);
 
-        initTextView(view);
+        initPagerTabTextView(view);
         initViewPager(view, inflater);
         initList(view);
 
