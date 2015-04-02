@@ -84,12 +84,12 @@ public class CityList extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         mCityLit = (ListView) findViewById(R.id.city_list);
         letterListView = (MyLetterListView) findViewById(R.id.cityLetterListView);
-//        DBManager dbManager = new DBManager(this);
-//        dbManager.openDateBase();
-//        dbManager.closeDatabase();
-//        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/"
-//                + DBManager.DB_NAME, null);
-        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/" + DBManager.DB_NAME, null);
+        DBManager dbManager = new DBManager(this);
+        dbManager.openDateBase();
+        dbManager.closeDatabase();
+        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/"
+                + DBManager.DB_NAME, null);
+//        database = SQLiteDatabase.openOrCreateDatabase(DBManager.DB_PATH + "/" + DBManager.DB_NAME, null);
 
         mCityNames = getCityNames();
         // database.close();
