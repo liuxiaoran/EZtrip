@@ -1,11 +1,9 @@
 package utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 
