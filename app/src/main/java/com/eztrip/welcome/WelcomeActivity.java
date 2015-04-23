@@ -10,12 +10,8 @@ import android.widget.Button;
 import com.eztrip.MainActivity;
 import com.eztrip.MyContext;
 import com.eztrip.R;
-import com.eztrip.database.CityDao;
-import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.login.LoginActivity;
 import com.eztrip.register.RegisterActivity;
-
-import utils.FindSpotService;
 
 /**
  * Created by xiaoran on 2015/1/19.

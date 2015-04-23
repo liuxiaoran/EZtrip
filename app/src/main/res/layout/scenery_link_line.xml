@@ -9,7 +9,7 @@
         android:background="?android:attr/listDivider"
 
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="28dp" />
+        android:layout_marginLeft="30dp" />
 
 
 </RelativeLayout>

@@ -73,39 +73,10 @@ public class RouteAutoGenerator {
             spotList.add(spot);
             totalVisitTime += spot.recommendTime;
         }
-//        final ArrayList<HashMap<String, Double>> spotPosition = new ArrayList<>();
-//        GeoCoder mSearch = GeoCoder.newInstance();
-//        for (int i = 0; i < spotList.size(); i++) {
-//            final int index = i;
-//            OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
-//                public void onGetGeoCodeResult(GeoCodeResult result) {
-//                    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-//                        //没有检索到结果
-//                        //TODO:抛异常
-//                    }
-//                    //获取地理编码结果
-//                    HashMap<String, Double> latLngInfo = new HashMap<>();
-//                    latLngInfo.put("latitude", result.getLocation().latitude);
-//                    latLngInfo.put("longitude", result.getLocation().longitude);
-//                    spotPosition.add(index, latLngInfo);
-//                }
-//
-//                @Override
-//                public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-//                    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-//                        //没有找到检索结果
-//                    }
-//                    //获取反向地理编码结果
-//                }
-//            };
-//            mSearch.setOnGetGeoCodeResultListener(listener);
-//            mSearch.geocode(new GeoCodeOption()
-//                    .city(RouteData.city)
-//                    .address(spotList.get(i).address));
-//        }
-//        mSearch.destroy();
         return spotList;
     }
+
+
     //get traffic time between every two spots and a hotel information
     public static void getSpotTimeAndHotel(final RouteMakerFragment.MyHandler handler, ArrayList<RouteData.SpotTemp> spotList, final Context context) {
         RouteData.distance = new HashMap[spotList.size()][];
@@ -180,6 +151,10 @@ public class RouteAutoGenerator {
         }
         RouteMakerService.getHotel(handler);
     }
+
+
+
+
     //try to combine the nearest spots into a plan until the number of the plan is equal to the number of the date
     public static String generateSpotSettingsPlan(ArrayList<RouteData.SpotTemp> spotList, Context context) {
         Log.e("length", Integer.toString(spotList.size()));
@@ -296,12 +271,17 @@ public class RouteAutoGenerator {
         return success;
     }
 
+
+
     private static int getLastPeriod(int currPeriod) {
         if(currPeriod % 3 ==0)
             return currPeriod - 2;
         else
             return currPeriod - 1;
     }
+
+
+
     //try to divide the plan of each day into at least two periods(morning afternoon) or three(add evening)
     private static void arrangeCurrentDayPlan(ArrayList<RouteData.SpotTemp> spotList, int leftMostIndex, int currDay) {
         final int moringMaxVisitTime = 210, afternoonMaxVisitTime = 270;
@@ -337,11 +317,9 @@ public class RouteAutoGenerator {
         }
         while (nextSpot != null);
     }
-    //deprecated
-    public static ArrayList<RouteData.SpotTemp> regenerateSpotSettings(Context context) {
-        ArrayList<ScenerySpot> spots = TravelBag.getInstance().getScenerySpotList();
-        return executeBasicSettings(RouteData.city, spots, RouteData.dayLength, RouteData.trafficInfo, RouteData.dietInfo, context);
-    }
+
+
+
     //try to find a nearest restaurant of the spot at meal times
     public static String executeSpotSettings(Context context, RouteMakerFragment.MyHandler handler) {
         boolean breakfast = RouteData.dietInfo.contains(context.getResources().getString(R.string.routemaker_dietsettings_breakfast));
@@ -593,6 +571,21 @@ public class RouteAutoGenerator {
         handler.handleMessage(m);
     }
 
+
+    /**
+     * get the time between two places(located by latitude and longitude)
+     * @param context
+     * @param handler
+     * @param index
+     *          related to the index in Routedata.singleEvents
+     * @param startLatitude
+     * @param startLongitude
+     * @param finishLatitude
+     * @param finishLongitude
+     * @param relatedPeriod
+     *          related to the index in Routedata.trafficTimeOccupied
+     * @return
+     */
     public static int getSingleTrafficTime(final Context context, final RouteMakerFragment.MyHandler handler, int index, final String startLatitude, final String startLongitude, final String finishLatitude, final String finishLongitude, final int relatedPeriod) {
         Log.e("index", Integer.toString(index));
         final int trafficIndex = index;
@@ -611,7 +604,7 @@ public class RouteAutoGenerator {
                 }
                 if (RouteData.trafficInfo.equals(context.getResources().getString(R.string.routemaker_trafficsettings_public))) {
 //                    RouteData.singleEvents.get(trafficIndex).detail = result.getRouteLines().get(0).getAllStep().toString();
-                    if( result.getRouteLines()!= null) {
+                    if(result.getRouteLines()!= null) {
                         int duration = result.getRouteLines().get(0).getDuration() / 60;
                         RouteData.trafficTimeOccupied[relatedPeriod] += duration;
                         RouteData.singleEvents.get(trafficIndex).timeLength = duration;
@@ -673,6 +666,8 @@ public class RouteAutoGenerator {
         return index;
     }
 
+
+    //try to arrange plans into several days
     public static void arrangeTimeSettingsTime() {
         setVisitTime();
         final Clock startTime = new Clock(8, 0);
@@ -784,6 +779,8 @@ public class RouteAutoGenerator {
         return success;
     }
 
+
+    //try to combine two spots into a continuous spot-visiting plan
     public static boolean combineTwoSpots(SortedDistance[] sortedDistances, ArrayList<RouteData.SpotTemp> spotList, int index, double times) {
         final double maxVisitTime = times * 480;
         int i = sortedDistances[index].i, j = sortedDistances[index].j;
@@ -826,6 +823,8 @@ public class RouteAutoGenerator {
             return false;
     }
 
+
+    //update the total visit time the day the spot at the currIndex in the spotList
     public static void updateCombinedTime(int currIndex, int lastIndex, ArrayList<RouteData.SpotTemp> spotList, int combinedTime) {
         spotList.get(currIndex).combinedVisitTime = combinedTime;
         int nextIndex = spotList.indexOf(spotList.get(currIndex).leftSpot) == lastIndex ? spotList.indexOf(spotList.get(currIndex).rightSpot) : spotList.indexOf(spotList.get(currIndex).leftSpot);
@@ -834,6 +833,7 @@ public class RouteAutoGenerator {
             updateCombinedTime(nextIndex, currIndex, spotList, combinedTime);
     }
 
+    //get one end index of the currIndex of the spotList
     public static int getOneEndIndex(ArrayList<RouteData.SpotTemp> spotList, int currIndex, int lastIndex) {
         int nextIndex;
         if (lastIndex == -1)

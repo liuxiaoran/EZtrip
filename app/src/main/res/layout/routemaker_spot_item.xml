@@ -8,14 +8,15 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="17dp"
             android:layout_centerVertical="true"
             android:id="@+id/item_type" />
 
         <TextView
             android:layout_width="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
             android:layout_height="match_parent"
             android:id="@+id/item_content"
             android:text="@string/routemaker_spotitem_default"
