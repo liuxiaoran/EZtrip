@@ -118,7 +118,7 @@ public class TravelHelpFragment extends Fragment {
         ArrayList<View> views = new ArrayList<View>();
 
         View pager1 = inflater.inflate(R.layout.realtime_remind_layout, null);
-        createView1(view);
+        createView1(pager1);
 
         View pager2 = inflater.inflate(R.layout.travelhelper_total_plan, null);
         initList(pager2);
@@ -148,9 +148,9 @@ public class TravelHelpFragment extends Fragment {
             int compare = currentDate.compareTo(startCalendar.getTime());
             if (compare < 0) {
 
-                statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+                statusTv.setText("您最近的一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
             } else if (compare > 0) {
-                statusTv.setText("您最近得一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+                statusTv.setText("您最近的一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
             } else {
                 year = startCalendar.get(Calendar.YEAR);
                 TimeThread timeThread = new TimeThread();
