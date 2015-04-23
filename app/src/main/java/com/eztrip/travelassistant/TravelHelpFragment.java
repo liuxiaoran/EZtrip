@@ -41,6 +41,11 @@ public class TravelHelpFragment extends Fragment {
     private StickyListHeadersListView listView;
     private TimeSettingsAdapter stickyListHeadersAdapter;
 
+    private Status travelStatus;
+
+    enum Status {
+        UNDONE, ISDOING, DONE
+    }
     // 状态TextView，如果是当天,显示实时时间
     private TextView statusTv;
 
@@ -149,10 +154,13 @@ public class TravelHelpFragment extends Fragment {
             if (compare < 0) {
 
                 statusTv.setText("您最近的一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+                travelStatus = Status.DONE;
             } else if (compare > 0) {
                 statusTv.setText("您最近的一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
+                travelStatus = Status.UNDONE;
             } else {
                 year = startCalendar.get(Calendar.YEAR);
+                travelStatus = Status.ISDOING;
                 TimeThread timeThread = new TimeThread();
                 timeThread.start();
             }
@@ -234,8 +242,10 @@ public class TravelHelpFragment extends Fragment {
 
     private void initList(View view) {
         listView = (StickyListHeadersListView)view.findViewById(R.id.travelhelper_list);
-        stickyListHeadersAdapter = new TimeSettingsAdapter(getActivity(),TimeSettingsAdapter.FROM_TRAVEL_HELP);
-        listView.setAdapter(stickyListHeadersAdapter);
+        if (RouteData.singleEvents != null) {
+            stickyListHeadersAdapter = new TimeSettingsAdapter(getActivity(), TimeSettingsAdapter.FROM_TRAVEL_HELP);
+            listView.setAdapter(stickyListHeadersAdapter);
+        }
     }
 
     class MyViewPagerAdapter extends PagerAdapter {
