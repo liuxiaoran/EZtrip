@@ -188,8 +188,10 @@ public class RouteAutoGenerator {
             }
         });
         int combinedSpotNum = spotList.size();
-        if (combinedSpotNum <= RouteData.dayLength)
+        if (combinedSpotNum <= RouteData.dayLength) {
             RouteData.warning = "NotBusy";
+            return failure;
+        }
         for (int i = 0; i < sortedDistances.length; i++) {
             if (combinedSpotNum <= RouteData.dayLength)
                 break;
@@ -216,7 +218,7 @@ public class RouteAutoGenerator {
         }
         ArrayList<Integer> visitedSpotIndex = new ArrayList<>();
         for (int i = 0; i < spotList.size(); i++) {
-            Log.e("ex", spotList.get(i).detail);
+            Log.e(spotList.get(i).detail, Integer.toString(spotList.get(i).period));
         }
         for (int i = 0; i < RouteData.dayLength; i++) {
             RouteData.SpotTemp[] nothing = new RouteData.SpotTemp[3];
@@ -472,7 +474,7 @@ public class RouteAutoGenerator {
             placeInfo.put("longitude", finishLongitude);
             placeInfo.put("address", finishAddress);
             otherEvent.locationInfo.add(placeInfo);
-
+            trafficEvent.day = otherEvent.day;
             trafficEvent.type = RouteData.ActivityType.TRAFFIC;
             trafficEvent.detail = "traffic";
             RouteData.singleEvents.add(trafficEvent);
@@ -716,66 +718,78 @@ public class RouteAutoGenerator {
     }
 
     public static String executeFinishSettings(final RouteMakerFragment.MyHandler handler, final Context context, String startTime, String name) {
-        EztripHttpUtil eztripHttpUtil = new EztripHttpUtil();
-        AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Toast.makeText(context, "线路生成成功，您可以在“行程规划”中查看生成的线路", Toast.LENGTH_LONG).show();
-                Message m = new Message();
-                Bundle b = new Bundle();
-                b.putBoolean("minus", true);
-                b.putString("source", "finish");
-                b.putBoolean("success", true);
-                m.setData(b);
-                handler.handleMessage(m);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_LONG).show();
-                Message m = new Message();
-                Bundle b = new Bundle();
-                b.putBoolean("minus", true);
-                b.putString("source", "finish");
-                b.putBoolean("success", false);
-                m.setData(b);
-                handler.handleMessage(m);
-            }
-        };
-        JSONObject parameter = new JSONObject();
+//        EztripHttpUtil eztripHttpUtil = new EztripHttpUtil();
+//        AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                Toast.makeText(context, "线路生成成功，您可以在“行程规划”中查看生成的线路", Toast.LENGTH_LONG).show();
+//                Message m = new Message();
+//                Bundle b = new Bundle();
+//                b.putBoolean("minus", true);
+//                b.putString("source", "finish");
+//                b.putBoolean("success", true);
+//                m.setData(b);
+//                handler.handleMessage(m);
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_LONG).show();
+//                Message m = new Message();
+//                Bundle b = new Bundle();
+//                b.putBoolean("minus", true);
+//                b.putString("source", "finish");
+//                b.putBoolean("success", false);
+//                m.setData(b);
+//                handler.handleMessage(m);
+//            }
+//        };
+//        JSONObject parameter = new JSONObject();
+//        try {
+//            //TODO: id来源
+//            parameter.put("id", 1);
+//            parameter.put("name", name);
+//            parameter.put("city", RouteData.city);
+//            parameter.put("start_date", startTime);
+//            parameter.put("day_length", RouteData.dayLength);
+//            List<Map> eventList = new ArrayList<>();
+//            for (int i = 0; i < RouteData.singleEvents.size(); i++) {
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("day", RouteData.singleEvents.get(i).day);
+//                map.put("type", RouteData.singleEvents.get(i).type.toString().toLowerCase());
+//                map.put("start_time", RouteData.singleEvents.get(i).startTime);
+//                map.put("finish_time", RouteData.singleEvents.get(i).finishTime);
+//                map.put("detail", RouteData.singleEvents.get(i).detail);
+//                List<Map> locationList = new ArrayList<>();
+//                for (int j = 0; j < RouteData.singleEvents.get(i).locationInfo.size(); j++) {
+//                    Map<String, String> locationInfo = new HashMap<>();
+//                    locationInfo.put("longitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("longitude"));
+//                    locationInfo.put("latitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("latitude"));
+//                    locationInfo.put("address", RouteData.singleEvents.get(i).locationInfo.get(j).get("address"));
+//                    locationList.add(locationInfo);
+//                }
+//                map.put("places", locationList);
+//                eventList.add(map);
+//            }
+//            parameter.put("event", eventList);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        HashMap<String, String> request = new HashMap<>();
+//        request.put("content", parameter.toString());
+        //EztripHttpUtil.post(URLConstants.SUBMIT_ROUTE, request, asyncHttpResponseHandler);
         try {
-            //TODO: id来源
-            parameter.put("id", 1);
-            parameter.put("name", name);
-            parameter.put("city", RouteData.city);
-            parameter.put("start_date", startTime);
-            parameter.put("day_length", RouteData.dayLength);
-            List<Map> eventList = new ArrayList<>();
-            for (int i = 0; i < RouteData.singleEvents.size(); i++) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("day", RouteData.singleEvents.get(i).day);
-                map.put("type", RouteData.singleEvents.get(i).type.toString().toLowerCase());
-                map.put("start_time", RouteData.singleEvents.get(i).startTime);
-                map.put("finish_time", RouteData.singleEvents.get(i).finishTime);
-                map.put("detail", RouteData.singleEvents.get(i).detail);
-                List<Map> locationList = new ArrayList<>();
-                for (int j = 0; j < RouteData.singleEvents.get(i).locationInfo.size(); j++) {
-                    Map<String, String> locationInfo = new HashMap<>();
-                    locationInfo.put("longitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("longitude"));
-                    locationInfo.put("latitude", RouteData.singleEvents.get(i).locationInfo.get(j).get("latitude"));
-                    locationInfo.put("address", RouteData.singleEvents.get(i).locationInfo.get(j).get("address"));
-                    locationList.add(locationInfo);
-                }
-                map.put("places", locationList);
-                eventList.add(map);
-            }
-            parameter.put("event", eventList);
-        } catch (JSONException e) {
+            Thread.sleep(1000);
+            Message m = new Message();
+            Bundle b = new Bundle();
+            b.putBoolean("minus", true);
+            b.putString("source", "finish");
+            b.putBoolean("success", true);
+            m.setData(b);
+            handler.handleMessage(m);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        HashMap<String, String> request = new HashMap<>();
-        request.put("content", parameter.toString());
-        EztripHttpUtil.post(URLConstants.SUBMIT_ROUTE, request, asyncHttpResponseHandler);
         return success;
     }
 

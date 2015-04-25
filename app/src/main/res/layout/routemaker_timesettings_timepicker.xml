@@ -4,6 +4,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:scrollbars="vertical">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <TextView
         android:layout_height="wrap_content"
@@ -24,5 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timepicker_finishtime" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
