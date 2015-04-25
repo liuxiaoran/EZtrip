@@ -578,9 +578,9 @@ public class RouteMakerFragment extends Fragment {
                     public void onClick(View v) {
                         String startTime = date.getText().toString();
                         String names = name.getText().toString();
-                        if(hint.getVisibility() == View.VISIBLE)
-                            Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
-                        else {
+//                        if(hint.getVisibility() == View.VISIBLE)
+//                            Toast.makeText(getActivity(),hint.getText().toString(),Toast.LENGTH_LONG).show();
+//                        else {
                             RouteData.name = names;
                             if(aSwitch.isChecked()) {
                                 RouteData.startDay.set(startYear,startMonth,startDay);
@@ -589,7 +589,7 @@ public class RouteMakerFragment extends Fragment {
                             }
                             ProgressDialogController.show();
                             RouteAutoGenerator.executeFinishSettings(new MyHandler(1), getActivity(), startTime, names);
-                        }
+//                        }
                     }
                 });
             }

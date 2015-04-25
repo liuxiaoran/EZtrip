@@ -167,7 +167,7 @@ public class FindSpotMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        String[] levelData = {"5A级", "4A级", "3A级", "A级", "A级"};
+        String[] levelData = {"5A级", "4A级", "3A级", "2A级", "A级"};
 
 
         View view = inflater.inflate(R.layout.findspot_fragment_main, null);

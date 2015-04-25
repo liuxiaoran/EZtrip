@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -62,6 +64,7 @@ public class TravelHelpFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
 
+            Log.v(TAG, msg.what + "what");
             if (msg.what == 1) {
                 long sysTime = System.currentTimeMillis();
                 CharSequence sysTimeStr = DateFormat.format("HH:mm:ss", sysTime);  // HH 代表24小时制， hh代表12小时制
@@ -70,16 +73,16 @@ public class TravelHelpFragment extends Fragment {
 
                 long sysTime = System.currentTimeMillis();
                 Date currDate = new Date(sysTime);
-
+                Log.v(TAG, "currentTime" + currDate);
                 for (int i = 0; i < RouteData.singleEvents.size(); i++) {
                     RouteData.SingleEvent event = RouteData.singleEvents.get(i);
                     Clock startClock = event.startTime;
                     Clock finishClock = event.finishTime;
-                    Date startDate = new Date(year, startClock.hour, startClock.minute);
-                    Date finishDate = new Date(year, finishClock.hour, finishClock.minute);
-                    int compare1 = currDate.compareTo(startDate);
-                    int compare2 = currDate.compareTo(finishDate);
-                    if (compare1 > 0 && compare2 < 0) {
+//                    Date startDate = new Date(year, startClock.hour, startClock.minute);
+//                    Date finishDate = new Date(year, finishClock.hour, finishClock.minute);
+                    int compare1 = compareTime(startClock.hour, startClock.minute);
+                    int compare2 = compareTime(finishClock.hour, finishClock.minute);
+                    if (compare1 <= 0 && compare2 > 0) {
                         currentStatusTv.setText(event.detail);
                         if (i + 1 <= RouteData.singleEvents.size() - 1)
                             nextStatusTv.setText(RouteData.singleEvents.get(i + 1).detail);
@@ -150,7 +153,7 @@ public class TravelHelpFragment extends Fragment {
             Log.v(TAG, "startDay is null");
         } else {
             //an int < 0 if this Date is less than the specified Date, 0 if they are equal, and an int > 0 if this Date is greater.
-            int compare = currentDate.compareTo(startCalendar.getTime());
+            int compare = compareDate(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
             if (compare < 0) {
 
                 statusTv.setText("您最近的一次旅行在" + DateFormat.format("yyyy-MM-dd", startCalendar.getTime()));
@@ -161,8 +164,9 @@ public class TravelHelpFragment extends Fragment {
             } else {
                 year = startCalendar.get(Calendar.YEAR);
                 travelStatus = Status.ISDOING;
-                TimeThread timeThread = new TimeThread();
-                timeThread.start();
+                Timer timer = new Timer(true);
+                timer.schedule(new TimerTask(), 0, 1000);
+
             }
         }
 
@@ -206,29 +210,44 @@ public class TravelHelpFragment extends Fragment {
         }
     }
 
-    class TimeThread extends Thread {
+    private int compareTime(int hour, int minute) {
+        Date current = new Date(System.currentTimeMillis());
+        int ret = 0;
+        if (hour < current.getHours()) {
+            ret = -1;
+        } else if (hour > current.getHours()) {
+            ret = 1;
+        } else {
+            if (minute < current.getMinutes()) {
+                ret = -1;
+            } else if (minute > current.getMinutes()) {
+                ret = 1;
+            }
+        }
+        return ret;
 
-        long totalTime = 0;
+    }
+
+    private int totalTime;
+
+    class TimerTask extends java.util.TimerTask {
+
+
 
         @Override
         public void run() {
 
-            try {
-                Thread.sleep(1000);
-                totalTime += 1000;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             Message msg = new Message();
             msg.what = 1;  //消息(一个整型值)
             mHandler.sendMessage(msg);// 每隔1秒发送一个msg给mHandler
 
-            if (totalTime % 60000 == 0) {
+            if (totalTime % 60000 == 0 || totalTime == 0) {
                 totalTime = 0;
                 Message msg1 = new Message();
                 msg1.what = 2;
                 mHandler.sendMessage(msg1);
             }
+            totalTime += 1000;
         }
     }
 
