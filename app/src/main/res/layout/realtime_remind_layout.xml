@@ -10,6 +10,8 @@
         android:layout_height="100dp"
         android:text="未开始"
         android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/travel_assistant_status_tv" />
 
     <LinearLayout
