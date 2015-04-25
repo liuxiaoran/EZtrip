@@ -39,6 +39,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.navisdk.model.datastruct.RouteDetailSchemeNode;
 import com.eztrip.MainActivity;
 import com.eztrip.findspot.FindSpotMainFragment;
 import com.eztrip.findspot.LevelResultFragment;
@@ -321,16 +322,16 @@ public class RouteMakerFragment extends Fragment {
             }
 
             private void initView() {
-                warning = (TextView) view.findViewById(R.id.routemaker_spotsettings_warning);
-                if(!RouteData.spotSettingsHint.equals("")) {
-                    if(RouteData.spotSettingsHint.equals("TooBusy")) {
-                        warning.setText("您的计划可能过于繁忙，请尝试增加旅行天数或减少游览景点。");
-                    }else if(RouteData.spotSettingsHint.equals("NotBusy")) {
-                        warning.setText("您的日程安排比较清闲，推荐您减少旅行天数或增加游览景点。");
-                    }
-                }else {
-                    warning.setVisibility(View.GONE);
-                }
+//                warning = (TextView) view.findViewById(R.id.routemaker_spotsettings_warning);
+//                if(!RouteData.spotSettingsHint.equals("")) {
+//                    if(RouteData.spotSettingsHint.equals("TooBusy")) {
+//                        warning.setText("您的计划可能过于繁忙，请尝试增加旅行天数或减少游览景点。");
+//                    }else if(RouteData.spotSettingsHint.equals("NotBusy")) {
+//                        warning.setText("您的日程安排比较清闲，推荐您减少旅行天数或增加游览景点。");
+//                    }
+//                }else {
+//                    warning.setVisibility(View.GONE);
+//                }
                 hintLayout = (LinearLayout) view.findViewById(R.id.routemaker_spotsettings_change_hint);
                 hintLayout.setVisibility(View.GONE);
 //                regenerate = (Button) view.findViewById(R.id.routemaker_spotsettings_regeneration);
@@ -530,6 +531,7 @@ public class RouteMakerFragment extends Fragment {
                 hint = (TextView) view.findViewById(R.id.routemaker_finishisettings_start_date_hint);
                 aSwitch = (Switch)view.findViewById(R.id.switch1);
                 hint.setVisibility(View.GONE);
+                name.setText(RouteData.city + "之旅");
                 RouteData.startDay = Calendar.getInstance();
                 RouteData.startDay.add(Calendar.DAY_OF_YEAR, 1);
                 startYear = RouteData.startDay.get(Calendar.YEAR);
@@ -561,6 +563,7 @@ public class RouteMakerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         nameET = new EditText(getActivity());
+                        nameET.setText(name.getText());
                         new AlertDialog.Builder(getActivity())
                                 .setTitle(getActivity().getResources().getString(R.string.routemaker_finishsettings_name))
                                 .setView(nameET)
@@ -757,7 +760,11 @@ public class RouteMakerFragment extends Fragment {
                             }
                         }else {
                             ProgressDialogController.dismiss();
-                            Toast.makeText(getActivity(),"景点数量过多，不能生成合理的旅行计划，请减少景点数量或增加旅行天数",Toast.LENGTH_LONG).show();
+                            if(RouteData.warning.equals("TooBusy"))
+                                Toast.makeText(getActivity(),"景点数量过多，不能生成合理的旅行计划，请减少景点数量或增加旅行天数",Toast.LENGTH_LONG).show();
+                            else if(RouteData.warning.equals("NotBusy"))
+                                Toast.makeText(getActivity(),"景点数量过少，不能生成合理的旅行计划，请增加景点数量或减少旅行天数",Toast.LENGTH_LONG).show();
+
                         }
                     }else if(msg.getData().getString("source").equals("spot")) {
                         nextStep();

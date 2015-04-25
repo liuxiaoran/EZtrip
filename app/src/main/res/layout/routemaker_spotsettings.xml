@@ -18,7 +18,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="60dp">
 
             <TextView
                 android:id="@+id/routemaker_spotsettings_hint"
@@ -32,18 +32,6 @@
                 android:textColor="@color/red"
                 android:textSize="@dimen/body_text_size" />
 
-            <TextView
-                android:id="@+id/routemaker_spotsettings_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_below="@id/routemaker_spotsettings_hint"
-                android:layout_marginBottom="@dimen/default_padding"
-                android:layout_marginLeft="@dimen/default_margin_horizontal"
-                android:layout_marginStart="@dimen/default_margin_horizontal"
-                android:gravity="center_vertical"
-                android:text=""
-                android:textColor="@color/red"
-                android:textSize="@dimen/body_text_size" />
         </RelativeLayout>
     </LinearLayout>
 
